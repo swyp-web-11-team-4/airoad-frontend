@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { User } from "@/entities/user";
-import { userKeys } from "@/entities/user";
+import { userQueries } from "@/entities/user";
 import { api } from "@/shared/lib/axios";
 
 async function createUser(userData: Omit<User, "id">): Promise<User> {
@@ -14,7 +14,7 @@ export function useCreateUser() {
   return useMutation({
     mutationFn: createUser,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: userKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: userQueries.lists() });
     },
   });
 }
