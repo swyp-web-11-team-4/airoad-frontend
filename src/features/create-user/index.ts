@@ -1,2 +1,2 @@
 export { useCreateUser } from "./api";
-export { UserForm } from "./ui/user-form";
+export { UserForm } from "./ui/user-form/user-form";
