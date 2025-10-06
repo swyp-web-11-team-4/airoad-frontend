@@ -1,1 +1,1 @@
-// Shared configuration will be exported here
+export { env } from "./env";

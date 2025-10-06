@@ -29,10 +29,112 @@ pnpm format:fix   # Auto-format code
 
 ## Architecture
 
+### Project Structure (Feature-Sliced Design)
+This project follows Feature-Sliced Design principles with a clear separation of concerns:
+
+#### Layer Structure
+
+**Pages** (`pages/[page-name]/`):
+- Page components organized in `ui/` subdirectory
+- Structure: `pages/[page-name]/ui/index.tsx` + `index.css.ts`
+- Example: `pages/users/ui/index.tsx` with `index.css.ts`
+- Pages coordinate entities and features, contain no business logic
+- Export page component from `pages/[page-name]/index.ts`
+
+**Entities** (`entities/[entity]/`):
+- **API**: Contains GET requests and data fetching logic (queries)
+  - Example: `entities/user/api/user.queries.ts` handles user data fetching
+  - Query hooks using React Query/TanStack Query for data fetching
+- **UI**: Entity-specific UI components in dedicated folders
+  - Example: `entities/user/ui/user-list/UserList.tsx`
+- **Mocks**: GET request mock handlers and fixtures
+  - `mocks/fixtures.ts` - Mock data
+  - `mocks/handlers.ts` - GET request handlers using `createHandlers`
+  - Example: `entities/user/mocks/handlers.ts`
+
+**Features** (`features/[action-verb]/`):
+- Contains POST, PUT, DELETE, PATCH and other mutation logic
+- Feature folders use verb-based naming with `hyphen-case` (e.g., `create-user`, `update-profile`, `delete-post`)
+- **API**: Mutation hooks and business logic for state changes
+  - Example: `features/create-user/api/createUser.mutation.ts`
+- **Mocks**: POST, PUT, DELETE, PATCH mutation mock handlers
+  - `mocks/handlers.ts` - Mutation handlers using `createHandlers`
+  - Example: `features/create-user/mocks/handlers.ts`
+
+**App** (`app/`):
+- **Providers**: All application-level providers
+  - `providers/query.tsx` - React Query provider
+  - `providers/router.tsx` - React Router setup
+  - `providers/index.tsx` - Combined providers
+- **Mocks**: MSW configuration
+  - `mocks/browser.ts` - Worker setup with all handlers
+  - `mocks/init.ts` - Mock initialization logic
+  - All entity and feature handlers are registered here
+
+**Shared** (`shared/`):
+- **Lib**: Shared utilities and configurations
+  - `lib/axios.ts` - Axios client instance
+  - `lib/msw.ts` - MSW factory functions (`createHandler`, `createHandlers`)
+- **UI**: Reusable UI components (buttons, inputs, etc.)
+- **Types**: Shared TypeScript types and interfaces
+
+**Key Principles**:
+- Folder naming: Always use `hyphen-case` (e.g., `create-user`, `user-list`)
+- GET requests → `entities/[entity]/api/` and `entities/[entity]/mocks/`
+- Mutations (POST, PUT, DELETE, PATCH) → `features/[action-verb]/api/` and `features/[action-verb]/mocks/`
+- All providers managed in `app/providers/`
+- MSW handlers registered in `app/mocks/browser.ts`
+
 ### Build Configuration
 - **Vite config**: Uses `@vitejs/plugin-react-swc` for Fast Refresh via SWC (not Babel)
 - **TypeScript**: Project references split between app code (`tsconfig.app.json`) and build tooling (`tsconfig.node.json`)
 - **Strict mode**: TypeScript strict mode enabled with additional checks for unused locals/parameters
+
+### UI Component Structure
+All UI components must follow this structure using **Vanilla Extract** for styling:
+
+```
+component-name/
+├── ComponentName.tsx       # Component logic
+├── ComponentName.css.ts    # Vanilla Extract styles
+└── index.ts               # Re-export component
+```
+
+**Styling Guidelines**:
+- **NEVER** use inline styles (`style={{ ... }}`)
+- **ALWAYS** use Vanilla Extract (`.css.ts` files) for all styling
+- Use descriptive class names exported as named exports
+- Folder names use `hyphen-case` (e.g., `user-list/`)
+- Component files use `PascalCase` (e.g., `UserList.tsx`)
+
+**Example**:
+```typescript
+// user-list/UserList.css.ts
+import { style } from "@vanilla-extract/css";
+
+export const container = style({
+  padding: "20px",
+});
+
+export const title = style({
+  fontSize: "24px",
+  fontWeight: "600",
+});
+
+// user-list/UserList.tsx
+import * as styles from "./UserList.css";
+
+export const UserList = () => {
+  return (
+    <div className={styles.container}>
+      <h2 className={styles.title}>Title</h2>
+    </div>
+  );
+};
+
+// user-list/index.ts
+export { UserList } from "./UserList";
+```
 
 ### Code Style
 - **Biome** handles both linting and formatting
