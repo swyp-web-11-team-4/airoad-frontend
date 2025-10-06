@@ -7,6 +7,10 @@ React + TypeScript + Vite 기반의 프론트엔드 프로젝트입니다.
 - **React 19** - UI 라이브러리
 - **TypeScript** - 타입 안정성
 - **Vite** - 빌드 도구 (SWC 플러그인 사용)
+- **React Query** - 서버 상태 관리
+- **React Router** - 라우팅
+- **Vanilla Extract** - CSS-in-JS 스타일링
+- **MSW** - API 모킹
 - **Biome** - 린팅 및 포매팅
 - **pnpm** - 패키지 매니저
 
@@ -48,17 +52,54 @@ pnpm dev
 
 ## 프로젝트 구조
 
+이 프로젝트는 **Feature-Sliced Design** 아키텍처를 따릅니다.
+
 ```
-.
-├── src/
-│   ├── main.tsx        # 앱 진입점
-│   ├── App.tsx         # 루트 컴포넌트
-│   └── ...
-├── index.html          # HTML 진입점
-├── vite.config.ts      # Vite 설정
-├── biome.json          # Biome 설정
-└── tsconfig.json       # TypeScript 설정
+src/
+├── app/                    # 앱 레벨 설정
+│   ├── providers/         # React Query, Router 등 프로바이더
+│   ├── mocks/            # MSW 설정 및 핸들러 통합
+│   └── styles/           # 전역 스타일
+│
+├── pages/                 # 페이지 컴포넌트
+│   └── [page-name]/
+│       ├── ui/           # 페이지 UI 컴포넌트
+│       └── index.ts
+│
+├── widgets/              # 복합 UI 블록 (예정)
+│
+├── features/             # 사용자 인터랙션 (mutations)
+│   └── [action-verb]/    # 예: create-user, update-profile
+│       ├── api/          # POST, PUT, DELETE, PATCH 요청
+│       ├── ui/           # 기능별 UI 컴포넌트
+│       ├── mocks/        # Mutation 핸들러
+│       └── index.ts
+│
+├── entities/             # 비즈니스 엔티티 (queries)
+│   └── [entity]/         # 예: user, post
+│       ├── api/          # GET 요청 및 쿼리
+│       ├── ui/           # 엔티티 UI 컴포넌트
+│       ├── model/        # 타입 정의
+│       ├── mocks/        # GET 핸들러 및 fixtures
+│       └── index.ts
+│
+└── shared/               # 공유 리소스
+    ├── api/              # API 클라이언트 설정
+    ├── lib/              # 유틸리티 (axios, msw)
+    ├── ui/               # 재사용 가능한 UI 컴포넌트
+    └── config/           # 환경 설정
 ```
+
+### 주요 원칙
+
+- **폴더 네이밍**: 모든 폴더는 `hyphen-case` 사용 (예: `create-user`, `user-list`)
+- **GET 요청**: `entities/[entity]/api/`와 `entities/[entity]/mocks/`에 구현
+- **Mutations**: `features/[action-verb]/api/`와 `features/[action-verb]/mocks/`에 구현
+- **UI 컴포넌트**: Vanilla Extract 사용, 인라인 스타일 금지
+- **모든 프로바이더**: `app/providers/`에서 관리
+- **MSW 통합**: 모든 핸들러는 `app/mocks/browser.ts`에 등록
+
+더 자세한 아키텍처 가이드는 [CLAUDE.md](./CLAUDE.md)를 참조하세요.
 
 ## 코드 스타일
 
@@ -71,11 +112,35 @@ pnpm dev
 
 코드 작성 후에는 `pnpm format:fix`와 `pnpm lint:fix`를 실행하여 스타일을 맞춰주세요.
 
+### Git Hooks
+
+이 프로젝트는 **Husky**와 **lint-staged**를 사용하여 커밋 전 자동으로 코드 검사를 수행합니다.
+
+- **pre-commit**: staged 파일에 대해 `biome check --write` 실행
+- **commit-msg**: Conventional Commits 형식 검증
+
+## 스타일링 가이드
+
+모든 UI 컴포넌트는 **Vanilla Extract**를 사용합니다.
+
+```typescript
+// ❌ 잘못된 예 - 인라인 스타일 사용
+<div style={{ padding: "20px" }}>Content</div>
+
+// ✅ 올바른 예 - Vanilla Extract 사용
+// Component.css.ts
+export const container = style({ padding: "20px" });
+
+// Component.tsx
+<div className={styles.container}>Content</div>
+```
+
 ## 주요 설정
 
 ### Vite + SWC
 
 - `@vitejs/plugin-react-swc`를 사용하여 빠른 빌드와 HMR 지원
+- Vanilla Extract Vite 플러그인 통합
 - React Compiler는 SWC와 호환되지 않아 사용하지 않음
 
 ### TypeScript
@@ -83,6 +148,12 @@ pnpm dev
 - Strict 모드 활성화
 - 사용하지 않는 변수/매개변수 검사
 - 프로젝트 레퍼런스 분리 (앱 코드 / 빌드 도구)
+
+### MSW (Mock Service Worker)
+
+- 개발 환경에서 API 모킹 지원
+- `public/mockServiceWorker.js`에 워커 파일 위치
+- `import.meta.env.DEV`일 때만 모킹 활성화
 
 ## 라이선스
 
