@@ -1,2 +1,2 @@
-export { mockUsers } from "./fixtures";
-export { userHandlers } from "./handlers";
+export { mockUsers } from "./user.fixtures";
+export { userHandlers } from "./user.handlers";

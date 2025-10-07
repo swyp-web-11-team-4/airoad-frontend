@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { useCreateUser } from "../../api";
-import * as styles from "./UserForm.css";
+import * as styles from "./user-form.css";
 
 export const UserForm = () => {
   const nameId = useId();

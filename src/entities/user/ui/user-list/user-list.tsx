@@ -1,5 +1,5 @@
 import { useUsers } from "../../api";
-import * as styles from "./UserList.css";
+import * as styles from "./user-list.css";
 
 export const UserList = () => {
   const { data: users } = useUsers();

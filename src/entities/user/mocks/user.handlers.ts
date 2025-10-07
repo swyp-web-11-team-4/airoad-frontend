@@ -1,7 +1,7 @@
 import { HttpResponse } from "msw";
 
 import { createHandlers } from "@/shared/lib/msw";
-import { mockUsers } from "./fixtures";
+import { mockUsers } from "./user.fixtures";
 
 export const userHandlers = [
   createHandlers.get(`/users`, () => mockUsers),

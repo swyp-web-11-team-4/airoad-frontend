@@ -4,13 +4,13 @@ import { UserList } from "@/entities/user";
 import { UserForm } from "@/features/create-user";
 import * as styles from "./index.css";
 
-function ErrorFallback({
+const ErrorFallback = ({
   error,
   resetErrorBoundary,
 }: {
   error: Error;
   resetErrorBoundary: () => void;
-}) {
+}) => {
   return (
     <div className={styles.errorContainer}>
       <h3 className={styles.errorTitle}>Something went wrong:</h3>
@@ -20,7 +20,7 @@ function ErrorFallback({
       </button>
     </div>
   );
-}
+};
 
 export const UsersPage = () => {
   return (

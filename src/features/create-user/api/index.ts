@@ -1,1 +1,1 @@
-export { useCreateUser } from "./mutation";
+export { useCreateUser } from "./create-user.mutation";

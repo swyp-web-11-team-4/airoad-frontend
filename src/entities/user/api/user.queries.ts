@@ -1,16 +1,17 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { api } from "@/shared/lib/axios";
-import type { User } from "../model/types";
 
-async function fetchUsers(): Promise<User[]> {
+import { api } from "@/shared/lib/axios";
+import type { User } from "@/shared/type";
+
+const fetchUsers = async (): Promise<User[]> => {
   const { data } = await api.get<User[]>("/users");
   return data;
-}
+};
 
-async function fetchUser(id: number): Promise<User> {
+const fetchUser = async (id: number): Promise<User> => {
   const { data } = await api.get<User>(`/users/${id}`);
   return data;
-}
+};
 
 export const userQueries = {
   all: () => ["users"],
@@ -28,10 +29,10 @@ export const userQueries = {
     }),
 };
 
-export function useUsers(filters?: Record<string, unknown>) {
+export const useUsers = (filters?: Record<string, unknown>) => {
   return useSuspenseQuery(userQueries.list(filters));
-}
+};
 
-export function useUser(id: number) {
+export const useUser = (id: number) => {
   return useSuspenseQuery(userQueries.detail(id));
-}
+};

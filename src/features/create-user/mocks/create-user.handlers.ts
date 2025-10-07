@@ -1,7 +1,8 @@
 import { HttpResponse } from "msw";
-import type { User } from "@/entities/user";
+
 import { mockUsers } from "@/entities/user/mocks";
 import { createHandlers } from "@/shared/lib/msw";
+import type { User } from "@/shared/type";
 
 export const createUserHandlers = [
   createHandlers.post(`/users`, async ({ request }) => {

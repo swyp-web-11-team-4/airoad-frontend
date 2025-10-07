@@ -1,1 +1,1 @@
-export { createUserHandlers } from "./handlers";
+export { createUserHandlers } from "./create-user.handlers";

@@ -1,14 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { User } from "@/entities/user";
+
 import { userQueries } from "@/entities/user";
 import { api } from "@/shared/lib/axios";
+import type { User } from "@/shared/type";
 
-async function createUser(userData: Omit<User, "id">): Promise<User> {
+const createUser = async (userData: Omit<User, "id">): Promise<User> => {
   const { data } = await api.post<User>("/users", userData);
   return data;
-}
+};
 
-export function useCreateUser() {
+export const useCreateUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -17,4 +18,4 @@ export function useCreateUser() {
       queryClient.invalidateQueries({ queryKey: userQueries.lists() });
     },
   });
-}
+};

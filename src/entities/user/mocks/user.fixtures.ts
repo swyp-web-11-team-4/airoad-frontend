@@ -1,4 +1,4 @@
-import type { User } from "../model/types";
+import type { User } from "@/shared/type";
 
 export const mockUsers: User[] = [
   { id: 1, name: "김철수", email: "kim@example.com", role: "Developer" },
