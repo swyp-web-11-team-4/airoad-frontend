@@ -1,3 +1,4 @@
+import { User } from "@mynaui/icons-react";
 import { useId, useState } from "react";
 import { useCreateUser } from "../../api";
 import * as styles from "./user-form.css";
@@ -30,6 +31,7 @@ export const UserForm = () => {
 
   return (
     <div className={styles.container}>
+      <User color="gray" />
       <h2 className={styles.title}>새 사용자 추가</h2>
 
       <form onSubmit={handleSubmit} className={styles.form}>
