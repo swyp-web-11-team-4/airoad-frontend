@@ -56,45 +56,37 @@ pnpm dev
 
 ```
 src/
-├── app/                    # 앱 레벨 설정
-│   ├── providers/         # React Query, Router 등 프로바이더
+├── app/                  # 앱 레벨 설정
+│   ├── providers/        # React Query, Router 등 프로바이더
 │   ├── mocks/            # MSW 설정 및 핸들러 통합
+│   ├── types/            # 환경
 │   └── styles/           # 전역 스타일
 │
-├── pages/                 # 페이지 컴포넌트
-│   └── [page-name]/
-│       ├── ui/           # 페이지 UI 컴포넌트
-│       └── index.ts
-│
-├── widgets/              # 복합 UI 블록 (예정)
-│
-├── features/             # 사용자 인터랙션 (mutations)
-│   └── [action-verb]/    # 예: create-user, update-profile
-│       ├── api/          # POST, PUT, DELETE, PATCH 요청
-│       ├── ui/           # 기능별 UI 컴포넌트
-│       ├── mocks/        # Mutation 핸들러
-│       └── index.ts
-│
-├── entities/             # 비즈니스 엔티티 (queries)
+├── entities/             # 비즈니스 엔티티 (model)
 │   └── [entity]/         # 예: user, post
-│       ├── api/          # GET 요청 및 쿼리
-│       ├── ui/           # 엔티티 UI 컴포넌트
+│       ├── api/          # 백엔드 간의 요청 및 쿼리, mock 핸들러
+│       ├── config/       # 도메인 설정, 상수 (dev용 기본값 포함)
 │       ├── model/        # 타입 정의
-│       ├── mocks/        # GET 핸들러 및 fixtures
+│       └── index.ts
+│
+├── pages/                # 페이지 컴포넌트, 데이터를 받아 UI에 표시
+│   └── [page-name]/      # entities에서 내려주는 데이터를 받음 
+│       ├── ui/           # 페이지 UI 컴포넌트
+│       ├── model/        # hook 정의 (mutation, useSuspenseQuery)
 │       └── index.ts
 │
 └── shared/               # 공유 리소스
     ├── api/              # API 클라이언트 설정
     ├── lib/              # 유틸리티 (axios, msw)
     ├── ui/               # 재사용 가능한 UI 컴포넌트
+    ├── type/             # 전역에서 공유되는 타입
     └── config/           # 환경 설정
 ```
 
 ### 주요 원칙
 
 - **폴더 네이밍**: 모든 폴더는 `hyphen-case` 사용 (예: `create-user`, `user-list`)
-- **GET 요청**: `entities/[entity]/api/`와 `entities/[entity]/mocks/`에 구현
-- **Mutations**: `features/[action-verb]/api/`와 `features/[action-verb]/mocks/`에 구현
+- **API 요청 및 React Query와 핸들러**: `entities/[entity]/api/`에 구현
 - **UI 컴포넌트**: Vanilla Extract 사용, 인라인 스타일 금지
 - **모든 프로바이더**: `app/providers/`에서 관리
 - **MSW 통합**: 모든 핸들러는 `app/mocks/browser.ts`에 등록
