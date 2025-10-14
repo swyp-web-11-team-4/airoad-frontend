@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { UserList } from "@/entities/user";
+import { UserForm } from "@/features/create-user";
 import * as styles from "./index.css";
-import { UserForm } from "./user-form/user-form";
-import { UserList } from "./user-list/user-list";
 
 const ErrorFallback = ({
   error,
