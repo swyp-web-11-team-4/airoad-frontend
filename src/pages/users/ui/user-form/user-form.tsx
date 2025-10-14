@@ -1,6 +1,6 @@
 import { User } from "@mynaui/icons-react";
 import { useId, useState } from "react";
-import { useCreateUser } from "../../api";
+import { useCreateUser } from "../../model/user.hook";
 import * as styles from "./user-form.css";
 
 export const UserForm = () => {
