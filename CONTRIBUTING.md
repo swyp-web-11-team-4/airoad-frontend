@@ -253,29 +253,15 @@ chore: React Query 버전 업데이트
 
 **Pages** (`pages/[page-name]/`):
 - 페이지 컴포넌트
-- `ui/` 하위에 구현
-- 비즈니스 로직 없음
+- `ui/` 하위에 구현, 컴포넌트 단위는 세부 폴더로, (예: ui/user-form) 페이지 단위는 ui/index.ts 단위로 구성
+- `model/` 로직 구현에 사용되는 hook을 작성 (예: `user.hook.ts`)
 
 **Entities** (`entities/[entity]/`):
-- 서비스의 비즈니스 객체 단위를 관리하는 폴더로, 주로 **GET 요청**과 같은 데이터 Fetching이 이에 해당
+- 서비스의 비즈니스 객체 단위를 관리하는 폴더로, dto 영역 안의 로직을 작성 (api, handler, queries)
 - `api/`: React Query를 사용한 query hooks
   - 파일명: `[entity].queries.ts` (예: `user.queries.ts`)
-- `ui/`: 엔티티별 UI 컴포넌트
-  - 폴더/파일명: `hyphen-case` (예: `user-list/user-list.tsx`)
-- `model/`: 타입 정의 (예: `types.ts`)
-- `mocks/`: GET 요청 mock 핸들러
-  - `[entity].fixtures.ts` (예: `user.fixtures.ts`)
-  - `[entity].handlers.ts` (예: `user.handlers.ts`)
-
-**Features** (`features/[action-verb]/`):
-- 서비스 **기능**에 해당하는 내용을 관리하는 폴더로, 주로 **POST, PUT, DELETE, PATCH** 요청이 이에 해당
-- 동사 기반 폴더명 (예: `create-user`, `update-profile`)
-- `api/`: React Query를 사용한 mutation hooks
-  - 파일명: `[feature].mutation.ts` (예: `create-user.mutation.ts`)
-- `ui/`: 기능별 UI 컴포넌트
-  - 폴더/파일명: `hyphen-case` (예: `user-form/user-form.tsx`)
-- `mocks/`: mutation mock 핸들러
-  - `[feature].handlers.ts` (예: `create-user.handlers.ts`)
+- `config/`: 비즈니스 객체 단위의 상수 파일 (예: `user.fixtrues.ts`) 
+- `model/`: 타입 정의 및 query factory (예: `user.model.ts`, `user.queries.ts`)
 
 **Shared** (`shared/`):
 - 서비스 전역 공유 유틸리티 및 UI 컴포넌트
@@ -333,10 +319,10 @@ export { UserCard } from "./user-card";
 
 ## API 작성 가이드
 
-### Entity API (Query)
+### Query API
 
 ```typescript
-// entities/user/api/user.queries.ts
+// entities/user/model/user.queries.ts
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { api } from "@/shared/lib/axios";
 import type { User } from "@/shared/type";
@@ -364,10 +350,10 @@ export const useUsers = (filters?: Record<string, unknown>) => {
 };
 ```
 
-### Feature API (Mutation)
+### Mutation API
 
 ```typescript
-// features/create-user/api/create-user.mutation.ts
+// pages/user/model/user.hook.ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { userQueries } from "@/entities/user";
 import { api } from "@/shared/lib/axios";
@@ -394,10 +380,10 @@ export const useCreateUser = () => {
 
 ## MSW 설정
 
-### Entity Mock (GET)
+### GET Mock 
 
 ```typescript
-// entities/user/mocks/user.handlers.ts
+// entities/user/api/user.handlers.ts
 import { HttpResponse } from "msw";
 import { createHandlers } from "@/shared/lib/msw";
 import { mockUsers } from "./user.fixtures";
@@ -421,10 +407,10 @@ export const userHandlers = [
 ];
 ```
 
-### Feature Mock (Mutation)
+### Mutation Mock 
 
 ```typescript
-// features/create-user/mocks/create-user.handlers.ts
+// entities/user/api/create-user.handlers.ts
 import { HttpResponse } from "msw";
 import type { User } from "@/shared/type";
 import { mockUsers } from "@/entities/user/mocks";
@@ -453,8 +439,7 @@ export const createUserHandlers = [
 ```typescript
 // app/mocks/browser.ts
 import { setupWorker } from "msw/browser";
-import { userHandlers } from "@/entities/user/mocks";
-import { createUserHandlers } from "@/features/create-user/mocks";
+import { userHandlers, createUserHandlers } from "@/entities/user";
 
 export const worker = setupWorker(...userHandlers, ...createUserHandlers);
 ```
