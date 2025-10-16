@@ -445,6 +445,38 @@ import { userHandlers, createUserHandlers } from "@/entities/user";
 export const worker = setupWorker(...userHandlers, ...createUserHandlers);
 ```
 
+### store 생성
+파일 구조는 [참조문서](https://zustand.docs.pmnd.rs/guides/typescript) 최상단 참조
+
+```typescript
+// shard/store/use-bear-store.ts
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+
+const StorageKey = "bear-storage";
+
+type BearState = {
+  bears: number;
+  increasePopulation: () => void;
+  removeAllBears: () => void;
+  updateBears: (newBears: number) => void;
+};
+
+export const useBearStore = create<BearState>()(
+  persist(
+    (set) => ({
+      bears: 0,
+      increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
+      removeAllBears: () => set({ bears: 0 }),
+      updateBears: (newBears) => set({ bears: newBears }),
+    }),
+    {
+      name: StorageKey,
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
+);
+```
 ## Pull Request
 
 ### 기본 원칙
