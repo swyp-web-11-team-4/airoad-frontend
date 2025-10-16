@@ -269,6 +269,7 @@ chore: React Query 버전 업데이트
 - `ui/`: 재사용 가능한 공통 UI 컴포넌트
 - `config/`: 환경 설정 (예: `env.ts`)
 - `api/`: API 클라이언트 설정
+- `store/`: 전역 상태 저장소
 
 **App** (`app/`):
 - 애플리케이션 레벨 설정
