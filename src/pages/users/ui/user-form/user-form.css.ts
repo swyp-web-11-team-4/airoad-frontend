@@ -33,37 +33,6 @@ export const label = style({
   color: "#555",
 });
 
-export const input = style({
-  padding: "10px 12px",
-  fontSize: "14px",
-  border: "1px solid #ddd",
-  borderRadius: "4px",
-  transition: "border-color 0.2s ease",
-  ":focus": {
-    outline: "none",
-    borderColor: "#1976d2",
-  },
-});
-
-export const button = style({
-  padding: "12px 20px",
-  fontSize: "14px",
-  fontWeight: "600",
-  color: "#fff",
-  backgroundColor: "#1976d2",
-  border: "none",
-  borderRadius: "4px",
-  cursor: "pointer",
-  transition: "background-color 0.2s ease",
-  ":hover": {
-    backgroundColor: "#1565c0",
-  },
-  ":disabled": {
-    backgroundColor: "#ccc",
-    cursor: "not-allowed",
-  },
-});
-
 export const successMessage = style({
   padding: "12px",
   backgroundColor: "#e8f5e9",

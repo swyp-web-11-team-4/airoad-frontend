@@ -1,6 +1,9 @@
 import { User } from "@mynaui/icons-react";
+import { Button, TextField } from "@radix-ui/themes";
 import { useId, useState } from "react";
+
 import { useCreateUser } from "../../model/user.hook";
+
 import * as styles from "./user-form.css";
 
 export const UserForm = () => {
@@ -39,12 +42,11 @@ export const UserForm = () => {
           <label htmlFor={nameId} className={styles.label}>
             이름
           </label>
-          <input
+          <TextField.Root
             id={nameId}
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className={styles.input}
             required
             placeholder="홍길동"
           />
@@ -54,12 +56,11 @@ export const UserForm = () => {
           <label htmlFor={emailId} className={styles.label}>
             이메일
           </label>
-          <input
+          <TextField.Root
             id={emailId}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={styles.input}
             required
             placeholder="example@email.com"
           />
@@ -69,20 +70,19 @@ export const UserForm = () => {
           <label htmlFor={roleId} className={styles.label}>
             역할
           </label>
-          <input
+          <TextField.Root
             id={roleId}
             type="text"
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className={styles.input}
             required
             placeholder="Developer"
           />
         </div>
 
-        <button type="submit" className={styles.button} disabled={isPending}>
+        <Button type="submit" color="gold" size="3" disabled={isPending}>
           {isPending ? "생성 중..." : "사용자 생성"}
-        </button>
+        </Button>
 
         {isSuccess && (
           <div className={styles.successMessage}>사용자가 성공적으로 생성되었습니다!</div>

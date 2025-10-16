@@ -1,3 +1,4 @@
+import { Button } from "@radix-ui/themes";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import * as styles from "./index.css";
@@ -15,9 +16,9 @@ const ErrorFallback = ({
     <div className={styles.errorContainer}>
       <h3 className={styles.errorTitle}>Something went wrong:</h3>
       <pre className={styles.errorMessage}>{error.message}</pre>
-      <button type="button" onClick={resetErrorBoundary} className={styles.retryButton}>
+      <Button type="button" onClick={resetErrorBoundary} className={styles.retryButton}>
         Try again
-      </button>
+      </Button>
     </div>
   );
 };
