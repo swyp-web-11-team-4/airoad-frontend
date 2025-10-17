@@ -269,6 +269,7 @@ chore: React Query 버전 업데이트
 - `ui/`: 재사용 가능한 공통 UI 컴포넌트
 - `config/`: 환경 설정 (예: `env.ts`)
 - `api/`: API 클라이언트 설정
+- `store/`: 전역 상태 저장소
 
 **App** (`app/`):
 - 애플리케이션 레벨 설정
@@ -444,6 +445,38 @@ import { userHandlers, createUserHandlers } from "@/entities/user";
 export const worker = setupWorker(...userHandlers, ...createUserHandlers);
 ```
 
+### store 생성
+파일 구조는 [참조문서](https://zustand.docs.pmnd.rs/guides/typescript) 최상단 참조
+
+```typescript
+// shard/store/use-bear-store.ts
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+
+const StorageKey = "bear-storage";
+
+type BearState = {
+  bears: number;
+  increasePopulation: () => void;
+  removeAllBears: () => void;
+  updateBears: (newBears: number) => void;
+};
+
+export const useBearStore = create<BearState>()(
+  persist(
+    (set) => ({
+      bears: 0,
+      increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
+      removeAllBears: () => set({ bears: 0 }),
+      updateBears: (newBears) => set({ bears: newBears }),
+    }),
+    {
+      name: StorageKey,
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
+);
+```
 ## Pull Request
 
 ### 기본 원칙
