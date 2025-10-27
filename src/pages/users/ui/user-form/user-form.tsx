@@ -1,4 +1,3 @@
-import { User } from "@mynaui/icons-react";
 import { Button, TextField } from "@radix-ui/themes";
 import { useId, useState } from "react";
 
@@ -34,7 +33,6 @@ export const UserForm = () => {
 
   return (
     <div className={styles.container}>
-      <User color="gray" />
       <h2 className={styles.title}>새 사용자 추가</h2>
 
       <form onSubmit={handleSubmit} className={styles.form}>
