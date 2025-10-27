@@ -1,3 +1,4 @@
+// src/shared/styles/global.css.ts
 import { globalStyle } from "@vanilla-extract/css";
 
 globalStyle("*, *::before, *::after", {
