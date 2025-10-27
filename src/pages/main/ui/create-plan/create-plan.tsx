@@ -1,4 +1,4 @@
-import { Checkbox, DropdownMenu, Flex, Popover, RadioCards, Text } from "@radix-ui/themes";
+import { Button, Checkbox, DropdownMenu, Flex, Popover, RadioCards, Text } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -18,11 +18,11 @@ const THEME_OPTIONS = [
 ];
 const PEOPLE_OPTIONS: string[] = ["1인", "2인", "3인", "4인", "5인", "6인 이상"];
 export default function CreatePlan() {
-  const [place, setPlace] = useState<string>("");
-  const [date, setDate] = useState<Date | undefined>(undefined);
-  const [term, setTerm] = useState<string>("");
+  const [place, setPlace] = useState<string>("서울");
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [term, setTerm] = useState<string>("2박 3일");
   const [themes, setThemes] = useState<string[]>([]);
-  const [people, setPeople] = useState<string>("");
+  const [people, setPeople] = useState<string>("1인");
 
   const [openPlace, setOpenPlace] = useState(false);
   const [openDate, setOpenDate] = useState(false);
@@ -244,6 +244,7 @@ export default function CreatePlan() {
                 className={styles.dropdownContent}
                 align="start"
                 variant="soft"
+                color="gray"
                 side="bottom"
                 sideOffset={6}
               >
@@ -302,6 +303,7 @@ export default function CreatePlan() {
                 className={styles.dropdownContent}
                 align="start"
                 variant="soft"
+                color="gray"
                 side="bottom"
                 sideOffset={6}
               >
@@ -320,6 +322,11 @@ export default function CreatePlan() {
             </DropdownMenu.Root>
           </RadioCards.Root>
         </div>
+        <Flex align="center" justify="center" width="100%">
+          <Button size="4" color="indigo">
+            AI 여행일정 만들기
+          </Button>
+        </Flex>
       </div>
     </div>
   );
