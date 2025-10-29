@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from ".";
 import "react-day-picker/dist/style.css";
+import "./styles/global.css";
 import "dayjs/locale/ko";
 import dayjs from "dayjs";
 import "@/app/styles/global.css";

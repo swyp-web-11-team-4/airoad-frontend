@@ -6,7 +6,20 @@ import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import * as styles from "./create-travel.css";
 
-const PLACE_OPTIONS: string[] = ["서울", "부산", "제주"];
+const PLACE_OPTIONS: string[] = [
+  "서울",
+  "부산",
+  "제주",
+  "가평/양평",
+  "강릉/속초",
+  "경주",
+  "여수",
+  "인천",
+  "전주",
+  "순천/홍천",
+  "태안",
+  "통영/거제/남해",
+];
 const TERM_OPTIONS: string[] = ["당일치기", "1박 2일", "2박 3일", "3박 4일", "4박 5일", "5박 6일"];
 const THEME_OPTIONS = [
   { id: "sight", label: "유명관광지", emoji: "🚠" },
@@ -17,6 +30,7 @@ const THEME_OPTIONS = [
   { id: "shopping", label: "쇼핑", emoji: "🛍️" },
 ];
 const PEOPLE_OPTIONS: string[] = ["1인", "2인", "3인", "4인", "5인", "6인 이상"];
+
 export default function CreateTravel() {
   const [place, setPlace] = useState<string>("서울");
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -244,7 +258,7 @@ export default function CreateTravel() {
                 className={styles.dropdownContent}
                 align="start"
                 variant="soft"
-                color="gray"
+                color="indigo"
                 side="bottom"
                 sideOffset={6}
               >
