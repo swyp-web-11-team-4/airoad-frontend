@@ -6,14 +6,15 @@ export type TravelCardProps = {
   name: string;
   date: string;
   city: string;
+  imgUrl: string;
   showDelete?: boolean;
   onDelete?: () => void;
 };
 
-export function TravelCard({ name, date, city, showDelete, onDelete }: TravelCardProps) {
+export function TravelCard({ name, date, city, imgUrl, showDelete, onDelete }: TravelCardProps) {
   return (
     <Card size="2" className={styles.cardBox}>
-      <img className={styles.cardImg} src="/images/default-card.png" alt="기본 카드 이미지" />
+      <img className={styles.cardImg} src={imgUrl} alt="기본 카드 이미지" />
       <div className={styles.cardData}>
         <Text size="3">{name}</Text>
         <Text size="2" color="gray">
