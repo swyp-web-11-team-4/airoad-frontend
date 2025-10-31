@@ -1,4 +1,5 @@
 import { style } from "@vanilla-extract/css";
+import { mediaQuery } from "@/shared/styles";
 
 export const infoBox = style({
   width: "100%",
@@ -8,12 +9,26 @@ export const infoBox = style({
   alignContent: "center",
   justifyContent: "space-between",
   display: "flex",
+  "@media": {
+    [mediaQuery.tablet]: {
+      flexDirection: "column",
+      height: "auto",
+      padding: "60px",
+      justifyContent: "center",
+    },
+  },
 });
 export const titleBox = style({
   display: "flex",
   flexDirection: "column",
   gap: "20px",
   justifyContent: "center",
+
+  "@media": {
+    [mediaQuery.tablet]: {
+      textAlign: "center",
+    },
+  },
 });
 export const subtitleBox = style({
   display: "flex",
@@ -24,4 +39,10 @@ export const subtitleBox = style({
 export const imgBox = style({
   width: "400px",
   height: "400px",
+  "@media": {
+    [mediaQuery.tablet]: {
+      width: "auto",
+      height: "auto",
+    },
+  },
 });

@@ -1,7 +1,7 @@
 import type { ApiResponse } from "@/shared/type";
 
 export interface Trip {
-  planId: number;
+  id: number;
   imageUrl: string;
   title: string;
   startDate: string;
@@ -10,6 +10,9 @@ export interface Trip {
 
 export interface Trips {
   content: Trip[];
+  nextCursor: number | null;
+  hasNext: boolean;
+  size: number;
 }
 
 export type GetTripsResponse = ApiResponse<Trips>;

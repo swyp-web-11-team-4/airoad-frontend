@@ -20,7 +20,7 @@ export default function RecentTravel({ trips }: { trips?: Trip[] }) {
       <div className={styles.cardContainer}>
         {trips?.slice(0, 4).map((trip) => (
           <TravelCard
-            key={trip.planId}
+            key={trip.id}
             name={trip.title}
             city={trip.region}
             date={trip.startDate}
