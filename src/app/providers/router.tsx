@@ -1,27 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 import { MainPage } from "@/pages/main/ui";
-import TravelList from "@/pages/travel-list/ui";
-import { UsersPage } from "@/pages/users";
+import TripList from "@/pages/trip-list/ui";
+import { PAGE_ROUTES } from "@/shared/config/page-routers";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
-    element: (
-      <div>
-        Home Page - <a href="/users">Go to Users Page</a>
-      </div>
-    ),
-  },
-  {
-    path: "/main",
+    path: PAGE_ROUTES.ROOT,
     element: <MainPage />,
   },
   {
-    path: "/travel/list",
-    element: <TravelList />,
-  },
-  {
-    path: "/users",
-    element: <UsersPage />,
+    path: PAGE_ROUTES.TRIP_LIST,
+    element: <TripList />,
   },
 ]);

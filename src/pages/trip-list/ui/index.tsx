@@ -4,9 +4,9 @@ import { useState } from "react";
 
 import { type Field, field } from "../config";
 import * as styles from "./index.css";
-import TarvelCardList from "./travel-card-list/tarvel-card-list";
+import TarvelCardList from "./trip-card-list/trip-card-list";
 
-export default function TravelList() {
+export default function TripList() {
   const [sortParam, setSortParam] = useState<Field>(field.createdAt);
 
   return (

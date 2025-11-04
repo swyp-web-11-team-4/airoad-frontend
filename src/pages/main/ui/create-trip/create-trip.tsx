@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import * as styles from "./create-travel.css";
+import * as styles from "./create-trip.css";
 
 const PLACE_OPTIONS: string[] = [
   "서울",
@@ -31,7 +31,7 @@ const THEME_OPTIONS = [
 ];
 const PEOPLE_OPTIONS: string[] = ["1인", "2인", "3인", "4인", "5인", "6인 이상"];
 
-export default function CreateTravel() {
+export default function CreateTrip() {
   const [place, setPlace] = useState<string>("서울");
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [term, setTerm] = useState<string>("2박 3일");

@@ -12,9 +12,9 @@ import { CardItem } from "@/shared/ui";
 import { CardItemSkeleton } from "@/shared/ui/card-item-skeleton/card-item-skeleton";
 import { DataFetchState } from "@/shared/ui/data-fetch-state/data-fetch-state";
 import type { Field } from "../../config";
-import * as styles from "./travel-card-list.css";
+import * as styles from "./trip-card-list.css";
 
-function TravelCardList({ sortParam }: { sortParam: Field }) {
+function TripCardList({ sortParam }: { sortParam: Field }) {
   const navigate = useNavigate();
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
   const { mutate: removeTrip, isPending } = useDeleteTrip();
@@ -33,7 +33,7 @@ function TravelCardList({ sortParam }: { sortParam: Field }) {
         title="저장된 여행 계획이 없습니다!"
         description="메인 홈에서 여행 계획을 생성해보세요!"
         actionText="홈으로 가기"
-        onAction={() => navigate(PAGE_ROUTES.MAIN)}
+        onAction={() => navigate(PAGE_ROUTES.ROOT)}
       />
     );
   return (
@@ -85,7 +85,7 @@ function TravelCardList({ sortParam }: { sortParam: Field }) {
   );
 }
 
-export default withAsyncBoundary(TravelCardList, {
+export default withAsyncBoundary(TripCardList, {
   rejectedFallback: ({ error, reset }) => (
     <DataFetchState
       type="error"
