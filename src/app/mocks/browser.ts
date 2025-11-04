@@ -1,4 +1,4 @@
 import { setupWorker } from "msw/browser";
-import { createUserHandlers, userHandlers } from "@/entities/user";
+import { userHandlers } from "@/entities/member";
 
-export const worker = setupWorker(...userHandlers, ...createUserHandlers);
+export const worker = setupWorker(...userHandlers);
