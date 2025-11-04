@@ -1,5 +1,6 @@
 import { HttpResponse, type HttpResponseResolver, http } from "msw";
 import { env } from "../config";
+import type { ApiResponse } from "../type";
 
 type Method = "get" | "post" | "put" | "patch" | "delete";
 
@@ -64,4 +65,16 @@ export const createHandlers = {
     resolver: HttpResponseResolver | (() => T | Promise<T>),
     options = {},
   ) => createHandler({ path, method: "delete", resolver, ...options }),
+};
+
+export const createMockResponse = <D extends object>(
+  data: D,
+  options?: Pick<ApiResponse<D>, "status" | "success">,
+): ApiResponse<D> => {
+  return {
+    success: true,
+    status: 200,
+    data,
+    ...options,
+  };
 };
