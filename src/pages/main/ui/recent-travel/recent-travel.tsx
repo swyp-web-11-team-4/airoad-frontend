@@ -1,7 +1,7 @@
 import { Text } from "@radix-ui/themes";
 import { Link } from "react-router-dom";
 import type { Trip } from "@/entities/trips/model/trips.model";
-import { TravelCard } from "@/shared/ui/travel-card/travel-card";
+import { CardItem } from "@/shared/ui";
 import * as styles from "./recent-travel.css";
 
 export default function RecentTravel({ trips }: { trips?: Trip[] }) {
@@ -19,7 +19,7 @@ export default function RecentTravel({ trips }: { trips?: Trip[] }) {
       </div>
       <div className={styles.cardContainer}>
         {trips?.slice(0, 4).map((trip) => (
-          <TravelCard
+          <CardItem
             key={trip.id}
             name={trip.title}
             city={trip.region}

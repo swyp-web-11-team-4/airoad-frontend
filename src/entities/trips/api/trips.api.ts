@@ -13,3 +13,8 @@ export const getTripsList = async (
 
   return data;
 };
+
+export const deleteTrip = async (id: number) => {
+  await api.delete(`${API_PATHS.TRIPS.INFO._}/${id}`);
+  return id;
+};

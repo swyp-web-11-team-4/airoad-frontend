@@ -1,8 +1,8 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { AlertDialog, Badge, Card, IconButton, Text } from "@radix-ui/themes";
-import * as styles from "./travel-card.css";
+import * as styles from "./card-item.css";
 
-export type TravelCardProps = {
+export type CardItemProps = {
   name: string;
   date: string;
   city: string;
@@ -11,7 +11,7 @@ export type TravelCardProps = {
   onDelete?: () => void;
 };
 
-export function TravelCard({ name, date, city, imgUrl, showDelete, onDelete }: TravelCardProps) {
+export function CardItem({ name, date, city, imgUrl, showDelete, onDelete }: CardItemProps) {
   return (
     <Card size="2" className={styles.cardBox}>
       <img className={styles.cardImg} src={imgUrl} alt="기본 카드 이미지" />

@@ -10,7 +10,7 @@ export const cardBox = style({
 });
 export const cardImg = style({
   width: "100%",
-  borderRadius: "5px",
+  borderRadius: "12px",
 });
 export const cardData = style({
   display: "flex",
