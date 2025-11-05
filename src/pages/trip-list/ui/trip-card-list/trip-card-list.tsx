@@ -2,7 +2,7 @@ import { AlertDialog, Button } from "@radix-ui/themes";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import type { Trip } from "@/entities/trips/model/trips.model";
 import { tripsQueries } from "@/entities/trips/model/trips.queries";

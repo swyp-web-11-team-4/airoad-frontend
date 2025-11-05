@@ -1,5 +1,5 @@
 import { Text } from "@radix-ui/themes";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import type { Trip } from "@/entities/trips/model/trips.model";
 import { PAGE_ROUTES } from "@/shared/config/page-routers";
 import { CardItem } from "@/shared/ui";

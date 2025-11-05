@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { createCookiesStorage } from "@/shared/lib";
+import { createCookiesStorage } from "@/shared/lib/cookie";
 import type { TokenData } from "@/shared/type";
 import { logout, refreshAccessToken } from "../api";
 

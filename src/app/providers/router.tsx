@@ -1,5 +1,7 @@
 import { createBrowserRouter } from "react-router";
+import { MainPage } from "@/pages/main/ui";
 import { RedirectPage } from "@/pages/redirect";
+import TripList from "@/pages/trip-list/ui";
 import { PAGE_ROUTES } from "@/shared/config";
 import { ErrorPage } from "@/widgets/error-page";
 import { MainLayout } from "@/widgets/main-layout";
