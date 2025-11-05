@@ -1,5 +1,5 @@
 import { type ComponentProps, type ComponentType, Suspense } from "react";
-import ErrorBoundary from "../ui/error-boundary/error-boundary";
+import { ErrorBoundary } from "../error-boundary/error-boundary";
 
 type ErrorBoundaryProps = ComponentProps<typeof ErrorBoundary>;
 
@@ -10,7 +10,7 @@ type AsyncBoundaryProps = {
   pendingFallback: SuspenseProps["fallback"];
 };
 
-function withAsyncBoundary<Props = Record<string, never>>(
+export function withAsyncBoundary<Props = Record<string, never>>(
   WrappedComponent: ComponentType<Props>,
   { rejectedFallback, pendingFallback }: AsyncBoundaryProps,
 ) {
@@ -25,5 +25,3 @@ function withAsyncBoundary<Props = Record<string, never>>(
     );
   };
 }
-
-export default withAsyncBoundary;

@@ -3,14 +3,13 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import type { Trip } from "@/entities/trips/model/trips.model";
 import { tripsQueries } from "@/entities/trips/model/trips.queries";
 import { useDeleteTrip } from "@/pages/main/model/use-delete-trip";
 import { PAGE_ROUTES } from "@/shared/config/page-routers";
-import withAsyncBoundary from "@/shared/lib/with-async-boundary";
-import { CardItem } from "@/shared/ui";
-import { CardItemSkeleton } from "@/shared/ui/card-item-skeleton/card-item-skeleton";
-import { DataFetchState } from "@/shared/ui/data-fetch-state/data-fetch-state";
+import { getErrorCode } from "@/shared/lib/error-utils";
+import { CardItem, CardItemSkeleton, DataFetchState, withAsyncBoundary } from "@/shared/ui";
 import type { Field } from "../../config";
 import * as styles from "./trip-card-list.css";
 
@@ -25,6 +24,19 @@ function TripCardList({ sortParam }: { sortParam: Field }) {
     isFetchingNextPage,
     isError,
   } = useInfiniteQuery(tripsQueries.infinite(sortParam, 20));
+
+  const onDelete = () => {
+    if (selectedTrip) {
+      removeTrip(selectedTrip.id, {
+        onSuccess: () => {
+          toast.success("여행일정을 삭제했습니다.");
+        },
+        onError: (error) => {
+          toast.error(error.message);
+        },
+      });
+    }
+  };
 
   if (trips.length === 0)
     return (
@@ -66,14 +78,7 @@ function TripCardList({ sortParam }: { sortParam: Field }) {
                 </Button>
               </AlertDialog.Cancel>
               <AlertDialog.Action>
-                <Button
-                  color="red"
-                  variant="solid"
-                  disabled={isPending}
-                  onClick={() => {
-                    if (selectedTrip) removeTrip(selectedTrip.id);
-                  }}
-                >
+                <Button color="red" variant="solid" disabled={isPending} onClick={onDelete}>
                   일정 삭제
                 </Button>
               </AlertDialog.Action>
@@ -93,6 +98,7 @@ export default withAsyncBoundary(TripCardList, {
       description={String(error?.message ?? "잠시 후 다시 시도해주세요.")}
       actionText="다시 시도"
       onAction={reset}
+      errorCode={getErrorCode(error)}
     />
   ),
   pendingFallback: (

@@ -19,7 +19,7 @@ const initialState: State = {
   error: null,
 };
 
-class ErrorBoundary extends Component<Props, State> {
+export class ErrorBoundary extends Component<Props, State> {
   state: State = initialState;
 
   static getDerivedStateFromError(error: Error): State {
@@ -50,5 +50,3 @@ class ErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
-
-export default ErrorBoundary;
