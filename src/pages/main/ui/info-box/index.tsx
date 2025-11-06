@@ -1,5 +1,5 @@
 import { Text } from "@radix-ui/themes";
-import * as styles from "./info-box.css";
+import * as styles from "./index.css";
 export function InfoBox() {
   return (
     <div className={styles.infoBox}>

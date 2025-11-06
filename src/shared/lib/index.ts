@@ -1,4 +1,3 @@
-export * from "./axios";
-export * from "./msw";
-export { createHandlers } from "./msw";
+export { api } from "./axios";
+export { createCookiesStorage } from "./cookie";
 export { createOrderString } from "./order";

@@ -2,7 +2,7 @@ import { Button, Dialog, Flex } from "@radix-ui/themes";
 import googleLogo from "@/shared/asset/google-logo.png";
 import { GOOGLE_OAUTH_REDIRECT_URL, SESSION_STORAGE_KEYS } from "@/shared/config";
 import { useAuthStore } from "../../model/auth.store";
-import * as styles from "./login-dialog.css";
+import * as styles from "./index.css";
 
 export const LoginDialog = () => {
   const isAuthenticated = useAuthStore((state) => !!state.accessToken);

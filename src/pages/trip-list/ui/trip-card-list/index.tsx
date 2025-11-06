@@ -4,21 +4,18 @@ import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
-import type { Trip } from "@/entities/trips/model/trips.model";
-import { tripsQueries } from "@/entities/trips/model/trips.queries";
-import { useDeleteTrip } from "@/pages/main/model/use-delete-trip";
-import { PAGE_ROUTES } from "@/shared/config/page-routers";
-import { getErrorCode } from "@/shared/lib/error-utils";
+import type { Field } from "@/entities/trips/config";
+import { type Trip, tripsQueries, useDeleteTrip } from "@/entities/trips/model";
+import { PAGE_ROUTES } from "@/shared/config";
 import { CardItem, CardItemSkeleton, DataFetchState, withAsyncBoundary } from "@/shared/ui";
-import type { Field } from "../../config";
-import * as styles from "./trip-card-list.css";
+import * as styles from "./index.css";
 
 function TripCardList({ sortParam }: { sortParam: Field }) {
   const navigate = useNavigate();
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
   const { mutate: removeTrip, isPending } = useDeleteTrip();
   const {
-    data: trips = [],
+    data: trips,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -38,7 +35,7 @@ function TripCardList({ sortParam }: { sortParam: Field }) {
     }
   };
 
-  if (trips.length === 0)
+  if (!trips || trips.length === 0)
     return (
       <DataFetchState
         type="empty"
@@ -94,11 +91,10 @@ export default withAsyncBoundary(TripCardList, {
   rejectedFallback: ({ error, reset }) => (
     <DataFetchState
       type="error"
-      title="요청 실패"
-      description={String(error?.message ?? "잠시 후 다시 시도해주세요.")}
+      title="여행 계획 목록"
       actionText="다시 시도"
       onAction={reset}
-      errorCode={getErrorCode(error)}
+      error={error}
     />
   ),
   pendingFallback: (

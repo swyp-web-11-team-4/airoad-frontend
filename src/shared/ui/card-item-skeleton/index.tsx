@@ -1,5 +1,5 @@
 import { Card, Flex, Skeleton } from "@radix-ui/themes";
-import * as styles from "./card-item-skeleton.css";
+import * as styles from "./index.css";
 
 export function CardItemSkeleton({ size = 4 }: { size?: number }) {
   return (

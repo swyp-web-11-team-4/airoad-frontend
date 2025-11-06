@@ -1,12 +1,12 @@
 import { Avatar, DropdownMenu, Skeleton } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
-import { LoginDialog } from "@/entities/auth";
-import { useAuthStore } from "@/entities/auth/model/auth.store";
-import { memberQueries, useMeQuery } from "@/entities/member";
+import { useAuthStore } from "@/entities/auth/model";
+import { LoginDialog } from "@/entities/auth/ui";
+import { memberQueries, useMeQuery } from "@/entities/member/api";
 import defaultUserImage from "@/shared/asset/default-user.jpg";
 import { PAGE_ROUTES } from "@/shared/config";
-import * as styles from "./user-section.css";
+import * as styles from "./index.css";
 
 export const UserSection = () => {
   const accessToken = useAuthStore((state) => state.accessToken);

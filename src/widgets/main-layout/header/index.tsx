@@ -1,7 +1,6 @@
 import logo from "@/shared/asset/logo.png";
-import { UserSection } from "../user-section/user-section";
-import * as styles from "./header.css";
-
+import { UserSection } from "../user-section";
+import * as styles from "./index.css";
 export const Header = () => {
   return (
     <header className={styles.container}>

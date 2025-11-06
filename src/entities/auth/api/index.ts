@@ -1,1 +1,1 @@
-export * from "./auth.api";
+export { logout, refreshAccessToken } from "./auth.api";

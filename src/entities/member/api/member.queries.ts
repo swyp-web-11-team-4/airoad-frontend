@@ -1,5 +1,5 @@
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
-import type { GetMeResponse } from "../model";
+import type { GetMeResponse } from "../model/member.dto";
 import { getMe } from "./member.api";
 
 export const memberQueries = {

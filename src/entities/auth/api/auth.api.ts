@@ -1,6 +1,6 @@
 import { API_PATHS } from "@/shared/config";
 import { api } from "@/shared/lib";
-import type { RefreshAccessTokenRequest, RefreshAccessTokenResponse } from "../model";
+import type { RefreshAccessTokenRequest, RefreshAccessTokenResponse } from "../model/auth.dto";
 
 export const refreshAccessToken = async ({ refreshToken }: RefreshAccessTokenRequest) => {
   const { data } = await api.post<RefreshAccessTokenResponse>(API_PATHS.AUTH.REISSUE._, {

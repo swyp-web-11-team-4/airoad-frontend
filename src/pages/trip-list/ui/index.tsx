@@ -1,10 +1,10 @@
 import { Select, Text } from "@radix-ui/themes";
 
 import { useState } from "react";
-
-import { type Field, field } from "../config";
+import type { Field } from "@/entities/trips/config";
+import { field } from "@/entities/trips/config/field";
 import * as styles from "./index.css";
-import TarvelCardList from "./trip-card-list/trip-card-list";
+import TarvelCardList from "./trip-card-list";
 
 export default function TripList() {
   const [sortParam, setSortParam] = useState<Field>(field.createdAt);

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteTrip } from "@/entities/trips/api/trips.api";
-import { tripsQueries } from "@/entities/trips/model/trips.queries";
+import { deleteTrip } from "@/entities/trips/api";
+import { tripsQueries } from "@/entities/trips/model";
 
 export function useDeleteTrip() {
   const queryClient = useQueryClient();

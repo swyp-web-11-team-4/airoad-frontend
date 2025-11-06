@@ -1,1 +1,1 @@
-export { mediaQuery } from "./mixins";
+export { mediaQuery } from "./mixins/mediaQuery";

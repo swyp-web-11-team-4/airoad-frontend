@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import * as styles from "./create-trip.css";
+import * as styles from "./index.css";
 
 const PLACE_OPTIONS: string[] = [
   "서울",

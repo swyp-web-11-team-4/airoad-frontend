@@ -1,5 +1,5 @@
 import { type ComponentProps, type ComponentType, Suspense } from "react";
-import { ErrorBoundary } from "../error-boundary/error-boundary";
+import { ErrorBoundary } from "../error-boundary";
 
 type ErrorBoundaryProps = ComponentProps<typeof ErrorBoundary>;
 

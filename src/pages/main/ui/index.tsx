@@ -1,15 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
-import { tripsQueries } from "@/entities/trips/model/trips.queries";
-import CreateTrip from "./create-trip/create-trip";
+import { useAuthStore } from "@/entities/auth/model";
+import CreateTrip from "./create-trip";
 import * as styles from "./index.css";
-import { InfoBox } from "./info-box/info-box";
-import RecentTrips from "./recent-trips/recent-trips";
+import { InfoBox } from "./info-box";
+import RecentTrips from "./recent-trips";
 export function MainPage() {
-  const { data: trips } = useQuery(tripsQueries.list());
+  const accessToken = useAuthStore((s) => s.accessToken);
+
   return (
     <div className={styles.container}>
       <CreateTrip />
-      <RecentTrips trips={trips} />
+      {!!accessToken && <RecentTrips />}
       <InfoBox />
     </div>
   );

@@ -1,18 +1,20 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
-import { type Field, field } from "@/pages/trip-list/config";
-import { createTripSort } from "@/pages/trip-list/lib/sort";
 import type { ApiErrorResponse } from "@/shared/type";
 import { getTripsList } from "../api/trips.api";
+import { type Field, field } from "../config/field";
+import { createTripSort } from "../lib/sort";
 import type { GetTripsResponse, Trip } from "../model/trips.model";
 
 export const tripsQueries = {
   all: () => ["trips"] as const,
+  lists: () => [...tripsQueries.all(), "list"] as const,
   list: (sort = field.createdAt, size = 20) =>
     queryOptions({
-      queryKey: ["trips", "list", sort, size],
+      queryKey: [...tripsQueries.lists(), sort, size],
       queryFn: () => getTripsList(undefined, createTripSort(sort), size),
       select: (res) => res.data.content,
     }),
+  infinites: () => [...tripsQueries.all(), "infinite"] as const,
   infinite: (sort: Field, size: number) =>
     infiniteQueryOptions<
       GetTripsResponse,
@@ -21,7 +23,7 @@ export const tripsQueries = {
       (string | number)[],
       number | null
     >({
-      queryKey: ["trips", "infinite", sort, size],
+      queryKey: [...tripsQueries.infinites(), sort, size],
       initialPageParam: null,
       queryFn: ({ pageParam }) => getTripsList(pageParam, createTripSort(sort), size),
       getNextPageParam: (last) => {

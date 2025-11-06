@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { createCookiesStorage } from "@/shared/lib/cookie";
+import { createCookiesStorage } from "@/shared/lib";
 import type { TokenData } from "@/shared/type";
-import { logout, refreshAccessToken } from "../api";
+import { logout, refreshAccessToken } from "../api/auth.api";
 
 export interface AuthState extends TokenData {
   setTokens: (tokenData: TokenData) => void;

@@ -1,7 +1,7 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { type LoaderFunctionArgs, redirect } from "react-router";
-import { useAuthStore } from "@/entities/auth/model/auth.store";
-import { getMe, memberQueries } from "@/entities/member";
+import { useAuthStore } from "@/entities/auth/model";
+import { getMe, memberQueries } from "@/entities/member/api";
 import { PAGE_ROUTES, SESSION_STORAGE_KEYS } from "@/shared/config";
 
 export const createProtectedLoader =

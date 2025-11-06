@@ -1,6 +1,6 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { AlertDialog, Badge, Card, IconButton, Text } from "@radix-ui/themes";
-import * as styles from "./card-item.css";
+import * as styles from "./index.css";
 
 export type CardItemProps = {
   name: string;
