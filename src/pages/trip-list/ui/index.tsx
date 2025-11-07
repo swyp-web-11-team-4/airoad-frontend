@@ -6,7 +6,7 @@ import { field } from "@/entities/trips/config/field";
 import * as styles from "./index.css";
 import TarvelCardList from "./trip-card-list";
 
-export default function TripList() {
+export function TripListPage() {
   const [sortParam, setSortParam] = useState<Field>(field.createdAt);
 
   return (
