@@ -1,7 +1,7 @@
 import { Flex, Heading, Spinner, Text } from "@radix-ui/themes";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useAuthStore } from "@/entities/auth/model/auth.store";
+import { useAuthStore } from "@/entities/auth/model";
 import { PAGE_ROUTES, SESSION_STORAGE_KEYS, URL_QUERY_KEYS } from "@/shared/config";
 
 export const RedirectPage = () => {

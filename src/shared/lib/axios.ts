@@ -1,5 +1,5 @@
 import axios, { type AxiosError } from "axios";
-import { useAuthStore } from "@/entities/auth/model/auth.store";
+import { useAuthStore } from "@/entities/auth/model";
 import { API_PATHS, env } from "@/shared/config";
 import type { ApiErrorResponse, TokenData } from "../type";
 

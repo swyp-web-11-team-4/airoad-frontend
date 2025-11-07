@@ -1,4 +1,4 @@
-import type { ERROR_CODE } from "../config";
+import type { ERROR_CODE } from "../config/error-code";
 
 export type ApiResponse<D extends object> = {
   success: boolean;

@@ -1,5 +1,7 @@
 import { createBrowserRouter } from "react-router";
+import { MainPage } from "@/pages/main/ui";
 import { RedirectPage } from "@/pages/redirect";
+import TripList from "@/pages/trip-list/ui";
 import { PAGE_ROUTES } from "@/shared/config";
 import { ErrorPage } from "@/widgets/error-page";
 import { MainLayout } from "@/widgets/main-layout";
@@ -14,8 +16,8 @@ export const router = createBrowserRouter([
         loader: createProtectedLoader(queryClient),
         children: [
           {
-            path: PAGE_ROUTES.TRIP,
-            element: <div>Trip</div>,
+            path: PAGE_ROUTES.TRIP_LIST,
+            element: <TripList />,
           },
         ],
         errorElement: <ErrorPage />,
@@ -24,7 +26,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: PAGE_ROUTES.ROOT,
-            element: <div>Home Page</div>,
+            element: <MainPage />,
           },
           {
             path: PAGE_ROUTES.REDIRECT,

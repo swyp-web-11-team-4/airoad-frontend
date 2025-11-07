@@ -1,6 +1,14 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from ".";
+import "react-day-picker/dist/style.css";
+import "./styles/global.css";
+import "dayjs/locale/ko";
+import dayjs from "dayjs";
+import "@/app/styles/global.css";
+import { Toaster } from "sonner";
+
+dayjs.locale("ko");
 
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Root element not found");
@@ -12,6 +20,7 @@ if (!rootElement) throw new Error("Root element not found");
   createRoot(rootElement).render(
     <StrictMode>
       <App />
+      <Toaster />
     </StrictMode>,
   );
 })();

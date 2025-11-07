@@ -23,6 +23,18 @@
       }
     }
   },
+  "overrides": [
+    {
+      "includes": ["**/*skeleton.tsx", "**/*skeleton.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noArrayIndexKey": "off"
+          }
+        }
+      }
+    }
+  ],
 
   "javascript": {
     "globals": ["browser"]
