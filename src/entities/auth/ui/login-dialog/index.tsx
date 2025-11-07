@@ -11,7 +11,7 @@ export const LoginDialog = () => {
   return (
     <Dialog.Root defaultOpen={!isAuthenticated && !!authRedirectTarget}>
       <Dialog.Trigger>
-        <Button color="gray" variant="surface">
+        <Button color="gray" variant="surface" size="3" highContrast>
           로그인
         </Button>
       </Dialog.Trigger>
