@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import { usePostTrip, useTripPlanStore } from "@/entities/trips/model";
 import * as styles from "./index.css";
 
 const PLACE_OPTIONS: string[] = [
@@ -20,31 +21,78 @@ const PLACE_OPTIONS: string[] = [
   "태안",
   "통영/거제/남해",
 ];
-const TERM_OPTIONS: string[] = ["당일치기", "1박 2일", "2박 3일", "3박 4일", "4박 5일", "5박 6일"];
-const THEME_OPTIONS = [
-  { id: "sight", label: "유명관광지", emoji: "🚠" },
-  { id: "activity", label: "체험/액티비티", emoji: "🌊" },
-  { id: "sns", label: "SNS 핫플", emoji: "📷" },
-  { id: "healing", label: "힐링", emoji: "🍵" },
-  { id: "culture", label: "문화/예술", emoji: "🏛️" },
-  { id: "shopping", label: "쇼핑", emoji: "🛍️" },
+const TERM_OPTIONS = [
+  { id: 1, label: "당일치기" },
+  { id: 2, label: "1박 2일" },
+  { id: 3, label: "2박 3일" },
+  { id: 4, label: "3박 4일" },
+  { id: 5, label: "4박 5일" },
+  { id: 6, label: "5박 6일" },
 ];
-const PEOPLE_OPTIONS: string[] = ["1인", "2인", "3인", "4인", "5인", "6인 이상"];
+const THEME_OPTIONS = [
+  { id: "FAMOUS_SPOT", label: "유명관광지", emoji: "🚠" },
+  { id: "EXPERIENCE_ACTIVITY", label: "체험/액티비티", emoji: "🌊" },
+  { id: "SNS_HOTSPOT", label: "SNS 핫플", emoji: "📷" },
+  { id: "HEALING", label: "힐링", emoji: "🍵" },
+  { id: "CULTURE_ART", label: "문화/예술", emoji: "🏛️" },
+  { id: "SHOPPING", label: "쇼핑", emoji: "🛍️" },
+  { id: "RESTAURANT", label: "음식점", emoji: "🥘" },
+];
 
+const PEOPLE_OPTIONS = [
+  { id: 1, label: "1인" },
+  { id: 2, label: "2인" },
+  { id: 3, label: "3인" },
+  { id: 4, label: "4인" },
+  { id: 5, label: "5인" },
+  { id: 6, label: "6인 이상" },
+];
 export default function CreateTrip() {
-  const [place, setPlace] = useState<string>("서울");
+  const [place, setPlace] = useState("서울");
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const [term, setTerm] = useState<string>("2박 3일");
+  const [termId, setTermId] = useState<number>(1);
   const [themes, setThemes] = useState<string[]>([]);
-  const [people, setPeople] = useState<string>("1인");
+  const [peopleCount, setPeopleCount] = useState<number>(1);
 
   const [openPlace, setOpenPlace] = useState(false);
   const [openDate, setOpenDate] = useState(false);
   const [openTerm, setOpenTerm] = useState(false);
   const [openTheme, setOpenTheme] = useState(false);
   const [openPeople, setOpenPeople] = useState(false);
+  const [selectedCard, setSelectedCard] = useState("");
+  const { updateTripMetaData, updateTripIdData } = useTripPlanStore();
+  const { mutate: postTrip, isPending } = usePostTrip();
+  const handleCreate = () => {
+    if (!date) return;
+    postTrip(
+      {
+        themes,
+        startDate: dayjs(date).format("YYYY-MM-DD"),
+        duration: termId,
+        region: place,
+        peopleCount,
+      },
+      {
+        onSuccess: (res) => {
+          const { conversationId, tripPlanId } = res.data ?? {};
+          if (conversationId && tripPlanId) {
+            updateTripMetaData({
+              themes,
+              startDate: dayjs(date).format("YYYY-MM-DD"),
+              duration: termId,
+              region: place,
+              peopleCount,
+            });
 
-  const [selectedCard, setSelectedCard] = useState<string>("");
+            updateTripIdData({
+              conversationId,
+              tripPlanId,
+            });
+          }
+        },
+      },
+    );
+  };
 
   return (
     <div className={styles.container}>
@@ -185,8 +233,8 @@ export default function CreateTrip() {
                 <RadioCards.Item value="term" className={styles.radioItem}>
                   <Flex direction="column" width="100%">
                     <Text size="2">여행 기간</Text>
-                    <Text size="4" color={term ? undefined : "gray"}>
-                      {term || "여행 기간 선택"}
+                    <Text size="4">
+                      {TERM_OPTIONS.find((value) => value.id === termId)?.label || "여행 기간 선택"}
                     </Text>
                   </Flex>
                 </RadioCards.Item>
@@ -211,13 +259,13 @@ export default function CreateTrip() {
               >
                 {TERM_OPTIONS.map((term) => (
                   <DropdownMenu.Item
-                    key={term}
+                    key={term.id}
                     onSelect={() => {
-                      setTerm(term);
+                      setTermId(term.id);
                       setOpenTerm(false);
                     }}
                   >
-                    {term}
+                    {term.label}
                   </DropdownMenu.Item>
                 ))}
               </DropdownMenu.Content>
@@ -237,7 +285,7 @@ export default function CreateTrip() {
                     <Text size="4" color={themes.length ? undefined : "gray"}>
                       {themes.length
                         ? themes
-                            .map((theme) => THEME_OPTIONS.find((data) => data.id === theme)?.label)
+                            .map((theme) => THEME_OPTIONS.find((d) => d.id === theme)?.label)
                             .join(", ")
                         : "테마 선택"}
                     </Text>
@@ -297,12 +345,12 @@ export default function CreateTrip() {
                 <RadioCards.Item value="people" className={styles.radioItem}>
                   <Flex direction="column" width="100%">
                     <Text size="2">인원 수</Text>
-                    <Text size="4" color={people ? undefined : "gray"}>
-                      {people || "인원 선택"}
+                    <Text size="4">
+                      {PEOPLE_OPTIONS.find((value) => value.id === peopleCount)?.label ||
+                        "인원 선택"}
                     </Text>
                   </Flex>
                 </RadioCards.Item>
-
                 <DropdownMenu.Trigger>
                   <button
                     type="button"
@@ -312,7 +360,6 @@ export default function CreateTrip() {
                   />
                 </DropdownMenu.Trigger>
               </div>
-
               <DropdownMenu.Content
                 className={styles.dropdownContent}
                 align="start"
@@ -321,15 +368,15 @@ export default function CreateTrip() {
                 side="bottom"
                 sideOffset={6}
               >
-                {PEOPLE_OPTIONS.map((opt) => (
+                {PEOPLE_OPTIONS.map((people) => (
                   <DropdownMenu.Item
-                    key={opt}
+                    key={people.id}
                     onSelect={() => {
-                      setPeople(opt);
+                      setPeopleCount(people.id);
                       setOpenPeople(false);
                     }}
                   >
-                    {opt}
+                    {people.label}
                   </DropdownMenu.Item>
                 ))}
               </DropdownMenu.Content>
@@ -337,8 +384,14 @@ export default function CreateTrip() {
           </RadioCards.Root>
         </div>
         <Flex align="center" justify="center" width="100%">
-          <Button size="4" color="indigo">
-            AI 여행일정 만들기
+          <Button
+            size="4"
+            color="indigo"
+            onClick={handleCreate}
+            disabled={isPending}
+            aria-busy={isPending}
+          >
+            {isPending ? "생성 중..." : "AI 여행일정 만들기"}
           </Button>
         </Flex>
       </div>

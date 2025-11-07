@@ -3,7 +3,13 @@ import type { ApiErrorResponse } from "@/shared/type";
 import { getTripsList } from "../api/trips.api";
 import { type Field, field } from "../config/field";
 import { createTripSort } from "../lib/sort";
-import type { GetTripsResponse, Trip } from "../model/trips.model";
+import type {
+  ChatMessage,
+  DailyPlanItem,
+  ErrorPayload,
+  GetTripsResponse,
+  Trip,
+} from "../model/trips.model";
 
 export const tripsQueries = {
   all: () => ["trips"] as const,
@@ -31,5 +37,24 @@ export const tripsQueries = {
         return last.data.nextCursor;
       },
       select: (data) => data.pages.flatMap((page) => page.data.content),
+    }),
+  stream: () => [...tripsQueries.all(), "stream"],
+  chat: (chatRoomId: number) => [...tripsQueries.stream(), "chat", chatRoomId] as const,
+  chatStream: (chatRoomId: number) =>
+    queryOptions<ChatMessage[]>({
+      queryKey: tripsQueries.chat(chatRoomId),
+      queryFn: async () => [] as ChatMessage[],
+    }),
+  schedule: (tripPlanId: number) => [...tripsQueries.stream(), "schedule", tripPlanId] as const,
+  scheduleStream: (tripPlanId: number) =>
+    queryOptions<DailyPlanItem[], unknown>({
+      queryKey: tripsQueries.schedule(tripPlanId),
+      queryFn: async () => [] as DailyPlanItem[],
+    }),
+  errors: (chatRoomId: number) => [...tripsQueries.stream(), "errors", chatRoomId] as const,
+  errorStream: (chatRoomId: number) =>
+    queryOptions<ErrorPayload[], unknown>({
+      queryKey: tripsQueries.errors(chatRoomId),
+      queryFn: async () => [] as ErrorPayload[],
     }),
 };
