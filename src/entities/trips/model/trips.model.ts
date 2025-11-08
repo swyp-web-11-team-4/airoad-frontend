@@ -28,37 +28,39 @@ export type CreateTrip = {
   peopleCount: number;
 };
 
+export type SchedulePlaceData = {
+  id: number;
+  placeId: number;
+  visitOrder: number;
+  category: "MORNING" | "LUNCH" | "AFTERNOON" | "DINNER";
+  startTime: string;
+  endTime: string;
+  travelTime: number;
+  transportation: "PUBLIC_TRANSIT" | "WALKING" | "CAR";
+};
 export type ChatMessage = {
-  type: "SYSTEM" | "USER" | "AI" | "STREAM";
+  type: "COMPLETED";
   content: string;
   createdAt?: string;
 };
 
-export type StreamStatus = "PENDING" | "COMPLETED" | "CANCELLED";
-
-export type DailyPlanItem = {
-  day: number;
-  places: Array<{
-    name: string;
-    time?: string;
-  }>;
-  transfers?: Array<{
-    from: string;
-    to: string;
-    distanceKm?: number;
-    durationMin?: number;
-  }>;
-};
-
-export type DailyPlanSavedPayload = {
-  tripPlanId: number;
-  plans: DailyPlanItem[];
-};
-
-export type ErrorPayload = {
+export type ErrorMessage = {
   code: string;
   message: string;
   detail?: unknown;
+};
+
+export type ScheduleMessage = {
+  type: "DAILY_PLAN_GENERATED";
+  tripPlanId: number;
+  dailyPlan: {
+    id: number;
+    dayNumber: number;
+    date: string;
+    title: string;
+    description: string;
+    scheduledPlaces: SchedulePlaceData[];
+  };
 };
 
 export type GetTripsResponse = ApiResponse<Trips>;

@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
         element: <ChatLayout />,
         children: [
           {
-            path: PAGE_ROUTES.TRIP_CHAT(),
+            path: PAGE_ROUTES.TRIP_PLAN,
             element: <TripChatPage />,
           },
         ],

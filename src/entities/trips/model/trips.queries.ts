@@ -5,9 +5,9 @@ import { type Field, field } from "../config/field";
 import { createTripSort } from "../lib/sort";
 import type {
   ChatMessage,
-  DailyPlanItem,
-  ErrorPayload,
+  ErrorMessage,
   GetTripsResponse,
+  ScheduleMessage,
   Trip,
 } from "../model/trips.model";
 
@@ -47,14 +47,14 @@ export const tripsQueries = {
     }),
   schedule: (tripPlanId: number) => [...tripsQueries.stream(), "schedule", tripPlanId] as const,
   scheduleStream: (tripPlanId: number) =>
-    queryOptions<DailyPlanItem[], unknown>({
+    queryOptions<ScheduleMessage[], unknown>({
       queryKey: tripsQueries.schedule(tripPlanId),
-      queryFn: async () => [] as DailyPlanItem[],
+      queryFn: async () => [] as ScheduleMessage[],
     }),
   errors: (chatRoomId: number) => [...tripsQueries.stream(), "errors", chatRoomId] as const,
   errorStream: (chatRoomId: number) =>
-    queryOptions<ErrorPayload[], unknown>({
+    queryOptions<ErrorMessage[], unknown>({
       queryKey: tripsQueries.errors(chatRoomId),
-      queryFn: async () => [] as ErrorPayload[],
+      queryFn: async () => [] as ErrorMessage[],
     }),
 };
