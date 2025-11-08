@@ -74,9 +74,10 @@ export function useTripPlanStreams({
       subsRef.current = [errSub, chatSub, schedSub];
     };
 
-    client.onWebSocketError(() => {
+    client.onStompError = (frame) => {
+      console.error("stomp 구독 에러 발생", frame.body);
       setConnected(false);
-    });
+    };
     client.onWebSocketError(() => {
       setConnected(false);
     });
