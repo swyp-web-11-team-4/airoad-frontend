@@ -61,6 +61,8 @@ function TripCardList({ sortParam }: { sortParam: Field }) {
               city={trip.region}
               date={trip.startDate}
               imgUrl={trip.imageUrl}
+              tripPlanId={trip.id}
+              conversationId={trip.chatRoomId}
               onDelete={() => setSelectedTrip(trip)}
               showDelete
             />

@@ -7,6 +7,7 @@ const trips: Trip[] = [
     title: "Trip A",
     startDate: "2025.11.24",
     region: "서울",
+    chatRoomId: 101,
   },
   {
     id: 2,
@@ -14,6 +15,7 @@ const trips: Trip[] = [
     title: "Trip B",
     startDate: "2025.12.02",
     region: "부산",
+    chatRoomId: 102,
   },
   {
     id: 3,
@@ -21,6 +23,7 @@ const trips: Trip[] = [
     title: "Trip C",
     startDate: "2026.01.05",
     region: "제주",
+    chatRoomId: 103,
   },
   {
     id: 4,
@@ -28,6 +31,7 @@ const trips: Trip[] = [
     title: "Trip D",
     startDate: "2026.02.18",
     region: "서울",
+    chatRoomId: 104,
   },
   {
     id: 5,
@@ -35,6 +39,7 @@ const trips: Trip[] = [
     title: "Trip E",
     startDate: "2026.03.10",
     region: "강릉",
+    chatRoomId: 105,
   },
   {
     id: 6,
@@ -42,6 +47,7 @@ const trips: Trip[] = [
     title: "Trip F",
     startDate: "2026.04.02",
     region: "여수",
+    chatRoomId: 106,
   },
   {
     id: 7,
@@ -49,6 +55,7 @@ const trips: Trip[] = [
     title: "Trip G",
     startDate: "2026.04.20",
     region: "전주",
+    chatRoomId: 107,
   },
   {
     id: 8,
@@ -56,6 +63,7 @@ const trips: Trip[] = [
     title: "Trip H",
     startDate: "2026.05.15",
     region: "속초",
+    chatRoomId: 108,
   },
   {
     id: 9,
@@ -63,6 +71,7 @@ const trips: Trip[] = [
     title: "Trip I",
     startDate: "2026.06.05",
     region: "가평",
+    chatRoomId: 109,
   },
   {
     id: 10,
@@ -70,6 +79,7 @@ const trips: Trip[] = [
     title: "Trip J",
     startDate: "2026.07.01",
     region: "경주",
+    chatRoomId: 110,
   },
   {
     id: 11,
@@ -77,6 +87,7 @@ const trips: Trip[] = [
     title: "Trip K",
     startDate: "2026.07.22",
     region: "인천",
+    chatRoomId: 111,
   },
   {
     id: 12,
@@ -84,6 +95,7 @@ const trips: Trip[] = [
     title: "Trip L",
     startDate: "2026.08.10",
     region: "춘천",
+    chatRoomId: 112,
   },
   {
     id: 13,
@@ -91,6 +103,7 @@ const trips: Trip[] = [
     title: "Trip M",
     startDate: "2026.09.01",
     region: "대전",
+    chatRoomId: 113,
   },
   {
     id: 14,
@@ -98,6 +111,7 @@ const trips: Trip[] = [
     title: "Trip N",
     startDate: "2026.09.25",
     region: "울산",
+    chatRoomId: 114,
   },
   {
     id: 15,
@@ -105,6 +119,7 @@ const trips: Trip[] = [
     title: "Trip O",
     startDate: "2026.10.12",
     region: "광주",
+    chatRoomId: 115,
   },
   {
     id: 16,
@@ -112,6 +127,7 @@ const trips: Trip[] = [
     title: "Trip P",
     startDate: "2026.11.05",
     region: "안동",
+    chatRoomId: 116,
   },
   {
     id: 17,
@@ -119,6 +135,7 @@ const trips: Trip[] = [
     title: "Trip Q",
     startDate: "2026.12.03",
     region: "속초",
+    chatRoomId: 117,
   },
   {
     id: 18,
@@ -126,6 +143,7 @@ const trips: Trip[] = [
     title: "Trip R",
     startDate: "2027.01.20",
     region: "부여",
+    chatRoomId: 118,
   },
   {
     id: 19,
@@ -133,6 +151,7 @@ const trips: Trip[] = [
     title: "Trip S",
     startDate: "2027.02.14",
     region: "포항",
+    chatRoomId: 119,
   },
   {
     id: 20,
@@ -140,6 +159,7 @@ const trips: Trip[] = [
     title: "Trip T",
     startDate: "2027.03.08",
     region: "제천",
+    chatRoomId: 120,
   },
 ];
 
