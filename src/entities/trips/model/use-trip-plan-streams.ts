@@ -1,10 +1,7 @@
 import type { Client, StompSubscription } from "@stomp/stompjs";
-import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { toast } from "sonner";
 import { createStompClient } from "@/shared/lib";
 import type { ChatMessage, ErrorMessage, ScheduleMessage } from "./trips.model";
-import { tripsQueries } from "./trips.queries";
 
 type Props = {
   chatRoomId: number;
@@ -25,7 +22,6 @@ export function useTripPlanStreams({
 }: Props) {
   const clientRef = useRef<Client | null>(null);
   const subsRef = useRef<StompSubscription[]>([]);
-  const queryClient = useQueryClient();
   const [connected, setConnected] = useState(false);
   const [chat, setChat] = useState<ChatMessage[]>([]);
   const [error, setError] = useState<ErrorMessage>();
