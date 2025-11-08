@@ -4,17 +4,29 @@ import { GOOGLE_OAUTH_REDIRECT_URL, SESSION_STORAGE_KEYS } from "@/shared/config
 import { useAuthStore } from "../../model/auth.store";
 import * as styles from "./index.css";
 
-export const LoginDialog = () => {
+type LoginDialogProps = {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  showTriggerButton?: boolean;
+};
+
+export const LoginDialog = ({ open, onOpenChange, showTriggerButton = true }: LoginDialogProps) => {
   const isAuthenticated = useAuthStore((state) => !!state.accessToken);
   const authRedirectTarget = sessionStorage.getItem(SESSION_STORAGE_KEYS.AUTH_REDIRECT_TARGET);
 
   return (
-    <Dialog.Root defaultOpen={!isAuthenticated && !!authRedirectTarget}>
-      <Dialog.Trigger>
-        <Button color="gray" variant="surface" size="3" highContrast>
-          로그인
-        </Button>
-      </Dialog.Trigger>
+    <Dialog.Root
+      open={open}
+      onOpenChange={onOpenChange}
+      defaultOpen={!isAuthenticated && !!authRedirectTarget}
+    >
+      {showTriggerButton && (
+        <Dialog.Trigger>
+          <Button color="gray" variant="surface" size="3" highContrast>
+            로그인
+          </Button>
+        </Dialog.Trigger>
+      )}
       <Dialog.Content className={styles.content} maxWidth="480px">
         <Dialog.Title size="6" align="left" weight="bold">
           시작하기

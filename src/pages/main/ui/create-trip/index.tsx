@@ -5,6 +5,10 @@ import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
+import { useAuthStore } from "@/entities/auth/model";
+import { LoginDialog } from "@/entities/auth/ui";
+import { useMeQuery } from "@/entities/member/api";
 import {
   PEOPLE_OPTIONS,
   PLACE_OPTIONS,
@@ -17,6 +21,10 @@ import * as styles from "./index.css";
 
 export default function CreateTrip() {
   const navigate = useNavigate();
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const { data: user } = useMeQuery({
+    enabled: !!accessToken,
+  });
   const [place, setPlace] = useState("서울");
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [termId, setTermId] = useState<number>(1);
@@ -28,10 +36,21 @@ export default function CreateTrip() {
   const [openTerm, setOpenTerm] = useState(false);
   const [openTheme, setOpenTheme] = useState(false);
   const [openPeople, setOpenPeople] = useState(false);
+  const [openLogin, setLoginOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState("");
   const { mutate: postTrip, isPending } = usePostTrip();
   const handleCreate = () => {
-    if (!date) return;
+    if (user === undefined) {
+      setLoginOpen(true);
+      return;
+    }
+
+    if (themes.length === 0) {
+      setOpenTheme(true);
+      toast.error("테마를 선택해주세요.");
+      return;
+    }
+
     postTrip(
       {
         themes,
@@ -353,6 +372,7 @@ export default function CreateTrip() {
             {isPending ? "생성 중..." : "AI 여행일정 만들기"}
           </Button>
         </Flex>
+        <LoginDialog open={openLogin} onOpenChange={setLoginOpen} showTriggerButton={false} />
       </div>
     </div>
   );

@@ -1,9 +1,7 @@
 import type { Client, StompSubscription } from "@stomp/stompjs";
-import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createStompClient } from "@/shared/lib";
 import type { ChatMessage, ErrorMessage, ScheduleMessage } from "./trips.model";
-import { tripsQueries } from "./trips.queries";
 
 type Props = {
   chatRoomId: number;
@@ -24,59 +22,65 @@ export function useTripPlanStreams({
 }: Props) {
   const clientRef = useRef<Client | null>(null);
   const subsRef = useRef<StompSubscription[]>([]);
-  const queryClient = useQueryClient();
   const [connected, setConnected] = useState(false);
+  const [chat, setChat] = useState<ChatMessage[]>([]);
+  const [error, setError] = useState<ErrorMessage>();
+  const [schedule, setSchedule] = useState<ScheduleMessage[]>([]);
 
   const paths = useMemo(
     () => ({
       chat: `/user/sub/chat/${chatRoomId}`,
-      schedule: `/user/sub/schedule/${tripPlanId}`,
-      errors: `/user/sub/errors/${chatRoomId}`,
+      schedule: `/user/sub/scdule/${tripPlanId}`,
+      errors: `/user/sub/errs/${chatRoomId}`,
     }),
     [chatRoomId, tripPlanId],
   );
 
   useEffect(() => {
     if (!chatRoomId || !tripPlanId || !token) return;
-
     const client = createStompClient(brokerURL, token);
     clientRef.current = client;
 
-    client.onConnect = () => {
-      setConnected(true);
-
-      const errSub = client.subscribe(paths.errors, (msg) => {
-        try {
+    client.onConnect = (data) => {
+      const errSub = client.subscribe(
+        paths.errors,
+        (msg) => {
           const err = JSON.parse(msg.body) as ErrorMessage;
-          queryClient.setQueryData<ErrorMessage[]>(tripsQueries.errors(chatRoomId), (prev = []) => [
-            ...prev,
-            err,
-          ]);
-        } catch {}
-      });
+          setError(err);
+        },
+        { receipt: "sub-errors" },
+      );
 
-      const chatSub = client.subscribe(paths.chat, (msg) => {
-        try {
+      const chatSub = client.subscribe(
+        paths.chat,
+        (msg) => {
           const data = JSON.parse(msg.body) as ChatMessage;
-          queryClient.setQueryData<ChatMessage[]>(tripsQueries.chat(chatRoomId), (prev = []) => [
-            ...prev,
-            data,
-          ]);
-        } catch {}
-      });
+          setChat((prev) => [...prev, data]);
+        },
+        { receipt: "sub-chat" },
+      );
 
-      const schedSub = client.subscribe(paths.schedule, (msg) => {
-        try {
+      const schedSub = client.subscribe(
+        paths.schedule,
+        (msg) => {
           const data = JSON.parse(msg.body) as ScheduleMessage;
-          queryClient.setQueryData<ScheduleMessage[]>(
-            tripsQueries.schedule(tripPlanId),
-            (prev = []) => [...prev, data],
-          );
-        } catch {}
-      });
+          setSchedule((prev) => [...prev, data]);
+        },
+        { receipt: "sub-schedule" },
+      );
+
+      if (data.command === "CONNECTED") setConnected(true);
 
       subsRef.current = [errSub, chatSub, schedSub];
     };
+
+    client.onStompError = (frame) => {
+      console.error("stomp 구독 에러 발생", frame.body);
+      setConnected(false);
+    };
+    client.onWebSocketError(() => {
+      setConnected(false);
+    });
 
     client.activate();
 
@@ -87,7 +91,7 @@ export function useTripPlanStreams({
       clientRef.current = null;
       setConnected(false);
     };
-  }, [brokerURL, token, paths, chatRoomId, tripPlanId]);
+  }, [chatRoomId, tripPlanId]);
 
   const sendMessage = (content: string, type: "TEXT" | "IMAGE" = "TEXT") => {
     if (!clientRef.current || !connected) return;
@@ -97,5 +101,5 @@ export function useTripPlanStreams({
     });
   };
 
-  return { connected, sendMessage };
+  return { connected, sendMessage, chat, schedule, error };
 }
