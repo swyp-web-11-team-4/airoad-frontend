@@ -42,6 +42,8 @@ function RecentTrips() {
             city={trip.region}
             date={trip.startDate}
             imgUrl={trip.imageUrl}
+            conversationId={trip.chatRoomId}
+            tripPlanId={trip.id}
           />
         ))}
       </div>

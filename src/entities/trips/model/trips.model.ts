@@ -6,6 +6,7 @@ export interface Trip {
   title: string;
   startDate: string;
   region: string;
+  chatRoomId: number;
 }
 
 export interface Trips {
