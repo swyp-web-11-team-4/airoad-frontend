@@ -21,7 +21,7 @@ export const ChatHeader = () => {
 
   useEffect(() => {
     if (!tripPlanId) navigate(PAGE_ROUTES.ROOT);
-  });
+  }, [tripPlanId]);
   return (
     <Header>
       <Flex align="center" gap="20px">
@@ -43,7 +43,7 @@ export const ChatHeader = () => {
           {data?.region ?? "-"}
         </Text>
         <Text size="1" className={styles.info}>
-          {dayjs(data?.startDate).format("YYYY.MM.DD (dd)") ?? "-"}
+          {data?.startDate ? dayjs(data.startDate).format("YYYY.MM.DD (dd)") : "-"}
         </Text>
         <Text size="1" className={styles.info}>
           {TERM_OPTIONS.find((term) => term.id === data?.duration)?.label ?? "-"}
