@@ -1,4 +1,4 @@
-import type { Client, StompSubscription } from "@stomp/stompjs";
+import type { Client, IFrame, StompSubscription } from "@stomp/stompjs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createStompClient } from "@/shared/lib";
 import type { ChatMessage, ErrorMessage, ScheduleMessage } from "./trips.model";
@@ -30,8 +30,8 @@ export function useTripPlanStreams({
   const paths = useMemo(
     () => ({
       chat: `/user/sub/chat/${chatRoomId}`,
-      schedule: `/user/sub/scdule/${tripPlanId}`,
-      errors: `/user/sub/errs/${chatRoomId}`,
+      schedule: `/user/sub/schedule/${tripPlanId}`,
+      errors: `/user/sub/errors/${chatRoomId}`,
     }),
     [chatRoomId, tripPlanId],
   );
@@ -50,6 +50,11 @@ export function useTripPlanStreams({
         },
         { receipt: "sub-errors" },
       );
+      client.watchForReceipt("sub-errors", (frame: IFrame) => {
+        console.log("sub-errors: 에러 채널 구독 응답값", frame);
+        console.log("headers:", frame.headers);
+        console.log("body:", frame.body);
+      });
 
       const chatSub = client.subscribe(
         paths.chat,
@@ -59,6 +64,11 @@ export function useTripPlanStreams({
         },
         { receipt: "sub-chat" },
       );
+      client.watchForReceipt("sub-chat", (frame: IFrame) => {
+        console.log("sub-chat: 채팅 채널 구독 응답값", frame);
+        console.log("headers:", frame.headers);
+        console.log("body:", frame.body);
+      });
 
       const schedSub = client.subscribe(
         paths.schedule,
@@ -68,6 +78,11 @@ export function useTripPlanStreams({
         },
         { receipt: "sub-schedule" },
       );
+      client.watchForReceipt("sub-schedule", (frame: IFrame) => {
+        console.log("sub-schedule: 일정 채널 구독 응답값", frame);
+        console.log("headers:", frame.headers);
+        console.log("body:", frame.body);
+      });
 
       if (data.command === "CONNECTED") setConnected(true);
 

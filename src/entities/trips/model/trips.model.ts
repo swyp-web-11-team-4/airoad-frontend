@@ -16,6 +16,16 @@ export interface Trips {
   size: number;
 }
 
+export interface TripPlanInfo {
+  tripPlanId: number;
+  title: string;
+  region: string;
+  startDate: string;
+  duration: number;
+  peopleCount: number;
+  themes: string[];
+}
+
 export type TripId = {
   conversationId: number;
   tripPlanId: number;
@@ -66,3 +76,4 @@ export type ScheduleMessage = {
 
 export type GetTripsResponse = ApiResponse<Trips>;
 export type GetStateTripIdResponse = ApiResponse<TripId>;
+export type GetTripPlanInfoResponse = ApiResponse<TripPlanInfo>;

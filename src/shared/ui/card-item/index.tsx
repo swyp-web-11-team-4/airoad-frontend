@@ -43,7 +43,7 @@ export function CardItem({
         alt="기본 카드 이미지"
       />
       <div className={styles.cardData}>
-        <Text size="3">{name ?? "타이틀 없음"}</Text>
+        <Text size="3">{name || "타이틀 없음"}</Text>
         <Text size="2" color="gray">
           {date} 출발
         </Text>

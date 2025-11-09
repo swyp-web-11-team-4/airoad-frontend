@@ -1,12 +1,20 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import type { ApiErrorResponse } from "@/shared/type";
-import { getTripsList } from "../api/trips.api";
+import { getTripInfo, getTripsList } from "../api/trips.api";
 import { type Field, field } from "../config/field";
 import { createTripSort } from "../lib/sort";
 import type { GetTripsResponse, Trip } from "../model/trips.model";
 
 export const tripsQueries = {
   all: () => ["trips"] as const,
+  infos: () => [...tripsQueries.all(), "info"] as const,
+  info: (tripPlanId: number) =>
+    queryOptions({
+      queryKey: [...tripsQueries.infos()],
+      queryFn: () => getTripInfo(tripPlanId),
+      enabled: !!tripPlanId,
+      select: (res) => res.data,
+    }),
   lists: () => [...tripsQueries.all(), "list"] as const,
   list: (sort = field.createdAt, size = 20) =>
     queryOptions({
