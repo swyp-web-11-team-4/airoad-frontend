@@ -50,6 +50,9 @@ export function useTripPlanStreams({
         },
         { receipt: "sub-errors" },
       );
+      client.watchForReceipt("sub-errors", () => {
+        console.log("[STOMP] errors subscribed:", "sub-errors");
+      });
 
       const chatSub = client.subscribe(
         paths.chat,
@@ -59,6 +62,9 @@ export function useTripPlanStreams({
         },
         { receipt: "sub-chat" },
       );
+      client.watchForReceipt("sub-chat", () => {
+        console.log("[STOMP] errors subscribed:", "sub-chat");
+      });
 
       const schedSub = client.subscribe(
         paths.schedule,
@@ -68,6 +74,9 @@ export function useTripPlanStreams({
         },
         { receipt: "sub-schedule" },
       );
+      client.watchForReceipt("sub-schedule", () => {
+        console.log("[STOMP] errors subscribed:", "sub-schedule");
+      });
 
       if (data.command === "CONNECTED") setConnected(true);
 

@@ -1,13 +1,27 @@
 import { NotePencilIcon } from "@phosphor-icons/react";
 import { Share1Icon } from "@radix-ui/react-icons";
 import { Button, Flex, IconButton, Text } from "@radix-ui/themes";
+import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router";
 import { UserSection } from "@/entities/member/ui";
+import { PEOPLE_OPTIONS, TERM_OPTIONS, THEME_OPTIONS } from "@/entities/trips/config";
+import { tripsQueries } from "@/entities/trips/model";
 import iconLogo from "@/shared/asset/icon-logo.png";
+import { PAGE_ROUTES } from "@/shared/config";
 import { Header } from "@/widgets/header";
 import * as styles from "./index.css";
 
-/* TODO 데이터 연동 작업 */
 export const ChatHeader = () => {
+  const [params] = useSearchParams();
+  const navigate = useNavigate();
+  const tripPlanId = Number(params.get("tripPlanId"));
+  const { data } = useQuery(tripsQueries.info(tripPlanId));
+
+  useEffect(() => {
+    if (!tripPlanId) navigate(PAGE_ROUTES.ROOT);
+  });
   return (
     <Header>
       <Flex align="center" gap="20px">
@@ -16,7 +30,7 @@ export const ChatHeader = () => {
         </div>
         <Flex align="center" gap="3">
           <Text size="4" weight="medium">
-            제주 3박4일 일정
+            {data?.title || "타이틀 없음"}
           </Text>
           <IconButton variant="ghost" color="gray">
             <NotePencilIcon />
@@ -26,19 +40,21 @@ export const ChatHeader = () => {
 
       <div className={styles.infoList}>
         <Text size="1" className={styles.info}>
-          제주도
+          {data?.region ?? "-"}
         </Text>
         <Text size="1" className={styles.info}>
-          2025.10.19 (일)
+          {dayjs(data?.startDate).format("YYYY.MM.DD (dd)") ?? "-"}
         </Text>
         <Text size="1" className={styles.info}>
-          2박 3일
+          {TERM_OPTIONS.find((term) => term.id === data?.duration)?.label ?? "-"}
         </Text>
         <Text size="1" className={styles.info}>
-          테마명1, 테마명2, 테마명3
+          {data?.themes
+            ?.map((id) => THEME_OPTIONS.find((theme) => theme.id === id)?.label ?? id)
+            .join(", ") ?? "-"}
         </Text>
         <Text size="1" className={styles.info}>
-          1인
+          {PEOPLE_OPTIONS.find((people) => people.id === data?.peopleCount)?.label ?? "-"}
         </Text>
       </div>
 
