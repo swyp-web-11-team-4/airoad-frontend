@@ -3,6 +3,7 @@ import { useLocation, useSearchParams } from "react-router";
 import { useAuthStore } from "@/entities/auth/model";
 import { useStartTripPlan } from "@/entities/trips/model/use-start-trip-plan";
 import { useTripPlanStreams } from "@/entities/trips/model/use-trip-plan-streams";
+import { ChatSection } from "./chat-section";
 
 export const TripChatPage = () => {
   const accessToken = useAuthStore.getState().accessToken;
@@ -36,7 +37,7 @@ export const TripChatPage = () => {
 
   return (
     <div>
-      {/* Chat Section */}
+      <ChatSection />
       {/* Schedule Section */}
     </div>
   );
