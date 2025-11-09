@@ -64,7 +64,13 @@ export default function CreateTrip() {
           const { conversationId, tripPlanId } = res.data ?? {};
           if (conversationId && tripPlanId) {
             navigate(
-              `${PAGE_ROUTES.TRIP_PLAN}?conversationId=${conversationId}&tripPlanId=${tripPlanId}`,
+              {
+                pathname: PAGE_ROUTES.TRIP_PLAN,
+                search: `?conversationId=${conversationId}&tripPlanId=${tripPlanId}`,
+              },
+              {
+                state: { create: true },
+              },
             );
           }
         },
