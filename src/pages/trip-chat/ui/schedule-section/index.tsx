@@ -23,7 +23,7 @@ export function ScheduleSection({ messages }: { messages: ScheduleMessage[] }) {
   return (
     <div className={styles.container}>
       {messages.map((msg) => (
-        <ScheduleBox key={msg.tripPlanId} {...msg.dailyPlan} />
+        <ScheduleBox key={msg.dailyPlan.id} {...msg.dailyPlan} />
       ))}
 
       {skeletonIds.map((id) => (

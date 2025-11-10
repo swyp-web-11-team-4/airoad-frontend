@@ -1,5 +1,6 @@
 import { Badge, Text } from "@radix-ui/themes";
 import dayjs from "dayjs";
+import { Fragment } from "react/jsx-runtime";
 import { CATEGORY_OPTIONS } from "@/entities/trips/config/category";
 import type { DayPlanData } from "@/entities/trips/model/trips.model";
 import Bus from "@/shared/asset/bus.svg";
@@ -18,7 +19,7 @@ export function ScheduleBox({ dayNumber, date, title, scheduledPlaces }: DayPlan
       </div>
       <div className={styles.dayContainer}>
         {scheduledPlaces.map((place, idx) => (
-          <>
+          <Fragment key={place.id}>
             <div className={styles.dayBox} key={place.id}>
               <img className={styles.dayImg} src="/images/day-card.png" alt="일정 이미지" />
               <div className={styles.dayInfo}>
@@ -48,7 +49,7 @@ export function ScheduleBox({ dayNumber, date, title, scheduledPlaces }: DayPlan
                 </div>
               </div>
             )}
-          </>
+          </Fragment>
         ))}
       </div>
     </div>
