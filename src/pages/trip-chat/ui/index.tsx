@@ -4,6 +4,8 @@ import { useAuthStore } from "@/entities/auth/model";
 import { useStartTripPlan } from "@/entities/trips/model/use-start-trip-plan";
 import { useTripPlanStreams } from "@/entities/trips/model/use-trip-plan-streams";
 import { ChatSection } from "./chat-section";
+import * as styles from "./index.css";
+import { ScheduleSection } from "./schedule-section";
 
 export const TripChatPage = () => {
   const accessToken = useAuthStore.getState().accessToken;
@@ -36,9 +38,9 @@ export const TripChatPage = () => {
   });
 
   return (
-    <div>
+    <div className={styles.container}>
       <ChatSection />
-      {/* Schedule Section */}
+      <ScheduleSection messages={schedule} />
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import type { SchedulePlaceData } from "../model/trips.model";
+
 export const PLACE_OPTIONS: string[] = [
   "서울",
   "부산",
@@ -38,3 +40,11 @@ export const PEOPLE_OPTIONS = [
   { id: 5, label: "5인" },
   { id: 6, label: "6인 이상" },
 ];
+
+export const CATEGORY_OPTIONS: Record<SchedulePlaceData["category"], string> = {
+  MORNING: "오전일정",
+  LUNCH: "점심",
+  AFTERNOON: "오후일정",
+  DINNER: "저녁",
+  EVENING: "저녁",
+};

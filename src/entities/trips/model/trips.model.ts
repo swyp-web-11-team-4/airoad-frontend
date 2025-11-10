@@ -38,12 +38,19 @@ export type CreateTrip = {
   region: string;
   peopleCount: number;
 };
-
+export type DayPlanData = {
+  id: number;
+  dayNumber: 1 | 2 | 3 | 4 | 5 | 6;
+  date: string;
+  title: string;
+  description: string;
+  scheduledPlaces: SchedulePlaceData[];
+};
 export type SchedulePlaceData = {
   id: number;
   placeId: number;
   visitOrder: number;
-  category: "MORNING" | "LUNCH" | "AFTERNOON" | "DINNER";
+  category: "MORNING" | "LUNCH" | "AFTERNOON" | "DINNER" | "EVENING";
   startTime: string;
   endTime: string;
   travelTime: number;
@@ -64,14 +71,7 @@ export type ErrorMessage = {
 export type ScheduleMessage = {
   type: "DAILY_PLAN_GENERATED";
   tripPlanId: number;
-  dailyPlan: {
-    id: number;
-    dayNumber: number;
-    date: string;
-    title: string;
-    description: string;
-    scheduledPlaces: SchedulePlaceData[];
-  };
+  dailyPlan: DayPlanData;
 };
 
 export type GetTripsResponse = ApiResponse<Trips>;

@@ -1,0 +1,78 @@
+import { style } from "@vanilla-extract/css";
+export const box = style({
+  width: "578px",
+  height: "100%",
+  background: "#fff",
+  borderTopLeftRadius: "16px",
+  borderTopRightRadius: "16px",
+  borderBottomLeftRadius: "4px",
+  borderBottomRightRadius: "4px",
+  overflow: "hidden",
+  display: "flex",
+  flexDirection: "column",
+  flexShrink: 0,
+});
+
+export const header = style({
+  position: "relative",
+  padding: "20px 24px",
+  display: "flex",
+  flexDirection: "column",
+  gap: "4px",
+  borderTopLeftRadius: "16px",
+  borderTopRightRadius: "16px",
+  flex: "0 0 auto",
+  overflow: "hidden",
+  "::before": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: "8px",
+    borderTopLeftRadius: "16px",
+    borderTopRightRadius: "16px",
+    background: "#00002D17",
+  },
+});
+
+export const dayContainer = style({
+  height: "100%",
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  overflowY: "auto",
+  alignItems: "center",
+  justifyContent: "flex-start",
+});
+
+export const dayBox = style({
+  padding: "16px",
+  display: "flex",
+  gap: "16px",
+  alignItems: "center",
+  borderTop: "1px solid var(--gray-3)",
+  borderBottom: "1px solid var(--gray-3)",
+  flexShrink: 0,
+  width: "100%",
+});
+export const dayInfo = style({
+  display: "flex",
+  flexDirection: "column",
+  gap: "4px",
+});
+
+export const dayTag = style({
+  display: "flex",
+  gap: "8px",
+  marginBottom: "4px",
+});
+
+export const timeBox = style({
+  width: "100%",
+  height: "60px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexShrink: "0",
+});
