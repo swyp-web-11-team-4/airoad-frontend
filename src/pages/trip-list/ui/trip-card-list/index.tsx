@@ -1,5 +1,5 @@
 import { AlertDialog, Button } from "@radix-ui/themes";
-import { useInfiniteQuery, useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router";
