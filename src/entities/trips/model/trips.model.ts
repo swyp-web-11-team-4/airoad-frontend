@@ -40,7 +40,7 @@ export type CreateTrip = {
   peopleCount: number;
 };
 
-export type CategoryType = "MORNING" | "AFTERNOON" | "EVENING" | "LUNCH" | "CAFE" | "DINNER";
+export type CategoryType = "MORNING" | "AFTERNOON" | "EVENING";
 
 export type ThemeType =
   | "FAMOUS_SPOT"
@@ -48,8 +48,7 @@ export type ThemeType =
   | "SNS_HOTSPOT"
   | "HEALING"
   | "CULTURE_ART"
-  | "SHOPPING"
-  | "RESTAURANT";
+  | "SHOPPING";
 
 export type Place = {
   id: number;
