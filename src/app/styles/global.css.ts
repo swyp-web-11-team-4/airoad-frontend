@@ -14,22 +14,22 @@ globalStyle("*", {
 
 globalStyle("body", {
   "@media": {
-    "(prefers-color-scheme: dark)": {
-      vars: {
-        "--indigo-1": "#11131F",
-        "--indigo-2": "#141726",
-        "--indigo-3": "#182449",
-        "--indigo-4": "#1D2E62",
-        "--indigo-5": "#253974",
-        "--indigo-6": "#304384",
-        "--indigo-7": "#3A4F97",
-        "--indigo-8": "#435DB1",
-        "--indigo-9": "#3E63DD",
-        "--indigo-10": "#5472E4",
-        "--indigo-11": "#9EB1FF",
-        "--indigo-12": "#D6E1FF",
-      },
-    },
+    // "(prefers-color-scheme: dark)": {
+    //   vars: {
+    //     "--indigo-1": "#11131F",
+    //     "--indigo-2": "#141726",
+    //     "--indigo-3": "#182449",
+    //     "--indigo-4": "#1D2E62",
+    //     "--indigo-5": "#253974",
+    //     "--indigo-6": "#304384",
+    //     "--indigo-7": "#3A4F97",
+    //     "--indigo-8": "#435DB1",
+    //     "--indigo-9": "#3E63DD",
+    //     "--indigo-10": "#5472E4",
+    //     "--indigo-11": "#9EB1FF",
+    //     "--indigo-12": "#D6E1FF",
+    //   },
+    // },
     "(prefers-color-scheme: light)": {
       vars: {
         "--indigo-1": "#FDFDFE ",
