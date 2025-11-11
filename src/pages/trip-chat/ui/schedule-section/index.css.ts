@@ -9,3 +9,7 @@ export const container = style({
   overflowX: "auto",
   background: "#ECF1FF",
 });
+
+export const box = style({
+  display: "flex",
+});

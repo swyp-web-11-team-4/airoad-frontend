@@ -1,5 +1,5 @@
 import { style } from "@vanilla-extract/css";
-export const box = style({
+export const skeletonBox = style({
   width: "578px",
   height: "100%",
   background: "#fff",
@@ -13,7 +13,7 @@ export const box = style({
   flexShrink: 0,
 });
 
-export const header = style({
+export const skeletonHeader = style({
   position: "relative",
   padding: "20px 24px",
   display: "flex",
@@ -36,7 +36,7 @@ export const header = style({
   },
 });
 
-export const dayContainer = style({
+export const skeletonDayContainer = style({
   height: "100%",
   width: "100%",
   display: "flex",
@@ -58,7 +58,7 @@ export const dayContainer = style({
   },
 });
 
-export const dayBox = style({
+export const skeletonDayBox = style({
   padding: "16px",
   display: "flex",
   gap: "16px",
@@ -68,19 +68,19 @@ export const dayBox = style({
   flexShrink: 0,
   width: "100%",
 });
-export const dayInfo = style({
+export const skeletonDayInfo = style({
   display: "flex",
   flexDirection: "column",
   gap: "4px",
 });
 
-export const dayTag = style({
+export const skeletonDayTag = style({
   display: "flex",
   gap: "8px",
   marginBottom: "4px",
 });
 
-export const timeBox = style({
+export const skeletonTimeBox = style({
   width: "100%",
   height: "60px",
   display: "flex",
