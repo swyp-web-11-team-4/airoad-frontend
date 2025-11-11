@@ -10,7 +10,7 @@ export const tripsQueries = {
   infos: () => [...tripsQueries.all(), "info"] as const,
   info: (tripPlanId: number) =>
     queryOptions({
-      queryKey: [...tripsQueries.infos()],
+      queryKey: [...tripsQueries.infos(), tripPlanId],
       queryFn: () => getTripInfo(tripPlanId),
       enabled: !!tripPlanId,
       select: (res) => res.data,
