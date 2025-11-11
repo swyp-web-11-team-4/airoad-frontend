@@ -44,6 +44,18 @@ export const dayContainer = style({
   overflowY: "auto",
   alignItems: "center",
   justifyContent: "flex-start",
+  selectors: {
+    "&::-webkit-scrollbar": {
+      width: "4px",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "#00083046",
+      borderRadius: "8px",
+    },
+    "&::-webkit-scrollbar-track": {
+      background: "#0000330F",
+    },
+  },
 });
 
 export const dayBox = style({

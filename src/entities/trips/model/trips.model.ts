@@ -38,6 +38,43 @@ export type CreateTrip = {
   region: string;
   peopleCount: number;
 };
+
+export type CategoryType = "MORNING" | "AFTERNOON" | "EVENING" | "LUNCH" | "CAFE" | "DINNER";
+
+export type ThemeType =
+  | "FAMOUS_SPOT"
+  | "EXPERIENCE_ACTIVITY"
+  | "SNS_HOTSPOT"
+  | "HEALING"
+  | "CULTURE_ART"
+  | "SHOPPING"
+  | "RESTAURANT";
+
+export type Place = {
+  id: number;
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  description: string;
+  imageUrl: string;
+  operatingHours: string | null;
+  holidayInfo: string | null;
+  isMustVisit: boolean;
+  themes: ThemeType[];
+};
+
+export type SchedulePlaceData = {
+  id: number;
+  visitOrder: number;
+  category: CategoryType;
+  startTime: string;
+  endTime: string;
+  travelTime: number;
+  transportation: "PUBLIC_TRANSIT" | "WALKING" | "CAR";
+  place: Place;
+};
+
 export type DayPlanData = {
   id: number;
   dayNumber: 1 | 2 | 3 | 4 | 5 | 6;
@@ -46,16 +83,7 @@ export type DayPlanData = {
   description: string;
   scheduledPlaces: SchedulePlaceData[];
 };
-export type SchedulePlaceData = {
-  id: number;
-  placeId: number;
-  visitOrder: number;
-  category: "MORNING" | "LUNCH" | "AFTERNOON" | "DINNER" | "EVENING";
-  startTime: string;
-  endTime: string;
-  travelTime: number;
-  transportation: "PUBLIC_TRANSIT" | "WALKING" | "CAR";
-};
+
 export type ChatMessage = {
   type: "COMPLETED";
   content: string;
@@ -72,8 +100,8 @@ export type ScheduleMessage = {
   type: "DAILY_PLAN_GENERATED";
   tripPlanId: number;
   dailyPlan: DayPlanData;
+  message: string;
 };
-
 export type GetTripsResponse = ApiResponse<Trips>;
 export type GetStateTripIdResponse = ApiResponse<TripId>;
 export type GetTripPlanInfoResponse = ApiResponse<TripPlanInfo>;

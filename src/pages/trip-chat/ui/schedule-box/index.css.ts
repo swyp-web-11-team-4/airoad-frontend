@@ -60,6 +60,18 @@ export const dayContainer = style({
   overflowY: "auto",
   alignItems: "center",
   justifyContent: "flex-start",
+  selectors: {
+    "&::-webkit-scrollbar": {
+      width: "4px",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "#00083046",
+      borderRadius: "8px",
+    },
+    "&::-webkit-scrollbar-track": {
+      background: "#0000330F",
+    },
+  },
 });
 
 export const dayTitle = recipe({
@@ -86,23 +98,27 @@ export const dayBox = style({
   borderTop: "1px solid var(--gray-3)",
   borderBottom: "1px solid var(--gray-3)",
   flexShrink: 0,
+  width: "100%",
 });
 
 export const dayImg = style({
   width: "128px",
   height: "128px",
   borderRadius: "10px",
+  flexShrink: 0,
 });
 
 export const dayInfo = style({
   display: "flex",
   flexDirection: "column",
   gap: "8px",
+  flex: 1,
 });
 
 export const dayTag = style({
   display: "flex",
   gap: "8px",
+  alignItems: "center",
 });
 
 export const tagBadge = recipe({
@@ -113,7 +129,8 @@ export const tagBadge = recipe({
   variants: {
     category: {
       MORNING: { background: "#D6EBFF", color: "#004A9F" },
-      LUNCH: { background: "#FFE7B2", color: "#8A4A00" },
+      LUNCH: { background: "#FFF8E5", color: "#FF7A00" },
+      CAFE: { background: "#FFF8E5", color: "#FF7A00" },
       AFTERNOON: { background: "#FFF8E5", color: "#FF7A00" },
       DINNER: { background: "#E4D8FF", color: "#4C2BB0" },
       EVENING: { background: "#E4D8FF", color: "#4C2BB0" },

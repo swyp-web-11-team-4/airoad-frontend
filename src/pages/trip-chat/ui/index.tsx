@@ -40,7 +40,7 @@ export const TripChatPage = () => {
   return (
     <div className={styles.container}>
       <ChatSection />
-      <ScheduleSection messages={schedule} />
+      <ScheduleSection schedule={schedule} />
     </div>
   );
 };
