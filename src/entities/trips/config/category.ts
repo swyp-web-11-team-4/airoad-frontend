@@ -1,5 +1,3 @@
-import type { Place, SchedulePlaceData } from "../model/trips.model";
-
 export const PLACE_OPTIONS: string[] = [
   "서울",
   "부산",
