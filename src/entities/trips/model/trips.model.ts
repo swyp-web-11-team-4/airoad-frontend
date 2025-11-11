@@ -85,9 +85,13 @@ export type DayPlanData = {
 };
 
 export type ChatMessage = {
-  type: "COMPLETED";
-  content: string;
-  createdAt?: string;
+  isComplete: boolean;
+  message: string;
+  timestamp?: string;
+};
+
+export type Chat = ChatMessage & {
+  messageType: "USER" | "ASSISTANT";
 };
 
 export type ErrorMessage = {

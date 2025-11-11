@@ -15,7 +15,7 @@ export const TripChatPage = () => {
   const tripPlanId = Number(params.get("tripPlanId"));
   const isCreate = state?.create ?? false;
   const { mutate: postTripPlan } = useStartTripPlan();
-  const { connected, chat, schedule, error } = useTripPlanStreams({
+  const { connected, chat, schedule, sendMessage } = useTripPlanStreams({
     chatRoomId: conversationId ?? 0,
     tripPlanId: tripPlanId ?? 0,
     token: accessToken,
@@ -23,23 +23,13 @@ export const TripChatPage = () => {
 
   useEffect(() => {
     if (connected && isCreate) {
-      postTripPlan(tripPlanId ?? 0);
+      postTripPlan(tripPlanId);
     }
   }, [connected]);
 
-  useEffect(() => {
-    console.log(chat);
-  }, [chat]);
-
-  useEffect(() => {
-    console.log(JSON.stringify(chat));
-    console.log(JSON.stringify(schedule));
-    console.log(JSON.stringify(error));
-  });
-
   return (
     <div className={styles.container}>
-      <ChatSection />
+      <ChatSection conversationId={conversationId} chat={chat} sendMessage={sendMessage} />
       <ScheduleSection schedule={schedule} />
     </div>
   );

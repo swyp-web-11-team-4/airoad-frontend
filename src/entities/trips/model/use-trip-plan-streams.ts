@@ -1,7 +1,7 @@
 import type { Client, IFrame, StompSubscription } from "@stomp/stompjs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createStompClient } from "@/shared/lib";
-import type { ChatMessage, ErrorMessage, ScheduleMessage } from "./trips.model";
+import type { Chat, ChatMessage, ErrorMessage, ScheduleMessage } from "./trips.model";
 
 type Props = {
   chatRoomId: number;
@@ -23,7 +23,7 @@ export function useTripPlanStreams({
   const clientRef = useRef<Client | null>(null);
   const subsRef = useRef<StompSubscription[]>([]);
   const [connected, setConnected] = useState(false);
-  const [chat, setChat] = useState<ChatMessage[]>([]);
+  const [chat, setChat] = useState<Chat[]>([]);
   const [error, setError] = useState<ErrorMessage>();
   const [schedule, setSchedule] = useState<ScheduleMessage[]>([]);
 
@@ -60,7 +60,7 @@ export function useTripPlanStreams({
         paths.chat,
         (msg) => {
           const data = JSON.parse(msg.body) as ChatMessage;
-          setChat((prev) => [...prev, data]);
+          setChat((prev) => [...prev, { messageType: "ASSISTANT", ...data }]);
         },
         { receipt: "sub-chat" },
       );
@@ -110,10 +110,21 @@ export function useTripPlanStreams({
 
   const sendMessage = (content: string, type: "TEXT" | "IMAGE" = "TEXT") => {
     if (!clientRef.current || !connected) return;
+
     clientRef.current.publish({
       destination: `/pub/chat/${chatRoomId}/message`,
       body: JSON.stringify({ content, messageType: type }),
     });
+
+    setChat((prev) => [
+      ...prev,
+      {
+        messageType: "USER",
+        isComplete: true,
+        message: content,
+        timestamp: new Date().toISOString(),
+      },
+    ]);
   };
 
   return { connected, sendMessage, chat, schedule, error };
