@@ -39,16 +39,51 @@ export type CreateTrip = {
   peopleCount: number;
 };
 
+export type CategoryType = "MORNING" | "AFTERNOON" | "EVENING" | "LUNCH" | "CAFE" | "DINNER";
+
+export type ThemeType =
+  | "FAMOUS_SPOT"
+  | "EXPERIENCE_ACTIVITY"
+  | "SNS_HOTSPOT"
+  | "HEALING"
+  | "CULTURE_ART"
+  | "SHOPPING"
+  | "RESTAURANT";
+
+export type Place = {
+  id: number;
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  description: string;
+  imageUrl: string;
+  operatingHours: string | null;
+  holidayInfo: string | null;
+  isMustVisit: boolean;
+  themes: ThemeType[];
+};
+
 export type SchedulePlaceData = {
   id: number;
-  placeId: number;
   visitOrder: number;
-  category: "MORNING" | "LUNCH" | "AFTERNOON" | "DINNER";
+  category: CategoryType;
   startTime: string;
   endTime: string;
   travelTime: number;
   transportation: "PUBLIC_TRANSIT" | "WALKING" | "CAR";
+  place: Place;
 };
+
+export type DayPlanData = {
+  id: number;
+  dayNumber: 1 | 2 | 3 | 4 | 5 | 6;
+  date: string;
+  title: string;
+  description: string;
+  scheduledPlaces: SchedulePlaceData[];
+};
+
 export type ChatMessage = {
   type: "COMPLETED";
   content: string;
@@ -64,16 +99,9 @@ export type ErrorMessage = {
 export type ScheduleMessage = {
   type: "DAILY_PLAN_GENERATED";
   tripPlanId: number;
-  dailyPlan: {
-    id: number;
-    dayNumber: number;
-    date: string;
-    title: string;
-    description: string;
-    scheduledPlaces: SchedulePlaceData[];
-  };
+  dailyPlan: DayPlanData;
+  message: string;
 };
-
 export type GetTripsResponse = ApiResponse<Trips>;
 export type GetStateTripIdResponse = ApiResponse<TripId>;
 export type GetTripPlanInfoResponse = ApiResponse<TripPlanInfo>;

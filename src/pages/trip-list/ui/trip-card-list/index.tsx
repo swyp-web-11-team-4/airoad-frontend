@@ -1,5 +1,5 @@
 import { AlertDialog, Button } from "@radix-ui/themes";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router";
@@ -20,7 +20,7 @@ function TripCardList({ sortParam }: { sortParam: Field }) {
     hasNextPage,
     isFetchingNextPage,
     isError,
-  } = useInfiniteQuery(tripsQueries.infinite(sortParam, 20));
+  } = useSuspenseInfiniteQuery(tripsQueries.infinite(sortParam, 20));
 
   const onDelete = () => {
     if (selectedTrip) {
@@ -35,7 +35,7 @@ function TripCardList({ sortParam }: { sortParam: Field }) {
     }
   };
 
-  if (!trips || trips.length === 0)
+  if (trips?.length === 0)
     return (
       <DataFetchState
         type="empty"
@@ -47,13 +47,13 @@ function TripCardList({ sortParam }: { sortParam: Field }) {
     );
   return (
     <InfiniteScroll
-      dataLength={trips.length}
+      dataLength={trips?.length || 0}
       hasMore={!isError && !!hasNextPage}
       next={fetchNextPage}
       className={styles.cardContainer}
       loader={isFetchingNextPage ? <CardItemSkeleton size={4} /> : null}
     >
-      {trips.map((trip) => (
+      {trips?.map((trip) => (
         <AlertDialog.Root key={trip.id}>
           <AlertDialog.Trigger>
             <CardItem

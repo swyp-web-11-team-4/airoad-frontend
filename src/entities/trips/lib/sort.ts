@@ -3,7 +3,7 @@ import { createOrderString } from "@/shared/lib";
 import { type Field, field } from "../config/field.ts";
 export const createTripSort = (value: Field) => {
   if (value === field.createdAt) {
-    return createOrderString(field.createdAt, order.asc);
+    return createOrderString(field.createdAt, order.desc);
   }
-  return createOrderString(field.startDate, order.desc);
+  return createOrderString(field.startDate, order.asc);
 };

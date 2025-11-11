@@ -20,15 +20,6 @@ export const TERM_OPTIONS = [
   { id: 5, label: "4박 5일" },
   { id: 6, label: "5박 6일" },
 ];
-export const THEME_OPTIONS = [
-  { id: "FAMOUS_SPOT", label: "유명관광지", emoji: "🚠" },
-  { id: "EXPERIENCE_ACTIVITY", label: "체험/액티비티", emoji: "🌊" },
-  { id: "SNS_HOTSPOT", label: "SNS 핫플", emoji: "📷" },
-  { id: "HEALING", label: "힐링", emoji: "🍵" },
-  { id: "CULTURE_ART", label: "문화/예술", emoji: "🏛️" },
-  { id: "SHOPPING", label: "쇼핑", emoji: "🛍️" },
-  { id: "RESTAURANT", label: "음식점", emoji: "🥘" },
-];
 
 export const PEOPLE_OPTIONS = [
   { id: 1, label: "1인" },
@@ -38,3 +29,22 @@ export const PEOPLE_OPTIONS = [
   { id: 5, label: "5인" },
   { id: 6, label: "6인 이상" },
 ];
+
+export const THEME_OPTIONS = [
+  { id: "FAMOUS_SPOT", label: "유명관광지", emoji: "🚠" },
+  { id: "EXPERIENCE_ACTIVITY", label: "체험/액티비티", emoji: "🌊" },
+  { id: "SNS_HOTSPOT", label: "SNS 핫플", emoji: "📷" },
+  { id: "HEALING", label: "힐링", emoji: "🍵" },
+  { id: "CULTURE_ART", label: "문화/예술", emoji: "🏛️" },
+  { id: "SHOPPING", label: "쇼핑", emoji: "🛍️" },
+  { id: "RESTAURANT", label: "음식점", emoji: "🥘" },
+] as const;
+
+export const CATEGORY_OPTIONS = {
+  MORNING: "오전일정",
+  AFTERNOON: "오후일정",
+  EVENING: "저녁일정",
+  LUNCH: "오후일정",
+  CAFE: "오후일정",
+  DINNER: "저녁일정",
+};

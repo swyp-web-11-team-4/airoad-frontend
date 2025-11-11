@@ -21,7 +21,7 @@ export const ChatHeader = () => {
 
   useEffect(() => {
     if (!tripPlanId) navigate(PAGE_ROUTES.ROOT);
-  }, [tripPlanId]);
+  }, [tripPlanId, navigate]);
   return (
     <Header>
       <Flex align="center" gap="20px">

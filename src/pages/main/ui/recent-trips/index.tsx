@@ -1,5 +1,5 @@
 import { Text } from "@radix-ui/themes";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { tripsQueries } from "@/entities/trips/model";
 import { PAGE_ROUTES } from "@/shared/config";
@@ -7,7 +7,7 @@ import { CardItem, CardItemSkeleton, DataFetchState, withAsyncBoundary } from "@
 import * as styles from "./index.css";
 
 function RecentTrips() {
-  const { data: trips } = useQuery(tripsQueries.list());
+  const { data: trips } = useSuspenseQuery(tripsQueries.list());
   if (!trips || trips.length === 0)
     return (
       <div className={styles.logBox}>

@@ -9,8 +9,10 @@ export const cardBox = style({
   cursor: "pointer",
 });
 export const cardImg = style({
-  width: "100%",
   borderRadius: "12px",
+  width: "100%",
+  height: "252px",
+  objectFit: "cover",
 });
 export const cardData = style({
   display: "flex",
