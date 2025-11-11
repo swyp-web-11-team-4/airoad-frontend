@@ -1,6 +1,6 @@
 import { Avatar, Flex, Text } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
-import { memberQueries } from "@/entities/member/model";
+import { membersQueries } from "@/entities/members/model";
 import defaultUserImage from "@/shared/asset/default-user.jpg";
 import * as styles from "./index.css";
 
@@ -9,7 +9,7 @@ interface UserMessageProps {
 }
 
 export const UserMessage = ({ text }: UserMessageProps) => {
-  const { data: user } = useQuery(memberQueries.me());
+  const { data: user } = useQuery(membersQueries.me());
 
   return (
     <Flex align="end" direction="column" gap="10px">

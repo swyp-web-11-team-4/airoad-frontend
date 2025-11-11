@@ -6,7 +6,7 @@ import { LoginDialog } from "@/entities/auth/ui";
 
 import defaultUserImage from "@/shared/asset/default-user.jpg";
 import { PAGE_ROUTES } from "@/shared/config";
-import { memberQueries } from "../../model";
+import { membersQueries } from "../../model";
 import * as styles from "./index.css";
 
 export const UserSection = () => {
@@ -19,14 +19,14 @@ export const UserSection = () => {
   const signOut = async () => {
     try {
       await logout();
-      queryClient.removeQueries({ queryKey: memberQueries.me().queryKey });
+      queryClient.removeQueries({ queryKey: membersQueries.me().queryKey });
       navigate(PAGE_ROUTES.ROOT);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const { data: user, isLoading } = useQuery(memberQueries.me());
+  const { data: user, isLoading } = useQuery(membersQueries.me());
 
   if (isLoading) return <Skeleton width="40px" height="40px" />;
 

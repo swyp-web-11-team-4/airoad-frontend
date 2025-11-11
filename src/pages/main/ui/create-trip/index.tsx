@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { LoginDialog } from "@/entities/auth/ui";
-import { memberQueries } from "@/entities/member/model";
+import { membersQueries } from "@/entities/members/model";
 import {
   PEOPLE_OPTIONS,
   PLACE_OPTIONS,
@@ -21,7 +21,7 @@ import * as styles from "./index.css";
 
 export default function CreateTrip() {
   const navigate = useNavigate();
-  const { data: user } = useQuery(memberQueries.me());
+  const { data: user } = useQuery(membersQueries.me());
   const [place, setPlace] = useState("서울");
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [termId, setTermId] = useState<number>(1);

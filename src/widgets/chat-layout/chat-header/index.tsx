@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
-import { UserSection } from "@/entities/member/ui";
+import { UserSection } from "@/entities/members/ui";
 import { PEOPLE_OPTIONS, TERM_OPTIONS, THEME_OPTIONS } from "@/entities/trips/config";
 import { tripsQueries } from "@/entities/trips/model";
 import iconLogo from "@/shared/asset/icon-logo.png";

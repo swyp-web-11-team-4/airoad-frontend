@@ -6,7 +6,7 @@ import { UserMessage } from "../user-message";
 export const ChatSection = () => {
   return (
     <Flex gap="5" direction="column" width="588px">
-      <Flex gap="5" direction="column" pl="20px" pr="8px">
+      <Flex gap="5" justify="end" direction="column" px="20px" flexGrow="1" overflowY="auto">
         <AssistantMessage content="이런 일정이 있어요! 이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!" />
         <UserMessage text="내가 선택한 일정 다른걸로 바꿔줘!" />
       </Flex>
