@@ -1,6 +1,6 @@
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import { Flex, IconButton } from "@radix-ui/themes";
-import * as styles from "./chat-input.css";
+import * as styles from "./index.css";
 
 export const ChatInput = () => {
   return (

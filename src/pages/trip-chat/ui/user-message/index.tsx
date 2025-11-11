@@ -1,7 +1,7 @@
 import { Avatar, Flex, Text } from "@radix-ui/themes";
 import { useMeQuery } from "@/entities/member/api";
 import defaultUserImage from "@/shared/asset/default-user.jpg";
-import * as styles from "./user-message.css";
+import * as styles from "./index.css";
 
 interface UserMessageProps {
   text: string;

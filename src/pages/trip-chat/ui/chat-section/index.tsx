@@ -1,11 +1,11 @@
 import { Flex, Text } from "@radix-ui/themes";
-import { AssistantMessage } from "./assistant-message";
-import { ChatInput } from "./chat-input";
-import { UserMessage } from "./user-message";
+import { AssistantMessage } from "../assistant-message";
+import { ChatInput } from "../chat-input";
+import { UserMessage } from "../user-message";
 
 export const ChatSection = () => {
   return (
-    <Flex gap="5" direction="column">
+    <Flex gap="5" direction="column" width="588px">
       <Flex gap="5" direction="column" pl="20px" pr="8px">
         <AssistantMessage content="이런 일정이 있어요! 이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!이런 일정이 있어요!" />
         <UserMessage text="내가 선택한 일정 다른걸로 바꿔줘!" />

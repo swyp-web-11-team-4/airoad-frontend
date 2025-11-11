@@ -2,7 +2,7 @@ import { Flex } from "@radix-ui/themes";
 import type { ReactNode } from "react";
 import iconLogo from "@/shared/asset/icon-logo.png";
 
-import * as styles from "./assistant-message.css";
+import * as styles from "./index.css";
 
 interface AssistantMessageProps {
   content: ReactNode;
