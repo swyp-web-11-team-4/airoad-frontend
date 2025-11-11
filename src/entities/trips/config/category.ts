@@ -1,4 +1,4 @@
-import type { SchedulePlaceData } from "../model/trips.model";
+import type { Place, SchedulePlaceData } from "../model/trips.model";
 
 export const PLACE_OPTIONS: string[] = [
   "서울",
@@ -32,12 +32,23 @@ export const PEOPLE_OPTIONS = [
   { id: 6, label: "6인 이상" },
 ];
 
-export const CATEGORY_OPTIONS: Record<SchedulePlaceData["category"], string> = {
+export const THEME_OPTIONS = [
+  { id: "FAMOUS_SPOT", label: "유명관광지", emoji: "🚠" },
+  { id: "EXPERIENCE_ACTIVITY", label: "체험/액티비티", emoji: "🌊" },
+  { id: "SNS_HOTSPOT", label: "SNS 핫플", emoji: "📷" },
+  { id: "HEALING", label: "힐링", emoji: "🍵" },
+  { id: "CULTURE_ART", label: "문화/예술", emoji: "🏛️" },
+  { id: "SHOPPING", label: "쇼핑", emoji: "🛍️" },
+  { id: "RESTAURANT", label: "음식점", emoji: "🥘" },
+] as const;
+
+export const CATEGORY_OPTIONS = {
   MORNING: "오전일정",
-  LUNCH: "점심",
   AFTERNOON: "오후일정",
-  DINNER: "저녁",
-  EVENING: "저녁",
+  EVENING: "저녁일정",
+  LUNCH: "오후일정",
+  CAFE: "오후일정",
+  DINNER: "저녁일정",
 };
 
 export const THEME_OPTIONS = [
