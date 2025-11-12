@@ -1,7 +1,7 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { type LoaderFunctionArgs, redirect } from "react-router";
 import { useAuthStore } from "@/entities/auth/model";
-import { getMe, memberQueries } from "@/entities/member/api";
+import { membersQueries } from "@/entities/members/model";
 import { PAGE_ROUTES, SESSION_STORAGE_KEYS } from "@/shared/config";
 
 export const createProtectedLoader =
@@ -17,7 +17,7 @@ export const createProtectedLoader =
     }
 
     try {
-      await queryClient.ensureQueryData({ queryKey: memberQueries.me(), queryFn: getMe });
+      await queryClient.ensureQueryData(membersQueries.me());
     } catch {
       throw redirect(PAGE_ROUTES.ROOT);
     }

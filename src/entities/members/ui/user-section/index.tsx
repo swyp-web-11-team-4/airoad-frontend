@@ -1,15 +1,15 @@
 import { Avatar, DropdownMenu, Skeleton } from "@radix-ui/themes";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { useAuthStore } from "@/entities/auth/model";
 import { LoginDialog } from "@/entities/auth/ui";
-import { memberQueries, useMeQuery } from "@/entities/member/api";
+
 import defaultUserImage from "@/shared/asset/default-user.jpg";
 import { PAGE_ROUTES } from "@/shared/config";
+import { membersQueries } from "../../model";
 import * as styles from "./index.css";
 
 export const UserSection = () => {
-  const accessToken = useAuthStore((state) => state.accessToken);
   const logout = useAuthStore((state) => state.logout);
 
   const queryClient = useQueryClient();
@@ -19,16 +19,14 @@ export const UserSection = () => {
   const signOut = async () => {
     try {
       await logout();
-      queryClient.removeQueries({ queryKey: memberQueries.me() });
+      queryClient.removeQueries({ queryKey: membersQueries.me().queryKey });
       navigate(PAGE_ROUTES.ROOT);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const { data: user, isLoading } = useMeQuery({
-    enabled: !!accessToken,
-  });
+  const { data: user, isLoading } = useQuery(membersQueries.me());
 
   if (isLoading) return <Skeleton width="40px" height="40px" />;
 
@@ -39,11 +37,7 @@ export const UserSection = () => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger className={styles.trigger}>
-        <Avatar
-          src={user.data.imageUrl ?? defaultUserImage}
-          alt="유저 이미지"
-          fallback={user.data.name[0]}
-        />
+        <Avatar src={user.imageUrl ?? defaultUserImage} alt="유저 이미지" fallback={user.name[0]} />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content className={styles.menu} side="bottom" align="end">
         <DropdownMenu.Item onClick={signOut}>로그아웃</DropdownMenu.Item>

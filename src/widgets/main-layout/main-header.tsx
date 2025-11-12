@@ -1,4 +1,4 @@
-import { UserSection } from "@/entities/member/ui";
+import { UserSection } from "@/entities/members/ui";
 import logo from "@/shared/asset/logo.png";
 import { Header } from "../header";
 

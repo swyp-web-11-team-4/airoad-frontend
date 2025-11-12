@@ -84,6 +84,7 @@ api.interceptors.response.use(
       }
     } catch (err) {
       processQueue(err, null);
+      useAuthStore.getState().removeTokens();
       return Promise.reject(err);
     } finally {
       isRefreshing = false;

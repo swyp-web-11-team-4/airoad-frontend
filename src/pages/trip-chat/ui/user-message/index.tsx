@@ -1,21 +1,22 @@
 import { Avatar, Flex, Text } from "@radix-ui/themes";
-import { useMeQuery } from "@/entities/member/api";
+import { useQuery } from "@tanstack/react-query";
+import { membersQueries } from "@/entities/members/model";
 import defaultUserImage from "@/shared/asset/default-user.jpg";
-import * as styles from "./user-message.css";
+import * as styles from "./index.css";
 
 interface UserMessageProps {
   text: string;
 }
 
 export const UserMessage = ({ text }: UserMessageProps) => {
-  const { data: user } = useMeQuery();
+  const { data: user } = useQuery(membersQueries.me());
 
   return (
     <Flex align="end" direction="column" gap="10px">
       <Avatar
-        src={user?.data.imageUrl ?? defaultUserImage}
+        src={user?.imageUrl ?? defaultUserImage}
         radius="full"
-        fallback={user?.data.name[0] ?? "U"}
+        fallback={user?.name[0] ?? "U"}
         className={styles.avatar}
       />
       <div className={styles.messageBubble}>

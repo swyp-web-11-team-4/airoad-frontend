@@ -6,6 +6,7 @@ import { logout, refreshAccessToken } from "../api/auth.api";
 
 export interface AuthState extends TokenData {
   setTokens: (tokenData: TokenData) => void;
+  removeTokens: () => void;
   logout: () => Promise<void>;
   reissue: () => Promise<TokenData>;
 }
@@ -20,6 +21,10 @@ export const useAuthStore = create<AuthState>()(
 
       setTokens: (tokenData: TokenData) => {
         set((prev) => ({ ...prev, ...tokenData }));
+      },
+
+      removeTokens: () => {
+        set((prev) => ({ ...prev, accessToken: "", refreshToken: "" }));
       },
 
       reissue: async () => {

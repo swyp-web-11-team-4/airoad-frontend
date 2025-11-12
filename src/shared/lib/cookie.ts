@@ -8,7 +8,7 @@ export const createCookiesStorage = <T>(): PersistStorage<T> => ({
   },
 
   setItem: (name: string, value: StorageValue<T>): void => {
-    setCookie(name, JSON.stringify(value), { expires: 1 });
+    setCookie(name, JSON.stringify(value), { expires: 1, path: "/", sameSite: "strict" });
   },
 
   removeItem: (name: string): void => {
