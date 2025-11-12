@@ -44,9 +44,6 @@ export const CATEGORY_OPTIONS = {
   MORNING: "오전일정",
   AFTERNOON: "오후일정",
   EVENING: "저녁일정",
-  LUNCH: "오후일정",
-  CAFE: "오후일정",
-  DINNER: "저녁일정",
 };
 
 export const THEME_OPTIONS = [

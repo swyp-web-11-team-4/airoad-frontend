@@ -15,7 +15,7 @@ export const skeletonBox = style({
 
 export const skeletonHeader = style({
   position: "relative",
-  padding: "20px 24px",
+  padding: "28px 24px 20px 24px",
   display: "flex",
   flexDirection: "column",
   gap: "4px",

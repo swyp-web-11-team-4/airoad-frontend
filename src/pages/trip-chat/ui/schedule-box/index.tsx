@@ -17,7 +17,7 @@ export const ScheduleBox = forwardRef<HTMLDivElement, DayPlanData>(
           <Text size="6" weight="bold">
             {title}
           </Text>
-          <Text size="2">{dayjs(date).format("YYYY년 MM월 DD일, ddd")}</Text>
+          <Text size="2">{dayjs(date).format("YYYY년 MM월 DD일, dddd")}</Text>
         </div>
         <div className={styles.dayContainer}>
           {scheduledPlaces.map((place, idx) => (
