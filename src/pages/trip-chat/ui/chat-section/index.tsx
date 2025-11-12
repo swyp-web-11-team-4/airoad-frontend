@@ -1,6 +1,6 @@
 import { Flex, Text } from "@radix-ui/themes";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { type FormEventHandler, useCallback, useEffect, useRef } from "react";
+import { type FormEventHandler, useCallback, useEffect, useMemo, useRef } from "react";
 import { chatsQueries, type MessageType } from "@/entities/chats/model";
 import type { Chat } from "@/entities/trips/model/trips.model";
 import type { useTripPlanStreams } from "@/entities/trips/model/use-trip-plan-streams";
@@ -18,6 +18,11 @@ export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionPr
   const chatListRef = useRef<HTMLDivElement>(null);
 
   const { data: previousChats } = useSuspenseQuery(chatsQueries.messageList(conversationId));
+
+  const sortedPreviousChats = useMemo(
+    () => [...previousChats.content].sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
+    [previousChats.content],
+  );
 
   const scrollToBottom = useCallback(() => {
     if (chatListRef.current) {
@@ -60,11 +65,9 @@ export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionPr
         flexGrow="1"
         overflowY="auto"
       >
-        {previousChats.content
-          .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
-          .map(({ id, content, messageType }) => (
-            <Message key={id} message={content} messageType={messageType} />
-          ))}
+        {sortedPreviousChats.map(({ id, content, messageType }) => (
+          <Message key={id} message={content} messageType={messageType} />
+        ))}
         {chat?.length > 0
           ? chat.map(({ messageType, message, timestamp }) => {
               return <Message key={timestamp} message={message} messageType={messageType} />;
