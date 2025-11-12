@@ -66,18 +66,8 @@ export function useTripPlanStreams({
       const chatSub = client.subscribe(
         paths.chat,
         (msg) => {
-          const data = JSON.parse(msg.body) as ChatMessage | ScheduleMessage;
-
-          if ("type" in data) {
-            const scheduleData = data as ScheduleMessage;
-
-            if (scheduleData.type === "COMPLETED") {
-              queryClient.invalidateQueries({ queryKey: tripsQueries.info(tripPlanId).queryKey });
-            }
-          } else {
-            const chatData = data as ChatMessage;
-            addChat({ messageType: "ASSISTANT", ...chatData });
-          }
+          const data = JSON.parse(msg.body) as ChatMessage;
+          addChat({ messageType: "ASSISTANT", ...data });
         },
         { receipt: "sub-chat" },
       );
@@ -92,6 +82,10 @@ export function useTripPlanStreams({
         (msg) => {
           const data = JSON.parse(msg.body) as ScheduleMessage;
           setSchedule((prev) => [...prev, data]);
+
+          if (data.type === "COMPLETED") {
+            queryClient.invalidateQueries({ queryKey: tripsQueries.info(tripPlanId).queryKey });
+          }
         },
         { receipt: "sub-schedule" },
       );
