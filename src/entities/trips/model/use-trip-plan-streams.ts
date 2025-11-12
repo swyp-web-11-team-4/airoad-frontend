@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useChatStore } from "@/entities/chats/model";
 import { createStompClient } from "@/shared/lib";
-import type { Chat, ChatMessage, ErrorMessage, ScheduleMessage } from "./trips.model";
+import type { ChatMessage, ErrorMessage, ScheduleMessage } from "./trips.model";
 import { tripsQueries } from "./trips.queries";
 
 type Props = {

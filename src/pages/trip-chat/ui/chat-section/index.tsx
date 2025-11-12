@@ -2,14 +2,10 @@ import { Flex, Text } from "@radix-ui/themes";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { type FormEventHandler, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router";
-import { chatsQueries, type MessageType, useChatStore } from "@/entities/chats/model";
+import { chatsQueries, useChatStore } from "@/entities/chats/model";
+import { AssistantMessage, ChatForm, ChatMessage, ScheduleCreatingChat } from "@/entities/chats/ui";
 import { tripsQueries } from "@/entities/trips/model";
-import type { Chat } from "@/entities/trips/model/trips.model";
 import type { useTripPlanStreams } from "@/entities/trips/model/use-trip-plan-streams";
-import { AssistantMessage } from "../assistant-message";
-import { ChatForm } from "../chat-form";
-import { ScheduleCreatingChat } from "../schedule-creating-chat";
-import { UserMessage } from "../user-message";
 
 interface ChatSectionProps {
   conversationId: number;
@@ -96,16 +92,20 @@ export const ChatSection = ({ conversationId, sendMessage }: ChatSectionProps) =
         overflowY="auto"
       >
         {sortedPreviousChats.map(({ id, content, messageType }) => (
-          <Message key={id} message={content} messageType={messageType} />
+          <ChatMessage key={id} content={content} messageType={messageType} />
         ))}
 
         {chats?.length > 0 ? (
           <>
             {restChats.map(({ messageType, message, timestamp }) => {
-              return <Message key={timestamp} message={message} messageType={messageType} />;
+              return <ChatMessage key={timestamp} content={message} messageType={messageType} />;
             })}
             {recentChat && (
-              <Message message={recentChat.message} messageType={recentChat.messageType} animate />
+              <ChatMessage
+                content={recentChat.message}
+                messageType={recentChat.messageType}
+                animate
+              />
             )}
           </>
         ) : null}
@@ -124,23 +124,4 @@ export const ChatSection = ({ conversationId, sendMessage }: ChatSectionProps) =
       </Flex>
     </Flex>
   );
-};
-
-const Message = ({
-  messageType,
-  message,
-  animate,
-}: {
-  messageType: MessageType;
-  message: string;
-  animate?: boolean;
-}) => {
-  switch (messageType) {
-    case "ASSISTANT":
-      return <AssistantMessage content={message} animate={animate} />;
-    case "USER":
-      return <UserMessage text={message} animate={animate} />;
-    default:
-      return null;
-  }
 };

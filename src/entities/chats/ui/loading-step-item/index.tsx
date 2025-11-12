@@ -1,7 +1,7 @@
 import { Flex, Text } from "@radix-ui/themes";
-import type { LoadingStep } from "./constants";
+import type { LoadingStep } from "@/entities/chats/model";
+import { JobState } from "../job-state";
 import * as styles from "./index.css";
-import { JobState } from "./job-state";
 
 interface LoadingStepItemProps {
   step: LoadingStep;

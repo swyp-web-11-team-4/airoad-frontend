@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { LOADING_STEPS, STEP_TRANSITION_INTERVAL } from "./constants";
+import { LOADING_STEPS, STEP_TRANSITION_INTERVAL } from "./chats.constants";
 
 interface UseLoadingProgressProps {
   isCompleted: boolean;

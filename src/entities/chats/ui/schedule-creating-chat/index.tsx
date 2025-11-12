@@ -1,8 +1,7 @@
 import { Flex, Text } from "@radix-ui/themes";
-import { LOADING_STEPS } from "./constants";
+import { LOADING_STEPS, useLoadingProgress } from "@/entities/chats/model";
+import { LoadingStepItem } from "../loading-step-item";
 import * as styles from "./index.css";
-import { LoadingStepItem } from "./loading-step-item";
-import { useLoadingProgress } from "./use-loading-progress";
 
 interface ScheduleCreatingChatProps {
   isCompleted?: boolean;
