@@ -1,4 +1,5 @@
 import type { Client, IFrame, StompSubscription } from "@stomp/stompjs";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useChatStore } from "@/entities/chats/model";
 import { createStompClient } from "@/shared/lib";
