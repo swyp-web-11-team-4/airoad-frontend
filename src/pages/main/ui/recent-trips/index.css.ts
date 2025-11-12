@@ -28,3 +28,10 @@ export const linkBox = style({
   border: "none",
   color: "inherit",
 });
+
+export const buttonBox = style({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  gap: "8px",
+});

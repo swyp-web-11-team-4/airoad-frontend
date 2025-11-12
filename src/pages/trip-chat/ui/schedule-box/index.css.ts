@@ -18,7 +18,7 @@ export const box = style({
 export const header = recipe({
   base: {
     position: "relative",
-    padding: "20px 24px",
+    padding: "28px 24px 20px 24px",
     display: "flex",
     flexDirection: "column",
     gap: "4px",
@@ -102,8 +102,8 @@ export const dayBox = style({
 });
 
 export const dayImg = style({
-  width: "128px",
-  height: "128px",
+  width: "108px",
+  height: "108px",
   borderRadius: "10px",
   flexShrink: 0,
 });
@@ -129,10 +129,7 @@ export const tagBadge = recipe({
   variants: {
     category: {
       MORNING: { background: "#D6EBFF", color: "#004A9F" },
-      LUNCH: { background: "#FFF8E5", color: "#FF7A00" },
-      CAFE: { background: "#FFF8E5", color: "#FF7A00" },
       AFTERNOON: { background: "#FFF8E5", color: "#FF7A00" },
-      DINNER: { background: "#E4D8FF", color: "#4C2BB0" },
       EVENING: { background: "#E4D8FF", color: "#4C2BB0" },
     },
   },
@@ -140,7 +137,7 @@ export const tagBadge = recipe({
 
 export const description = style({
   display: "-webkit-box",
-  WebkitLineClamp: 3,
+  WebkitLineClamp: 2,
   WebkitBoxOrient: "vertical",
   overflow: "hidden",
   textOverflow: "ellipsis",

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useSearchParams } from "react-router";
 import { tripsQueries } from "@/entities/trips/model";
 import type { ScheduleMessage } from "@/entities/trips/model/trips.model";
@@ -17,17 +17,13 @@ export function ScheduleSection({ schedule }: { schedule: ScheduleMessage[] }) {
   const filled = schedule.length;
   const remain = Math.max(total - filled, 0);
 
-  useEffect(() => {
-    lastRef.current?.scrollIntoView({ behavior: "smooth", inline: "end" });
-  }, [schedule]);
-
   return (
     <div className={styles.container}>
-      {schedule.map((data, idx) => (
+      {schedule.map((item, idx) => (
         <ScheduleBox
-          key={data.dailyPlan.id}
-          {...data.dailyPlan}
-          ref={idx === schedule.length - 1 ? lastRef : null}
+          key={item.dailyPlan?.id}
+          ref={idx === schedule.length - 1 ? lastRef : undefined}
+          {...item.dailyPlan}
         />
       ))}
 

@@ -1,10 +1,8 @@
 import type { Client, IFrame, StompSubscription } from "@stomp/stompjs";
-import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useChatStore } from "@/entities/chats/model";
 import { createStompClient } from "@/shared/lib";
 import type { ChatMessage, ErrorMessage, ScheduleMessage } from "./trips.model";
-import { tripsQueries } from "./trips.queries";
 
 type Props = {
   chatRoomId: number;
@@ -31,8 +29,6 @@ export function useTripPlanStreams({
   const [schedule, setSchedule] = useState<ScheduleMessage[]>([]);
 
   const addChat = useChatStore((state) => state.addChat);
-
-  const queryClient = useQueryClient();
 
   const paths = useMemo(
     () => ({
@@ -83,10 +79,6 @@ export function useTripPlanStreams({
         (msg) => {
           const data = JSON.parse(msg.body) as ScheduleMessage;
           setSchedule((prev) => [...prev, data]);
-
-          if (data.type === "COMPLETED") {
-            queryClient.invalidateQueries({ queryKey: tripsQueries.info(tripPlanId).queryKey });
-          }
         },
         { receipt: "sub-schedule" },
       );

@@ -37,14 +37,10 @@ export const THEME_OPTIONS = [
   { id: "HEALING", label: "힐링", emoji: "🍵" },
   { id: "CULTURE_ART", label: "문화/예술", emoji: "🏛️" },
   { id: "SHOPPING", label: "쇼핑", emoji: "🛍️" },
-  { id: "RESTAURANT", label: "음식점", emoji: "🥘" },
 ] as const;
 
 export const CATEGORY_OPTIONS = {
   MORNING: "오전일정",
   AFTERNOON: "오후일정",
   EVENING: "저녁일정",
-  LUNCH: "오후일정",
-  CAFE: "오후일정",
-  DINNER: "저녁일정",
 };
