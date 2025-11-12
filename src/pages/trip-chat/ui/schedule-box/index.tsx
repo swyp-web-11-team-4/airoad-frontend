@@ -1,6 +1,6 @@
 import { Badge, Text } from "@radix-ui/themes";
 import dayjs from "dayjs";
-import { forwardRef, useEffect } from "react";
+import { forwardRef } from "react";
 import { Fragment } from "react/jsx-runtime";
 import { CATEGORY_OPTIONS, THEME_OPTIONS } from "@/entities/trips/config/category";
 import type { DayPlanData } from "@/entities/trips/model/trips.model";

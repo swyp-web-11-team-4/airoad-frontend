@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useSearchParams } from "react-router";
 import { tripsQueries } from "@/entities/trips/model";
 import type { ScheduleMessage } from "@/entities/trips/model/trips.model";
