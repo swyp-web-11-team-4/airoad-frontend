@@ -1,8 +1,8 @@
 import type { Client, IFrame, StompSubscription } from "@stomp/stompjs";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useChatStore } from "@/entities/chats/model";
 import { createStompClient } from "@/shared/lib";
-import type { ChatMessage, ErrorMessage, ScheduleMessage } from "./trips.model";
+import type { Chat, ChatMessage, ErrorMessage, ScheduleMessage } from "./trips.model";
+import { tripsQueries } from "./trips.queries";
 
 type Props = {
   chatRoomId: number;
@@ -23,12 +23,12 @@ export function useTripPlanStreams({
 }: Props) {
   const clientRef = useRef<Client | null>(null);
   const subsRef = useRef<StompSubscription[]>([]);
-
+  const queryClient = useQueryClient();
   const [connected, setConnected] = useState(false);
+
+  const [chat, setChat] = useState<Chat[]>([]);
   const [error, setError] = useState<ErrorMessage>();
   const [schedule, setSchedule] = useState<ScheduleMessage[]>([]);
-
-  const addChat = useChatStore((state) => state.addChat);
 
   const paths = useMemo(
     () => ({
@@ -63,8 +63,7 @@ export function useTripPlanStreams({
         paths.chat,
         (msg) => {
           const data = JSON.parse(msg.body) as ChatMessage;
-
-          addChat({ messageType: "ASSISTANT", ...data });
+          setChat((prev) => [...prev, { messageType: "ASSISTANT", ...data }]);
         },
         { receipt: "sub-chat" },
       );
@@ -79,6 +78,9 @@ export function useTripPlanStreams({
         (msg) => {
           const data = JSON.parse(msg.body) as ScheduleMessage;
           setSchedule((prev) => [...prev, data]);
+          if (data.type === "COMPLETED") {
+            queryClient.invalidateQueries({ queryKey: tripsQueries.info(tripPlanId).queryKey });
+          }
         },
         { receipt: "sub-schedule" },
       );
@@ -120,13 +122,16 @@ export function useTripPlanStreams({
       body: JSON.stringify({ content, messageType: type }),
     });
 
-    addChat({
-      messageType: "USER",
-      isComplete: true,
-      message: content,
-      timestamp: new Date().toISOString(),
-    });
+    setChat((prev) => [
+      ...prev,
+      {
+        messageType: "USER",
+        isComplete: true,
+        message: content,
+        timestamp: new Date().toISOString(),
+      },
+    ]);
   };
 
-  return { connected, sendMessage, schedule, error };
+  return { connected, sendMessage, chat, schedule, error };
 }
