@@ -5,7 +5,7 @@ export type MessageContentType = "TEXT" | "IMAGE";
 export interface ChatMessage {
   isComplete: boolean;
   message: string;
-  timestamp?: string;
+  timestamp: string;
 }
 
 export interface Chat extends ChatMessage {
