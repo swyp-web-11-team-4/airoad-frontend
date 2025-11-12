@@ -36,7 +36,7 @@ export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionPr
     event.preventDefault();
     const value = new FormData(event.currentTarget).get("chat");
 
-    if (typeof value === "string") {
+    if (typeof value === "string" && value.trim()) {
       sendMessage(value, "TEXT");
       event.currentTarget.reset();
     }
@@ -68,6 +68,7 @@ export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionPr
         {sortedPreviousChats.map(({ id, content, messageType }) => (
           <Message key={id} message={content} messageType={messageType} />
         ))}
+
         {chat?.length > 0
           ? chat.map(({ messageType, message, timestamp }) => {
               return <Message key={timestamp} message={message} messageType={messageType} />;
