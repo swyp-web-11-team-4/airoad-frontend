@@ -2,7 +2,7 @@ import { Flex, Text } from "@radix-ui/themes";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { type FormEventHandler, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router";
-import { chatsQueries, type MessageType } from "@/entities/chats/model";
+import { chatsQueries, type MessageType, useChatStore } from "@/entities/chats/model";
 import { tripsQueries } from "@/entities/trips/model";
 import type { Chat } from "@/entities/trips/model/trips.model";
 import type { useTripPlanStreams } from "@/entities/trips/model/use-trip-plan-streams";
@@ -13,13 +13,15 @@ import { UserMessage } from "../user-message";
 
 interface ChatSectionProps {
   conversationId: number;
-  chat: Chat[];
   sendMessage: ReturnType<typeof useTripPlanStreams>["sendMessage"];
 }
 
-export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionProps) => {
+export const ChatSection = ({ conversationId, sendMessage }: ChatSectionProps) => {
   const chatListRef = useRef<HTMLDivElement>(null);
   const [showScheduleCreating, setShowScheduleCreating] = useState(true);
+
+  const chats = useChatStore((state) => state.chats);
+  const reset = useChatStore((state) => state.reset);
 
   const [params] = useSearchParams();
   const tripPlanId = Number(params.get("tripPlanId"));
@@ -28,8 +30,8 @@ export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionPr
 
   const { data: previousChats } = useSuspenseQuery(chatsQueries.messageList(conversationId));
 
-  const restChats = chat.length > 1 ? chat.slice(0, -1) : chat;
-  const recentChat = chat.length > 1 ? chat.at(-1) : undefined;
+  const restChats = chats.length > 1 ? chats.slice(0, -1) : chats;
+  const recentChat = chats.length > 1 ? chats.at(-1) : undefined;
 
   const sortedPreviousChats = useMemo(
     () => [...previousChats.content].sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
@@ -61,10 +63,10 @@ export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionPr
   }, [previousChats.content.length, scrollToBottom]);
 
   useEffect(() => {
-    if (chat.length) {
+    if (chats.length) {
       scrollToBottom();
     }
-  }, [chat.length, scrollToBottom]);
+  }, [chats.length, scrollToBottom]);
 
   useEffect(() => {
     if (tripInfo?.isCompleted) {
@@ -75,6 +77,12 @@ export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionPr
       return () => clearTimeout(timer);
     }
   }, [tripInfo?.isCompleted]);
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, [reset]);
 
   return (
     <Flex gap="5" direction="column" width="588px">
@@ -91,7 +99,7 @@ export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionPr
           <Message key={id} message={content} messageType={messageType} />
         ))}
 
-        {chat?.length > 0 ? (
+        {chats?.length > 0 ? (
           <>
             {restChats.map(({ messageType, message, timestamp }) => {
               return <Message key={timestamp} message={message} messageType={messageType} />;

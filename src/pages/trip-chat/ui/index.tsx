@@ -15,7 +15,7 @@ export const TripChatPage = () => {
   const tripPlanId = Number(params.get("tripPlanId"));
   const isCreate = state?.create ?? false;
   const { mutate: postTripPlan } = useStartTripPlan();
-  const { connected, chat, schedule, sendMessage } = useTripPlanStreams({
+  const { connected, schedule, sendMessage } = useTripPlanStreams({
     chatRoomId: conversationId ?? 0,
     tripPlanId: tripPlanId ?? 0,
     token: accessToken,
@@ -29,7 +29,7 @@ export const TripChatPage = () => {
 
   return (
     <div className={styles.container}>
-      <ChatSection conversationId={conversationId} chat={chat} sendMessage={sendMessage} />
+      <ChatSection conversationId={conversationId} sendMessage={sendMessage} />
       <ScheduleSection schedule={schedule} />
     </div>
   );

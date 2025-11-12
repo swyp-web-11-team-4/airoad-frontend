@@ -102,7 +102,7 @@ export type ErrorMessage = {
 };
 
 export type ScheduleMessage = {
-  type: "DAILY_PLAN_GENERATED";
+  type: "DAILY_PLAN_GENERATED" | "COMPLETED";
   tripPlanId: number;
   dailyPlan: DayPlanData;
   message: string;
