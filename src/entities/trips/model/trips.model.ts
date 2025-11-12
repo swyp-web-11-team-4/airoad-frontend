@@ -24,6 +24,7 @@ export interface TripPlanInfo {
   duration: number;
   peopleCount: number;
   themes: string[];
+  isCompleted: boolean;
 }
 
 export type TripId = {

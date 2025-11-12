@@ -17,7 +17,7 @@ export const AssistantMessage = ({ content, animate = false }: AssistantMessageP
       <div className={styles.avatar}>
         <img src={iconLogo} alt="어시스턴트 이미지" />
       </div>
-      <Flex direction="column" className={animate ? styles.content : undefined}>
+      <Flex width="100%" direction="column" className={animate ? styles.content : undefined}>
         {(() => {
           switch (typeof content) {
             case "string":

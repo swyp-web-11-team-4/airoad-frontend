@@ -1,13 +1,15 @@
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import { Flex, IconButton } from "@radix-ui/themes";
 import { type ChangeEvent, type FormEventHandler, type KeyboardEvent, useState } from "react";
+
 import * as styles from "./index.css";
 
 interface ChatFormProps {
+  disabled?: boolean;
   onSubmit: FormEventHandler<HTMLFormElement>;
 }
 
-export const ChatForm = ({ onSubmit }: ChatFormProps) => {
+export const ChatForm = ({ disabled, onSubmit }: ChatFormProps) => {
   const [isValid, setIsValid] = useState(false);
 
   const handleValid = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) => {
@@ -26,7 +28,7 @@ export const ChatForm = ({ onSubmit }: ChatFormProps) => {
   };
 
   return (
-    <form className={styles.wrapper} onSubmit={onSubmit}>
+    <form className={styles.wrapper} onSubmit={onSubmit} aria-disabled={disabled}>
       <textarea
         name="chat"
         className={styles.textarea}
@@ -41,7 +43,7 @@ export const ChatForm = ({ onSubmit }: ChatFormProps) => {
           color="indigo"
           radius="full"
           type="submit"
-          disabled={!isValid}
+          disabled={disabled || !isValid}
         >
           <ArrowUpIcon width={16} height={16} />
         </IconButton>

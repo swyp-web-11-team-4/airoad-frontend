@@ -1,11 +1,14 @@
 import { Flex, Text } from "@radix-ui/themes";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { type FormEventHandler, useCallback, useEffect, useMemo, useRef } from "react";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { type FormEventHandler, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router";
 import { chatsQueries, type MessageType } from "@/entities/chats/model";
+import { tripsQueries } from "@/entities/trips/model";
 import type { Chat } from "@/entities/trips/model/trips.model";
 import type { useTripPlanStreams } from "@/entities/trips/model/use-trip-plan-streams";
 import { AssistantMessage } from "../assistant-message";
 import { ChatForm } from "../chat-form";
+import { ScheduleCreatingChat } from "../schedule-creating-chat";
 import { UserMessage } from "../user-message";
 
 interface ChatSectionProps {
@@ -16,11 +19,17 @@ interface ChatSectionProps {
 
 export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionProps) => {
   const chatListRef = useRef<HTMLDivElement>(null);
+  const [showScheduleCreating, setShowScheduleCreating] = useState(true);
+
+  const [params] = useSearchParams();
+  const tripPlanId = Number(params.get("tripPlanId"));
+
+  const { data: tripInfo } = useQuery(tripsQueries.info(tripPlanId));
+
+  const { data: previousChats } = useSuspenseQuery(chatsQueries.messageList(conversationId));
 
   const restChats = chat.length > 1 ? chat.slice(0, -1) : chat;
   const recentChat = chat.length > 1 ? chat.at(-1) : undefined;
-
-  const { data: previousChats } = useSuspenseQuery(chatsQueries.messageList(conversationId));
 
   const sortedPreviousChats = useMemo(
     () => [...previousChats.content].sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
@@ -57,6 +66,16 @@ export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionPr
     }
   }, [chat.length, scrollToBottom]);
 
+  useEffect(() => {
+    if (tripInfo?.isCompleted) {
+      const timer = setTimeout(() => {
+        setShowScheduleCreating(false);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [tripInfo?.isCompleted]);
+
   return (
     <Flex gap="5" direction="column" width="588px">
       <Flex
@@ -82,9 +101,15 @@ export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionPr
             )}
           </>
         ) : null}
+
+        {showScheduleCreating && (
+          <AssistantMessage
+            content={<ScheduleCreatingChat isCompleted={tripInfo?.isCompleted} />}
+          />
+        )}
       </Flex>
       <Flex direction="column" px="20px" pb="4" gap="4">
-        <ChatForm onSubmit={submitMessage} />
+        <ChatForm disabled={!tripInfo?.isCompleted} onSubmit={submitMessage} />
         <Text color="gray" size="1" weight="regular" align="center">
           더 정확한 여행을 위해, 중요한 정보는 한 번 더 확인해주세요.
         </Text>
