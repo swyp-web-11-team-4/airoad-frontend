@@ -88,7 +88,7 @@ export type DayPlanData = {
 export type ChatMessage = {
   isComplete: boolean;
   message: string;
-  timestamp?: string;
+  timestamp: string;
 };
 
 export type Chat = ChatMessage & {
