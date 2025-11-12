@@ -37,7 +37,6 @@ export const THEME_OPTIONS = [
   { id: "HEALING", label: "힐링", emoji: "🍵" },
   { id: "CULTURE_ART", label: "문화/예술", emoji: "🏛️" },
   { id: "SHOPPING", label: "쇼핑", emoji: "🛍️" },
-  { id: "RESTAURANT", label: "음식점", emoji: "🥘" },
 ] as const;
 
 export const CATEGORY_OPTIONS = {
@@ -45,12 +44,3 @@ export const CATEGORY_OPTIONS = {
   AFTERNOON: "오후일정",
   EVENING: "저녁일정",
 };
-
-export const THEME_OPTIONS = [
-  { id: "FAMOUS_SPOT", label: "유명관광지", emoji: "🚠" },
-  { id: "EXPERIENCE_ACTIVITY", label: "체험/액티비티", emoji: "🌊" },
-  { id: "SNS_HOTSPOT", label: "SNS 핫플", emoji: "📷" },
-  { id: "HEALING", label: "힐링", emoji: "🍵" },
-  { id: "CULTURE_ART", label: "문화/예술", emoji: "🏛️" },
-  { id: "SHOPPING", label: "쇼핑", emoji: "🛍️" },
-] as const;

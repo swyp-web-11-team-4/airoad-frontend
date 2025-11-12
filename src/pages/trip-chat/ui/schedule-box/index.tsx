@@ -1,6 +1,6 @@
 import { Badge, Text } from "@radix-ui/themes";
 import dayjs from "dayjs";
-import { forwardRef } from "react";
+import { forwardRef, useEffect } from "react";
 import { Fragment } from "react/jsx-runtime";
 import { CATEGORY_OPTIONS, THEME_OPTIONS } from "@/entities/trips/config/category";
 import type { DayPlanData } from "@/entities/trips/model/trips.model";
@@ -20,7 +20,7 @@ export const ScheduleBox = forwardRef<HTMLDivElement, DayPlanData>(
           <Text size="2">{dayjs(date).format("YYYY년 MM월 DD일, dddd")}</Text>
         </div>
         <div className={styles.dayContainer}>
-          {scheduledPlaces.map((place, idx) => (
+          {scheduledPlaces?.map((place, idx) => (
             <Fragment key={place.id}>
               <div className={styles.dayBox} key={place.id}>
                 <img

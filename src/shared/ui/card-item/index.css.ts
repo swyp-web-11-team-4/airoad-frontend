@@ -11,7 +11,7 @@ export const cardBox = style({
 export const cardImg = style({
   borderRadius: "12px",
   width: "100%",
-  height: "252px",
+  aspectRatio: "1 / 1",
   objectFit: "cover",
 });
 export const cardData = style({

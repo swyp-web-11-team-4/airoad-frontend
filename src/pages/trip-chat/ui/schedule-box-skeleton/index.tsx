@@ -1,4 +1,5 @@
 import { Skeleton } from "@radix-ui/themes";
+import { Fragment } from "react/jsx-runtime";
 import * as styles from "./index.css";
 
 export function ScheduleBoxSkeleton() {
@@ -14,9 +15,9 @@ export function ScheduleBoxSkeleton() {
 
       <div className={styles.skeletonDayContainer}>
         {days.map((_, idx) => (
-          <>
-            {/* biome-ignore lint/suspicious/noArrayIndexKey: static skeleton, order won't change  */}
-            <div key={idx} className={styles.skeletonDayBox}>
+          /* biome-ignore lint/suspicious/noArrayIndexKey: static skeleton, order won't change  */
+          <Fragment key={idx}>
+            <div className={styles.skeletonDayBox}>
               <Skeleton width="128px" height="128px" />
               <div className={styles.skeletonDayInfo}>
                 <div className={styles.skeletonDayTag}>
@@ -31,7 +32,7 @@ export function ScheduleBoxSkeleton() {
             <div className={styles.skeletonTimeBox}>
               <Skeleton width="128px" height="28px" />
             </div>
-          </>
+          </Fragment>
         ))}
       </div>
     </div>
