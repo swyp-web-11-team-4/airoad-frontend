@@ -62,6 +62,7 @@ function RecentTrips() {
                 city={trip.region}
                 date={trip.startDate}
                 imgUrl={trip.imageUrl}
+                isCompleted={trip.isCompleted}
                 conversationId={trip.chatRoomId}
                 tripPlanId={trip.id}
                 onDelete={() => setSelectedTrip(trip)}

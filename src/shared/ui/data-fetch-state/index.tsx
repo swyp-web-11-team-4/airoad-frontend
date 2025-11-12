@@ -38,6 +38,7 @@ export function DataFetchState({
         <CrossCircledIcon color="#60646C" className={styles.iconBox} />
         <Text className={styles.titleBox}>{title} 정보를 불러올 수 없습니다.</Text>
         <Text className={styles.titleBox}>{error?.message}</Text>
+        {description && <Text className={styles.titleBox}>{description}</Text>}
         <Button color="gray" variant="outline" onClick={onAction} className={styles.buttonBox}>
           {actionText ?? "재시도"}
         </Button>

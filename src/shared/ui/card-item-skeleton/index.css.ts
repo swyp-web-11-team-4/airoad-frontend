@@ -9,8 +9,8 @@ export const skeletonBox = style({
   cursor: "pointer",
 });
 export const skeletonImg = style({
-  width: "100%",
   borderRadius: "12px",
+  aspectRatio: "1 / 1",
 });
 export const skeletonData = style({
   display: "flex",

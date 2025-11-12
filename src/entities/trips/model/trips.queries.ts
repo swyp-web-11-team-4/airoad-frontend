@@ -1,6 +1,6 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import type { ApiErrorResponse } from "@/shared/type";
-import { getTripInfo, getTripsList } from "../api/trips.api";
+import { getDailyPlans, getTripInfo, getTripsList } from "../api/trips.api";
 import { type Field, field } from "../config/field";
 import { createTripSort } from "../lib/sort";
 import type { GetTripsResponse, Trip } from "../model/trips.model";
@@ -22,7 +22,7 @@ export const tripsQueries = {
       queryFn: () => getTripsList(undefined, createTripSort(sort), size),
       select: (res) => res.data.content,
     }),
-  infinites: () => [...tripsQueries.all(), "infinite"] as const,
+  infinites: () => [...tripsQueries.lists(), "infinite"] as const,
   infinite: (sort: Field, size: number) =>
     infiniteQueryOptions<
       GetTripsResponse,
@@ -39,5 +39,13 @@ export const tripsQueries = {
         return last.data.nextCursor;
       },
       select: (data) => data.pages.flatMap((page) => page.data.content),
+    }),
+  dailyPlans: () => [...tripsQueries.all(), "dailyPlan"] as const,
+  dailyPlan: (tripPlanId: number) =>
+    queryOptions({
+      queryKey: [...tripsQueries.dailyPlans(), tripPlanId],
+      queryFn: () => getDailyPlans(tripPlanId),
+      enabled: !!tripPlanId,
+      select: (res) => res.data,
     }),
 };
