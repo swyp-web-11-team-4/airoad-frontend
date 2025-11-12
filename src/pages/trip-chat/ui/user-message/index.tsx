@@ -6,9 +6,10 @@ import * as styles from "./index.css";
 
 interface UserMessageProps {
   text: string;
+  animate?: boolean;
 }
 
-export const UserMessage = ({ text }: UserMessageProps) => {
+export const UserMessage = ({ text, animate = false }: UserMessageProps) => {
   const { data: user } = useQuery(membersQueries.me());
 
   return (
@@ -19,7 +20,7 @@ export const UserMessage = ({ text }: UserMessageProps) => {
         fallback={user?.name[0] ?? "U"}
         className={styles.avatar}
       />
-      <div className={styles.messageBubble}>
+      <div className={styles.messageBubble({ animate })}>
         <Text size="3" weight="regular" aria-label="사용자 메시지">
           {text}
         </Text>

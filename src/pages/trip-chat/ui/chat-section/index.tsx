@@ -17,6 +17,9 @@ interface ChatSectionProps {
 export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionProps) => {
   const chatListRef = useRef<HTMLDivElement>(null);
 
+  const restChats = chat.length > 1 ? chat.slice(0, -1) : chat;
+  const recentChat = chat.length > 1 ? chat.at(-1) : undefined;
+
   const { data: previousChats } = useSuspenseQuery(chatsQueries.messageList(conversationId));
 
   const sortedPreviousChats = useMemo(
@@ -69,11 +72,16 @@ export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionPr
           <Message key={id} message={content} messageType={messageType} />
         ))}
 
-        {chat?.length > 0
-          ? chat.map(({ messageType, message, timestamp }) => {
+        {chat?.length > 0 ? (
+          <>
+            {restChats.map(({ messageType, message, timestamp }) => {
               return <Message key={timestamp} message={message} messageType={messageType} />;
-            })
-          : null}
+            })}
+            {recentChat && (
+              <Message message={recentChat.message} messageType={recentChat.messageType} animate />
+            )}
+          </>
+        ) : null}
       </Flex>
       <Flex direction="column" px="20px" pb="4" gap="4">
         <ChatForm onSubmit={submitMessage} />
@@ -85,12 +93,20 @@ export const ChatSection = ({ conversationId, chat, sendMessage }: ChatSectionPr
   );
 };
 
-const Message = ({ messageType, message }: { messageType: MessageType; message: string }) => {
+const Message = ({
+  messageType,
+  message,
+  animate,
+}: {
+  messageType: MessageType;
+  message: string;
+  animate?: boolean;
+}) => {
   switch (messageType) {
     case "ASSISTANT":
-      return <AssistantMessage content={message} />;
+      return <AssistantMessage content={message} animate={animate} />;
     case "USER":
-      return <UserMessage text={message} />;
+      return <UserMessage text={message} animate={animate} />;
     default:
       return null;
   }

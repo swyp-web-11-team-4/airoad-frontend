@@ -8,15 +8,16 @@ import * as styles from "./index.css";
 
 interface AssistantMessageProps {
   content: ReactNode;
+  animate?: boolean;
 }
 
-export const AssistantMessage = ({ content }: AssistantMessageProps) => {
+export const AssistantMessage = ({ content, animate = false }: AssistantMessageProps) => {
   return (
     <Flex align="start" direction="column" gap="4" width="460px">
       <div className={styles.avatar}>
         <img src={iconLogo} alt="어시스턴트 이미지" />
       </div>
-      <Flex direction="column">
+      <Flex direction="column" className={animate ? styles.content : undefined}>
         {(() => {
           switch (typeof content) {
             case "string":
