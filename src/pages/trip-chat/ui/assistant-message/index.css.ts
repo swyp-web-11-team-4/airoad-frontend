@@ -9,3 +9,21 @@ export const avatar = style({
   borderRadius: 9999,
   background: "var(--accent-a3)",
 });
+
+export const markdown = {
+  ol: style({
+    marginLeft: 20,
+    marginBottom: 4,
+  }),
+  ul: style({
+    listStyle: "outside",
+    marginLeft: 20,
+    marginBottom: 4,
+  }),
+  li: style({
+    marginBottom: 4,
+  }),
+  p: style({
+    marginBottom: 4,
+  }),
+};
