@@ -1,6 +1,7 @@
 import { Flex } from "@radix-ui/themes";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { chatsQueries, useChatStore } from "@/entities/chats/model";
 import {
   AssistantMessage,
@@ -71,8 +72,8 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
 
         {currentChats.length > 0 && (
           <>
-            {restChats.map(({ messageType, message, timestamp }) => (
-              <ChatMessage key={timestamp} content={message} messageType={messageType} />
+            {restChats.map(({ messageType, message }) => (
+              <ChatMessage key={uuidv4()} content={message} messageType={messageType} />
             ))}
             {recentChat && (
               <ChatMessage
