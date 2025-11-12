@@ -1,4 +1,4 @@
-import type { Client, IFrame, StompSubscription } from "@stomp/stompjs";
+import type { Client, StompSubscription } from "@stomp/stompjs";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useChatStore } from "@/entities/chats/model";
@@ -11,7 +11,7 @@ type Props = {
   tripPlanId: number;
   brokerURL?: string;
   token?: string;
-  enabled?: boolean;
+  onReady?: () => void;
   onChat?: (m: ChatMessage) => void;
   onSchedule?: (p: ScheduleMessage) => void;
   onErrorMsg?: (e: ErrorMessage) => void;
@@ -22,16 +22,18 @@ export function useTripPlanStreams({
   tripPlanId,
   brokerURL = "wss://airoad.luigi99.cloud/ws-stomp",
   token,
+  onReady,
+  onChat,
+  onSchedule,
+  onErrorMsg,
 }: Props) {
   const clientRef = useRef<Client | null>(null);
   const subsRef = useRef<StompSubscription[]>([]);
 
-  const [connected, setConnected] = useState(false);
   const [error, setError] = useState<ErrorMessage>();
   const [schedule, setSchedule] = useState<ScheduleMessage[]>([]);
 
   const addChat = useChatStore((state) => state.addChat);
-
   const queryClient = useQueryClient();
 
   const paths = useMemo(
@@ -43,85 +45,107 @@ export function useTripPlanStreams({
     [chatRoomId, tripPlanId],
   );
 
-  useEffect(() => {
+  const cleanup = () => {
+    for (const s of subsRef.current) s.unsubscribe();
+    subsRef.current = [];
+    clientRef.current?.deactivate();
+    clientRef.current = null;
+  };
+  const connect = () => {
     if (!chatRoomId || !tripPlanId || !token) return;
+
     const client = createStompClient(brokerURL, token);
     clientRef.current = client;
 
-    client.onConnect = (data) => {
+    client.onConnect = () => {
+      let receiptCount = 0;
+      const onReceipt = () => {
+        console.log("onReceipt 호출");
+        receiptCount += 1;
+        console.log("onReceipt 호출", receiptCount);
+        if (receiptCount === 3) {
+          onReady?.();
+        }
+      };
+
       const errSub = client.subscribe(
         paths.errors,
         (msg) => {
           const err = JSON.parse(msg.body) as ErrorMessage;
           setError(err);
+          onErrorMsg?.(err);
         },
         { receipt: "sub-errors" },
       );
-      client.watchForReceipt("sub-errors", (frame: IFrame) => {
-        console.log("sub-errors: 에러 채널 구독 응답값", frame);
-        console.log("headers:", frame.headers);
-        console.log("body:", frame.body);
-      });
+      client.watchForReceipt("sub-errors", onReceipt);
 
       const chatSub = client.subscribe(
         paths.chat,
         (msg) => {
           const data = JSON.parse(msg.body) as ChatMessage;
-
           addChat({ messageType: "ASSISTANT", ...data });
+          onChat?.(data);
         },
         { receipt: "sub-chat" },
       );
-      client.watchForReceipt("sub-chat", (frame: IFrame) => {
-        console.log("sub-chat: 채팅 채널 구독 응답값", frame);
-        console.log("headers:", frame.headers);
-        console.log("body:", frame.body);
-      });
+      client.watchForReceipt("sub-chat", onReceipt);
 
       const schedSub = client.subscribe(
         paths.schedule,
         (msg) => {
           const data = JSON.parse(msg.body) as ScheduleMessage;
           setSchedule((prev) => [...prev, data]);
+          onSchedule?.(data);
 
           if (data.type === "COMPLETED") {
-            queryClient.invalidateQueries({ queryKey: tripsQueries.info(tripPlanId).queryKey });
+            queryClient.invalidateQueries({
+              queryKey: tripsQueries.info(tripPlanId).queryKey,
+            });
           }
         },
         { receipt: "sub-schedule" },
       );
-      client.watchForReceipt("sub-schedule", (frame: IFrame) => {
-        console.log("sub-schedule: 일정 채널 구독 응답값", frame);
-        console.log("headers:", frame.headers);
-        console.log("body:", frame.body);
-      });
-
-      if (data.command === "CONNECTED") setConnected(true);
+      client.watchForReceipt("sub-schedule", onReceipt);
 
       subsRef.current = [errSub, chatSub, schedSub];
     };
 
     client.onStompError = (frame) => {
-      console.error("stomp 구독 에러 발생", frame.body);
-      setConnected(false);
+      const error = {
+        code: "STOMP_ERROR",
+        message: "STOMP 구독 중 오류가 발생했습니다.",
+        detail: frame.body,
+      } as ErrorMessage;
+      setError(error);
+      onErrorMsg?.(error);
     };
-    client.onWebSocketError(() => {
-      setConnected(false);
-    });
+
+    client.onWebSocketError = (err) => {
+      const error = {
+        code: "WEBSOCKET_ERROR",
+        message: "웹소켓 연결에 실패했습니다.",
+        detail: err,
+      } as ErrorMessage;
+      setError(error);
+      onErrorMsg?.(error);
+    };
 
     client.activate();
+  };
 
-    return () => {
-      for (const s of subsRef.current) s.unsubscribe();
-      subsRef.current = [];
-      client.deactivate();
-      clientRef.current = null;
-      setConnected(false);
-    };
-  }, [chatRoomId, tripPlanId]);
+  useEffect(() => {
+    connect();
+    return cleanup;
+  }, [chatRoomId, tripPlanId, brokerURL, token]);
+
+  const reconnect = () => {
+    setError(undefined);
+    cleanup();
+    connect();
+  };
 
   const sendMessage = (content: string, type: "TEXT" | "IMAGE" = "TEXT") => {
-    if (!clientRef.current || !connected) return;
+    if (!clientRef.current) return;
 
     clientRef.current.publish({
       destination: `/pub/chat/${chatRoomId}/message`,
@@ -136,5 +160,5 @@ export function useTripPlanStreams({
     });
   };
 
-  return { connected, sendMessage, schedule, error };
+  return { sendMessage, schedule, error, reconnect };
 }

@@ -8,6 +8,7 @@ const trips: Trip[] = [
     startDate: "2025.11.24",
     region: "서울",
     chatRoomId: 101,
+    isCompleted: false,
   },
   {
     id: 2,
@@ -16,6 +17,7 @@ const trips: Trip[] = [
     startDate: "2025.12.02",
     region: "부산",
     chatRoomId: 102,
+    isCompleted: false,
   },
   {
     id: 3,
@@ -24,6 +26,7 @@ const trips: Trip[] = [
     startDate: "2026.01.05",
     region: "제주",
     chatRoomId: 103,
+    isCompleted: false,
   },
   {
     id: 4,
@@ -32,6 +35,7 @@ const trips: Trip[] = [
     startDate: "2026.02.18",
     region: "서울",
     chatRoomId: 104,
+    isCompleted: true,
   },
   {
     id: 5,
@@ -40,6 +44,7 @@ const trips: Trip[] = [
     startDate: "2026.03.10",
     region: "강릉",
     chatRoomId: 105,
+    isCompleted: false,
   },
   {
     id: 6,
@@ -48,6 +53,7 @@ const trips: Trip[] = [
     startDate: "2026.04.02",
     region: "여수",
     chatRoomId: 106,
+    isCompleted: true,
   },
   {
     id: 7,
@@ -56,6 +62,7 @@ const trips: Trip[] = [
     startDate: "2026.04.20",
     region: "전주",
     chatRoomId: 107,
+    isCompleted: false,
   },
   {
     id: 8,
@@ -64,6 +71,7 @@ const trips: Trip[] = [
     startDate: "2026.05.15",
     region: "속초",
     chatRoomId: 108,
+    isCompleted: true,
   },
   {
     id: 9,
@@ -72,6 +80,7 @@ const trips: Trip[] = [
     startDate: "2026.06.05",
     region: "가평",
     chatRoomId: 109,
+    isCompleted: false,
   },
   {
     id: 10,
@@ -80,6 +89,7 @@ const trips: Trip[] = [
     startDate: "2026.07.01",
     region: "경주",
     chatRoomId: 110,
+    isCompleted: true,
   },
   {
     id: 11,
@@ -88,6 +98,7 @@ const trips: Trip[] = [
     startDate: "2026.07.22",
     region: "인천",
     chatRoomId: 111,
+    isCompleted: false,
   },
   {
     id: 12,
@@ -96,6 +107,7 @@ const trips: Trip[] = [
     startDate: "2026.08.10",
     region: "춘천",
     chatRoomId: 112,
+    isCompleted: false,
   },
   {
     id: 13,
@@ -104,6 +116,7 @@ const trips: Trip[] = [
     startDate: "2026.09.01",
     region: "대전",
     chatRoomId: 113,
+    isCompleted: true,
   },
   {
     id: 14,
@@ -112,6 +125,7 @@ const trips: Trip[] = [
     startDate: "2026.09.25",
     region: "울산",
     chatRoomId: 114,
+    isCompleted: false,
   },
   {
     id: 15,
@@ -120,6 +134,7 @@ const trips: Trip[] = [
     startDate: "2026.10.12",
     region: "광주",
     chatRoomId: 115,
+    isCompleted: false,
   },
   {
     id: 16,
@@ -128,6 +143,7 @@ const trips: Trip[] = [
     startDate: "2026.11.05",
     region: "안동",
     chatRoomId: 116,
+    isCompleted: true,
   },
   {
     id: 17,
@@ -136,6 +152,7 @@ const trips: Trip[] = [
     startDate: "2026.12.03",
     region: "속초",
     chatRoomId: 117,
+    isCompleted: false,
   },
   {
     id: 18,
@@ -144,6 +161,7 @@ const trips: Trip[] = [
     startDate: "2027.01.20",
     region: "부여",
     chatRoomId: 118,
+    isCompleted: true,
   },
   {
     id: 19,
@@ -152,6 +170,7 @@ const trips: Trip[] = [
     startDate: "2027.02.14",
     region: "포항",
     chatRoomId: 119,
+    isCompleted: false,
   },
   {
     id: 20,
@@ -160,6 +179,7 @@ const trips: Trip[] = [
     startDate: "2027.03.08",
     region: "제천",
     chatRoomId: 120,
+    isCompleted: true,
   },
 ];
 

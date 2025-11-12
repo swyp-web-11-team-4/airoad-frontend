@@ -9,6 +9,7 @@ export type CardItemProps = {
   date: string;
   city: string;
   imgUrl: string;
+  isCompleted: boolean;
   showDelete?: boolean;
   conversationId: number;
   tripPlanId: number;
@@ -21,6 +22,7 @@ export function CardItem({
   city,
   imgUrl,
   showDelete,
+  isCompleted,
   onDelete,
   conversationId,
   tripPlanId,
@@ -33,7 +35,13 @@ export function CardItem({
       className={styles.cardBox}
       onClick={() => {
         navigate(
-          `${PAGE_ROUTES.TRIP_PLAN}?conversationId=${conversationId}&tripPlanId=${tripPlanId}`,
+          {
+            pathname: PAGE_ROUTES.TRIP_PLAN,
+            search: `?conversationId=${conversationId}&tripPlanId=${tripPlanId}`,
+          },
+          {
+            state: { create: !isCompleted },
+          },
         );
       }}
     >

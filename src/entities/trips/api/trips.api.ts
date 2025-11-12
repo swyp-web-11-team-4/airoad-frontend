@@ -2,6 +2,7 @@ import { api } from "@/shared/lib";
 import { API_PATHS } from "../config/api-paths";
 import type {
   CreateTrip,
+  GetDailyPlanListResponse,
   GetStateTripIdResponse,
   GetTripPlanInfoResponse,
   GetTripsResponse,
@@ -52,4 +53,11 @@ export const deleteTrip = async (tripPlanId: number) => {
 export const postTripPlan = async (id: number) => {
   await api.post(`${API_PATHS.TRIPS.INFO._}/${id}`);
   return id;
+};
+
+export const getDailyPlans = async (tripPlanId: number) => {
+  const { data } = await api.get<GetDailyPlanListResponse>(
+    API_PATHS.TRIPS.INFO.DAILY_PLANS(tripPlanId),
+  );
+  return data;
 };

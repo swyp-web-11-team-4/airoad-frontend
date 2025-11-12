@@ -7,6 +7,7 @@ export interface Trip {
   startDate: string;
   region: string;
   chatRoomId: number;
+  isCompleted: boolean;
 }
 
 export interface Trips {
@@ -109,3 +110,4 @@ export type ScheduleMessage = {
 export type GetTripsResponse = ApiResponse<Trips>;
 export type GetStateTripIdResponse = ApiResponse<TripId>;
 export type GetTripPlanInfoResponse = ApiResponse<TripPlanInfo>;
+export type GetDailyPlanListResponse = ApiResponse<ScheduleMessage>;
