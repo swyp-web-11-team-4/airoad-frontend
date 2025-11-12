@@ -98,9 +98,8 @@ All UI components must follow this structure using **Vanilla Extract** for styli
 
 ```
 component-name/
-├── component-name.tsx      # Component logic (hyphen-case)
-├── component-name.css.ts   # Vanilla Extract styles (hyphen-case)
-└── index.ts               # Re-export component
+├── index.tsx      # Component logic
+└── index.css.ts   # Vanilla Extract styles
 ```
 
 **Styling Guidelines**:
@@ -108,11 +107,11 @@ component-name/
 - **ALWAYS** use Vanilla Extract (`.css.ts` files) for all styling
 - Use descriptive class names exported as named exports
 - Folder names use `hyphen-case` (e.g., `user-list/`)
-- Component files use `hyphen-case` (e.g., `user-list.tsx`)
+- Component files are always `index.tsx` and `index.css.ts`
 
 **Example**:
 ```typescript
-// user-list/user-list.css.ts
+// user-list/index.css.ts
 import { style } from "@vanilla-extract/css";
 
 export const container = style({
@@ -124,8 +123,8 @@ export const title = style({
   fontWeight: "600",
 });
 
-// user-list/user-list.tsx
-import * as styles from "./user-list.css";
+// user-list/index.tsx
+import * as styles from "./index.css";
 
 export const UserList = () => {
   return (
@@ -134,9 +133,6 @@ export const UserList = () => {
     </div>
   );
 };
-
-// user-list/index.ts
-export { UserList } from "./user-list";
 ```
 
 ### Code Style

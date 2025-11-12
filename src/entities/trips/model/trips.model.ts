@@ -24,6 +24,7 @@ export interface TripPlanInfo {
   duration: number;
   peopleCount: number;
   themes: string[];
+  isCompleted: boolean;
 }
 
 export type TripId = {
@@ -87,7 +88,7 @@ export type DayPlanData = {
 export type ChatMessage = {
   isComplete: boolean;
   message: string;
-  timestamp?: string;
+  timestamp: string;
 };
 
 export type Chat = ChatMessage & {
@@ -101,7 +102,7 @@ export type ErrorMessage = {
 };
 
 export type ScheduleMessage = {
-  type: "DAILY_PLAN_GENERATED";
+  type: "DAILY_PLAN_GENERATED" | "COMPLETED";
   tripPlanId: number;
   dailyPlan: DayPlanData;
   message: string;
