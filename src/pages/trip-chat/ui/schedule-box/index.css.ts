@@ -129,7 +129,7 @@ export const tagBadge = recipe({
   variants: {
     category: {
       MORNING: { background: "#D6EBFF", color: "#004A9F" },
-      AFTERNOON: { background: "#FFF8E5", color: "#FF7A00" },
+      AFTERNOON: { background: "#FFE7B2", color: "#8A4A00" },
       EVENING: { background: "#E4D8FF", color: "#4C2BB0" },
     },
   },
