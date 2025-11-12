@@ -28,7 +28,14 @@ export const ChatForm = ({ disabled, onSubmit }: ChatFormProps) => {
   };
 
   return (
-    <form className={styles.wrapper} onSubmit={onSubmit} aria-disabled={disabled}>
+    <form
+      className={styles.wrapper}
+      onSubmit={(event) => {
+        onSubmit(event);
+        setIsValid(false);
+      }}
+      aria-disabled={disabled}
+    >
       <textarea
         name="chat"
         className={styles.textarea}

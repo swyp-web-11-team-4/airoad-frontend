@@ -67,6 +67,7 @@ export function useTripPlanStreams({
         paths.chat,
         (msg) => {
           const data = JSON.parse(msg.body) as ChatMessage;
+
           addChat({ messageType: "ASSISTANT", ...data });
         },
         { receipt: "sub-chat" },
