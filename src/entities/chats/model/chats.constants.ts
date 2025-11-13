@@ -30,3 +30,5 @@ export const LOADING_STEPS: LoadingStep[] = [
     label: "경로 파악 중...",
   },
 ];
+
+export const CHAT_LIST_SIZE = 10;

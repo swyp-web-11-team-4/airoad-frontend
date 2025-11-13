@@ -1,8 +1,16 @@
 import { Flex } from "@radix-ui/themes";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { v4 as uuidv4 } from "uuid";
-import { chatsQueries, useChatStore } from "@/entities/chats/model";
+import { CHAT_LIST_SIZE, chatsQueries, useChatStore } from "@/entities/chats/model";
 import {
   AssistantMessage,
   ChatLoadingPlaceholder,
@@ -18,6 +26,7 @@ interface ChatListProps {
 export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
   ({ conversationId, isTripCreated = false }, forwardedRef) => {
     const chatListRef = useRef<HTMLDivElement>(null);
+    const sentinelRef = useRef<HTMLDivElement>(null);
 
     const currentChats = useChatStore((state) => state.chats);
     const isWaitingResponse = useChatStore((state) => state.isWaitingResponse);
@@ -25,12 +34,27 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
 
     useImperativeHandle(forwardedRef, () => chatListRef.current as HTMLDivElement);
 
-    const { data: previousChats } = useSuspenseQuery(chatsQueries.messageList(conversationId));
-
-    const sortedPreviousChats = useMemo(
-      () => [...previousChats.content].sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
-      [previousChats.content],
+    const {
+      data: previousChatsData,
+      fetchNextPage,
+      hasNextPage,
+      isFetchingNextPage,
+    } = useInfiniteQuery(
+      chatsQueries.infiniteMessageList({
+        chatRoomId: conversationId,
+        size: CHAT_LIST_SIZE,
+      }),
     );
+
+    const [isFetchingPrevious, setIsFetchingPrevious] = useState(false);
+
+    const sortedPreviousChats = useMemo(() => {
+      if (!previousChatsData) return [];
+
+      const allMessages = previousChatsData.pages.flatMap((page) => page.data.content);
+
+      return allMessages.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    }, [previousChatsData]);
 
     const restChats = currentChats.length > 1 ? currentChats.slice(0, -1) : currentChats;
     const recentChat = currentChats.length > 1 ? currentChats.at(-1) : undefined;
@@ -51,10 +75,49 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
     }, [currentChats, setWaitingResponse]);
 
     useEffect(() => {
-      if (previousChats.content.length > 0 || currentChats.length > 0) {
+      if (sortedPreviousChats.length > 0 || currentChats.length > 0) {
         scrollToBottom();
       }
-    }, [previousChats.content.length, currentChats.length, scrollToBottom]);
+    }, [sortedPreviousChats.length, currentChats.length, scrollToBottom]);
+
+    useEffect(() => {
+      const sentinel = sentinelRef.current;
+      const chatList = chatListRef.current;
+
+      if (!sentinel || !chatList) return;
+
+      const observer = new IntersectionObserver(
+        async (entries) => {
+          const [entry] = entries;
+
+          if (entry.isIntersecting && hasNextPage && !isFetchingNextPage && !isFetchingPrevious) {
+            setIsFetchingPrevious(true);
+            const previousScrollHeight = chatList.scrollHeight;
+            const previousScrollTop = chatList.scrollTop;
+
+            await fetchNextPage();
+
+            requestAnimationFrame(() => {
+              const newScrollHeight = chatList.scrollHeight;
+              const scrollDiff = newScrollHeight - previousScrollHeight;
+              chatList.scrollTop = previousScrollTop + scrollDiff;
+              setIsFetchingPrevious(false);
+            });
+          }
+        },
+        {
+          root: chatList,
+          rootMargin: "100px 0px 0px 0px",
+          threshold: 0,
+        },
+      );
+
+      observer.observe(sentinel);
+
+      return () => {
+        observer.disconnect();
+      };
+    }, [fetchNextPage, hasNextPage, isFetchingNextPage, isFetchingPrevious]);
 
     return (
       <Flex
@@ -66,6 +129,14 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
         flexGrow="1"
         overflowY="auto"
       >
+        <div ref={sentinelRef} style={{ height: "1px" }} />
+
+        {isFetchingNextPage && (
+          <Flex justify="center" py="3">
+            <ChatLoadingPlaceholder />
+          </Flex>
+        )}
+
         {sortedPreviousChats.map(({ id, content, messageType }) => (
           <ChatMessage key={id} content={content} messageType={messageType} />
         ))}
