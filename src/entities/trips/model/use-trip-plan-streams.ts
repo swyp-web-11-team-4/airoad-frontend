@@ -1,4 +1,4 @@
-import type { Client, IFrame, StompSubscription } from "@stomp/stompjs";
+import type { Client, StompSubscription } from "@stomp/stompjs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { type ChatStream, useChatStore } from "@/entities/chats/model";
 import { createStompClient } from "@/shared/lib";
