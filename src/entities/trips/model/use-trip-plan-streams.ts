@@ -58,9 +58,7 @@ export function useTripPlanStreams({
     client.onConnect = () => {
       let receiptCount = 0;
       const onReceipt = () => {
-        console.log("onReceipt 호출");
         receiptCount += 1;
-        console.log("onReceipt 호출", receiptCount);
         if (receiptCount === 3) {
           onReady?.();
         }
@@ -86,11 +84,7 @@ export function useTripPlanStreams({
         { receipt: "sub-chat" },
       );
 
-      client.watchForReceipt("sub-chat", (frame: IFrame) => {
-        console.log("sub-chat: 채팅 채널 구독 응답값", frame);
-        console.log("headers:", frame.headers);
-        console.log("body:", frame.body);
-      });
+      client.watchForReceipt("sub-chat", onReceipt);
 
       const schedSub = client.subscribe(
         paths.schedule,
