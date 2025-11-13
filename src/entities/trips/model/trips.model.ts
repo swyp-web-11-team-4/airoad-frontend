@@ -85,16 +85,6 @@ export type DayPlanData = {
   scheduledPlaces: SchedulePlaceData[];
 };
 
-export type ChatMessage = {
-  isComplete: boolean;
-  message: string;
-  timestamp: string;
-};
-
-export type Chat = ChatMessage & {
-  messageType: "USER" | "ASSISTANT";
-};
-
 export type ErrorMessage = {
   code: string;
   message: string;

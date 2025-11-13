@@ -1,10 +1,8 @@
-import type { Client, StompSubscription } from "@stomp/stompjs";
-import { useQueryClient } from "@tanstack/react-query";
+import type { Client, IFrame, StompSubscription } from "@stomp/stompjs";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useChatStore } from "@/entities/chats/model";
+import { type ChatStream, useChatStore } from "@/entities/chats/model";
 import { createStompClient } from "@/shared/lib";
-import type { ChatMessage, ErrorMessage, ScheduleMessage } from "./trips.model";
-import { tripsQueries } from "./trips.queries";
+import type { ErrorMessage, ScheduleMessage } from "./trips.model";
 
 type Props = {
   chatRoomId: number;
@@ -12,7 +10,8 @@ type Props = {
   brokerURL?: string;
   token?: string;
   onReady?: () => void;
-  onChat?: (m: ChatMessage) => void;
+  enabled?: boolean;
+  onChat?: (m: ChatStream) => void;
   onSchedule?: (p: ScheduleMessage) => void;
   onErrorMsg?: (e: ErrorMessage) => void;
 };
@@ -34,7 +33,6 @@ export function useTripPlanStreams({
   const [schedule, setSchedule] = useState<ScheduleMessage[]>([]);
 
   const addChat = useChatStore((state) => state.addChat);
-  const queryClient = useQueryClient();
 
   const paths = useMemo(
     () => ({
@@ -82,13 +80,17 @@ export function useTripPlanStreams({
       const chatSub = client.subscribe(
         paths.chat,
         (msg) => {
-          const data = JSON.parse(msg.body) as ChatMessage;
-          addChat({ messageType: "ASSISTANT", ...data });
+          const data = JSON.parse(msg.body) as ChatStream;
           onChat?.(data);
         },
         { receipt: "sub-chat" },
       );
-      client.watchForReceipt("sub-chat", onReceipt);
+
+      client.watchForReceipt("sub-chat", (frame: IFrame) => {
+        console.log("sub-chat: 채팅 채널 구독 응답값", frame);
+        console.log("headers:", frame.headers);
+        console.log("body:", frame.body);
+      });
 
       const schedSub = client.subscribe(
         paths.schedule,
@@ -96,12 +98,6 @@ export function useTripPlanStreams({
           const data = JSON.parse(msg.body) as ScheduleMessage;
           setSchedule((prev) => [...prev, data]);
           onSchedule?.(data);
-
-          if (data.type === "COMPLETED") {
-            queryClient.invalidateQueries({
-              queryKey: tripsQueries.info(tripPlanId).queryKey,
-            });
-          }
         },
         { receipt: "sub-schedule" },
       );

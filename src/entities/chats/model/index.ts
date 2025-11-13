@@ -1,12 +1,9 @@
-export type {
-  Chat,
-  ChatMessage as ChatMessageStream,
-  ErrorMessage,
-} from "./chat.types";
 export type { LoadingStep } from "./chats.constants";
 export { LOADING_STEPS } from "./chats.constants";
 export type {
   ChatMessage,
+  ChatStream,
+  ChatStreamType,
   MessageContentType,
   MessageType,
 } from "./chats.model";
