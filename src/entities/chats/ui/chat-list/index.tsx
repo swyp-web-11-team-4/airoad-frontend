@@ -1,14 +1,6 @@
 import { Flex } from "@radix-ui/themes";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { CHAT_LIST_SIZE, chatsQueries, useChatStore } from "@/entities/chats/model";
 import {
@@ -17,6 +9,7 @@ import {
   ChatMessage,
   ScheduleCreatingChat,
 } from "@/entities/chats/ui";
+import { useInfiniteScroll } from "@/shared/hook";
 
 interface ChatListProps {
   conversationId: number;
@@ -25,14 +18,11 @@ interface ChatListProps {
 
 export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
   ({ conversationId, isTripCreated = false }, forwardedRef) => {
-    const chatListRef = useRef<HTMLDivElement>(null);
-    const sentinelRef = useRef<HTMLDivElement>(null);
+    const isInitialLoadRef = useRef(true);
 
     const currentChats = useChatStore((state) => state.chats);
     const isWaitingResponse = useChatStore((state) => state.isWaitingResponse);
     const setWaitingResponse = useChatStore((state) => state.setWaitingResponse);
-
-    useImperativeHandle(forwardedRef, () => chatListRef.current as HTMLDivElement);
 
     const {
       data: previousChatsData,
@@ -46,7 +36,13 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
       }),
     );
 
-    const [isFetchingPrevious, setIsFetchingPrevious] = useState(false);
+    const { sentinelRef, containerRef } = useInfiniteScroll({
+      hasNextPage,
+      fetchNextPage,
+      isFetchingNextPage,
+    });
+
+    useImperativeHandle(forwardedRef, () => containerRef.current as HTMLDivElement);
 
     const sortedPreviousChats = useMemo(() => {
       if (!previousChatsData) return [];
@@ -60,12 +56,12 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
     const recentChat = currentChats.length > 1 ? currentChats.at(-1) : undefined;
 
     const scrollToBottom = useCallback(() => {
-      if (chatListRef.current) {
-        chatListRef.current.scrollTo({
-          top: chatListRef.current.scrollHeight,
+      if (containerRef.current) {
+        containerRef.current.scrollTo({
+          top: containerRef.current.scrollHeight,
         });
       }
-    }, []);
+    }, [containerRef]);
 
     useEffect(() => {
       const lastChat = currentChats.at(-1);
@@ -75,53 +71,21 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
     }, [currentChats, setWaitingResponse]);
 
     useEffect(() => {
-      if (sortedPreviousChats.length > 0 || currentChats.length > 0) {
+      if (isInitialLoadRef.current && sortedPreviousChats.length > 0) {
         scrollToBottom();
+        isInitialLoadRef.current = false;
       }
-    }, [sortedPreviousChats.length, currentChats.length, scrollToBottom]);
+    }, [sortedPreviousChats.length, scrollToBottom]);
 
     useEffect(() => {
-      const sentinel = sentinelRef.current;
-      const chatList = chatListRef.current;
-
-      if (!sentinel || !chatList) return;
-
-      const observer = new IntersectionObserver(
-        async (entries) => {
-          const [entry] = entries;
-
-          if (entry.isIntersecting && hasNextPage && !isFetchingNextPage && !isFetchingPrevious) {
-            setIsFetchingPrevious(true);
-            const previousScrollHeight = chatList.scrollHeight;
-            const previousScrollTop = chatList.scrollTop;
-
-            await fetchNextPage();
-
-            requestAnimationFrame(() => {
-              const newScrollHeight = chatList.scrollHeight;
-              const scrollDiff = newScrollHeight - previousScrollHeight;
-              chatList.scrollTop = previousScrollTop + scrollDiff;
-              setIsFetchingPrevious(false);
-            });
-          }
-        },
-        {
-          root: chatList,
-          rootMargin: "100px 0px 0px 0px",
-          threshold: 0,
-        },
-      );
-
-      observer.observe(sentinel);
-
-      return () => {
-        observer.disconnect();
-      };
-    }, [fetchNextPage, hasNextPage, isFetchingNextPage, isFetchingPrevious]);
+      if (!isInitialLoadRef.current && currentChats.length > 0) {
+        scrollToBottom();
+      }
+    }, [currentChats.length, scrollToBottom]);
 
     return (
       <Flex
-        ref={chatListRef}
+        ref={containerRef}
         gap="5"
         direction="column"
         pt="20px"
