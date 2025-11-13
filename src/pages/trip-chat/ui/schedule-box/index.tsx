@@ -33,19 +33,26 @@ export const ScheduleBox = forwardRef<HTMLDivElement, DayPlanData>(
                     <Badge size="2" className={styles.tagBadge({ category: place.category })}>
                       {CATEGORY_OPTIONS[place.category]}
                     </Badge>
-                    <Badge size="2" variant="outline">
-                      {(() => {
-                        const themes = place.place.themes;
-                        if (!themes?.length) return "-";
+                    {place.place.themes?.length ? (
+                      place.place.themes.map((id) => {
+                        const options = [
+                          ...THEME_OPTIONS,
+                          { id: "RESTAURANT", label: "음식점", emoji: "🥘" },
+                        ];
 
-                        const labels = themes.map((id) => {
-                          const theme = THEME_OPTIONS.find((theme) => theme.id === id);
-                          return theme ? `${theme.emoji} ${theme.label}` : id;
-                        });
+                        const theme = options.find((theme) => theme.id === id);
 
-                        return labels.join(", ");
-                      })()}
-                    </Badge>
+                        return (
+                          <Badge key={id} size="2" variant="outline">
+                            {theme ? `${theme.emoji} ${theme.label}` : id}
+                          </Badge>
+                        );
+                      })
+                    ) : (
+                      <Badge size="2" variant="outline">
+                        -
+                      </Badge>
+                    )}
                   </div>
                   <Text size="3" weight="bold">
                     {place.place.name}
