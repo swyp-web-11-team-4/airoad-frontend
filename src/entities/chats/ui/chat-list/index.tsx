@@ -1,16 +1,8 @@
 import { Flex } from "@radix-ui/themes";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { CHAT_LIST_SIZE, chatsQueries, useChatStore } from "@/entities/chats/model";
+import { CHAT_LIST_SIZE, chatsQueries, useChatScroll, useChatStore } from "@/entities/chats/model";
 import {
   AssistantMessage,
   ChatLoadingPlaceholder,
@@ -21,8 +13,6 @@ import {
 import { useInfiniteScroll } from "@/shared/hook";
 import * as styles from "./index.css";
 
-const SCROLL_THRESHOLD = 1;
-
 interface ChatListProps {
   conversationId: number;
   isTripCreated?: boolean;
@@ -31,8 +21,6 @@ interface ChatListProps {
 export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
   ({ conversationId, isTripCreated = false }, forwardedRef) => {
     const isInitialLoadRef = useRef(true);
-    const [isAtBottom, setIsAtBottom] = useState(true);
-    const [showScrollButton, setShowScrollButton] = useState(false);
     const previousChatCountRef = useRef(0);
 
     const currentChats = useChatStore((state) => state.chats);
@@ -51,10 +39,13 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
       }),
     );
 
-    const { sentinelRef, containerRef } = useInfiniteScroll({
+    const { containerRef, showScrollButton, scrollToBottom, handleNewMessage } = useChatScroll();
+
+    const { sentinelRef } = useInfiniteScroll({
       hasNextPage,
       fetchNextPage,
       isFetchingNextPage,
+      containerRef,
     });
 
     useImperativeHandle(forwardedRef, () => containerRef.current as HTMLDivElement);
@@ -70,46 +61,6 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
     const lastChat = currentChats.at(-1);
     const restChats = currentChats.length > 1 ? currentChats.slice(0, -1) : currentChats;
     const recentChat = currentChats.length > 1 ? lastChat : undefined;
-
-    const checkIfAtBottom = useCallback(() => {
-      const container = containerRef.current;
-      if (!container) return false;
-
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
-
-      return distanceFromBottom < SCROLL_THRESHOLD;
-    }, [containerRef.current]);
-
-    const scrollToBottom = useCallback(() => {
-      const container = containerRef.current;
-      if (!container) return;
-
-      container.scrollTo({
-        top: container.scrollHeight,
-      });
-      setIsAtBottom(true);
-      setShowScrollButton(false);
-    }, [containerRef.current]);
-
-    useEffect(() => {
-      const container = containerRef.current;
-      if (!container) return;
-
-      const handleScroll = () => {
-        const atBottom = checkIfAtBottom();
-        setIsAtBottom(atBottom);
-
-        if (atBottom) {
-          setShowScrollButton(false);
-        }
-      };
-
-      container.addEventListener("scroll", handleScroll);
-      return () => {
-        container.removeEventListener("scroll", handleScroll);
-      };
-    }, [containerRef.current, checkIfAtBottom]);
 
     useEffect(() => {
       if (lastChat?.messageType === "ASSISTANT") {
@@ -134,17 +85,11 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
         const isUserMessage = lastChat.messageType === "USER";
         const isAssistantMessage = lastChat.messageType === "ASSISTANT";
 
-        if (isUserMessage) {
-          scrollToBottom();
-        } else if (isAtBottom) {
-          scrollToBottom();
-        } else if (isAssistantMessage && !showScrollButton) {
-          setShowScrollButton(true);
-        }
+        handleNewMessage({ isUserMessage, isAssistantMessage });
       }
 
       previousChatCountRef.current = currentChatCount;
-    }, [currentChats.length, lastChat, isAtBottom, showScrollButton, scrollToBottom]);
+    }, [currentChats.length, lastChat, handleNewMessage]);
 
     return (
       <div className={styles.container}>
