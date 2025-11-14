@@ -24,19 +24,71 @@ export const content = style({
 });
 
 export const markdown = {
-  ol: style({
-    marginLeft: 20,
-    marginBottom: 4,
-  }),
   ul: style({
-    listStyle: "outside",
-    marginLeft: 20,
-    marginBottom: 4,
+    paddingLeft: "1.5rem",
+    margin: "0.5em 0",
+    listStyleType: "disc",
+  }),
+  ol: style({
+    paddingLeft: "1.5rem",
+    margin: "0.5em 0",
+    listStyleType: "decimal",
   }),
   li: style({
-    marginBottom: 4,
+    margin: "0.5em 0",
   }),
   p: style({
-    marginBottom: 4,
+    margin: "0.5em 0",
+    lineHeight: 1.6,
+  }),
+  h1: style({
+    fontSize: "2em",
+    fontWeight: "var(--font-weight-bold)",
+    margin: "1em 0",
+  }),
+  h2: style({
+    fontSize: "1.5em",
+    fontWeight: "var(--font-weight-bold)",
+    margin: "0.75em 0",
+  }),
+  h3: style({
+    fontSize: "1.25em",
+    fontWeight: "var(--font-weight-bold)",
+    margin: "0.5em 0",
+  }),
+  h4: style({
+    fontWeight: "var(--font-weight-bold)",
+    margin: "0.5em 0",
+  }),
+  h5: style({
+    fontWeight: "var(--font-weight-bold)",
+    margin: "0.5em 0",
+  }),
+  h6: style({
+    fontWeight: "var(--font-weight-bold)",
+    margin: "0.5em 0",
+  }),
+  a: style({
+    color: "var(--accent-11)",
+    textDecoration: "underline",
+    ":hover": { textDecoration: "none" },
+  }),
+  blockquote: style({
+    paddingLeft: "1rem",
+    borderLeft: "3px solid var(--accent-7)",
+    color: "var(--accent-11)",
+    margin: "0.5em 0",
+    fontStyle: "italic",
+  }),
+  em: style({
+    fontStyle: "italic",
+  }),
+  strong: style({
+    fontWeight: "var(--font-weight-bold)",
+  }),
+  img: style({
+    width: "100%",
+    aspectRatio: "1/1",
+    objectFit: "contain",
   }),
 };
