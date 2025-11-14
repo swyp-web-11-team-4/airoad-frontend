@@ -41,21 +41,29 @@ export const useInfiniteScroll = ({
         const [entry] = entries;
 
         if (entry.isIntersecting && !isFetchingRef.current && fetchNextPageRef.current) {
-          const beforeState = onBeforeFetch?.(container) || {
-            scrollHeight: container.scrollHeight,
-            scrollTop: container.scrollTop,
-          };
+          isFetchingRef.current = true;
 
-          await fetchNextPageRef.current();
+          try {
+            const beforeState = onBeforeFetch?.(container) || {
+              scrollHeight: container.scrollHeight,
+              scrollTop: container.scrollTop,
+            };
 
-          requestAnimationFrame(() => {
-            if (onAfterFetch) {
-              onAfterFetch(container, beforeState);
-            } else {
-              const scrollDiff = container.scrollHeight - beforeState.scrollHeight;
-              container.scrollTop = beforeState.scrollTop + scrollDiff;
-            }
-          });
+            await fetchNextPageRef.current();
+
+            requestAnimationFrame(() => {
+              if (onAfterFetch) {
+                onAfterFetch(container, beforeState);
+              } else {
+                const scrollDiff = container.scrollHeight - beforeState.scrollHeight;
+                container.scrollTop = beforeState.scrollTop + scrollDiff;
+              }
+            });
+          } finally {
+            requestAnimationFrame(() => {
+              isFetchingRef.current = false;
+            });
+          }
         }
       },
       {
