@@ -1,7 +1,7 @@
 import { NotePencilIcon } from "@phosphor-icons/react";
 import { Share1Icon } from "@radix-ui/react-icons";
 import { Button, Flex, IconButton, Text, TextField } from "@radix-ui/themes";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
@@ -11,14 +11,16 @@ import { PEOPLE_OPTIONS, TERM_OPTIONS, THEME_OPTIONS } from "@/entities/trips/co
 import { tripsQueries, usePatchTrip } from "@/entities/trips/model";
 import iconLogo from "@/shared/asset/icon-logo.png";
 import { PAGE_ROUTES } from "@/shared/config";
+import { withAsyncBoundary } from "@/shared/ui";
 import { Header } from "@/widgets/header";
+import { ChatHeaderSkeleton } from "../chat-header-skeleton";
 import * as styles from "./index.css";
 
-export const ChatHeader = () => {
+const ChatHeader = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const tripPlanId = Number(params.get("tripPlanId"));
-  const { data } = useQuery(tripsQueries.info(tripPlanId));
+  const { data } = useSuspenseQuery(tripsQueries.info(tripPlanId));
   const { mutate: patchTrip, isPending } = usePatchTrip();
   const [editMode, setEditMode] = useState(false);
   const [title, setTitle] = useState<string>("");
@@ -119,3 +121,8 @@ export const ChatHeader = () => {
     </Header>
   );
 };
+
+export default withAsyncBoundary(ChatHeader, {
+  rejectedFallback: () => <ChatHeaderSkeleton />,
+  pendingFallback: <ChatHeaderSkeleton />,
+});

@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import { ChatHeader } from "./chat-header";
+import ChatHeader from "./chat-header";
 
 export const ChatLayout = () => {
   return (
