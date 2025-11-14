@@ -191,14 +191,8 @@ export default function CreateTrip() {
                     setOpenDate(false);
                   }}
                   weekStartsOn={0}
+                  showOutsideDays
                   className={styles.calendar}
-                  styles={{
-                    root: { width: "100%" },
-                    months: { width: "100%" },
-                    month: { width: "100%" },
-                    table: { width: "100%" },
-                    caption: { margin: 0 },
-                  }}
                 />
               </Popover.Content>
             </Popover.Root>

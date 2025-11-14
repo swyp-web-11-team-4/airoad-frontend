@@ -1,4 +1,4 @@
-import { style } from "@vanilla-extract/css";
+import { globalStyle, style } from "@vanilla-extract/css";
 import { mediaQuery } from "@/shared/styles";
 
 export const container = style({
@@ -145,7 +145,14 @@ export const iconBtn = style({
 export const calendar = style({
   width: "100%",
   maxWidth: "100%",
-  overflow: "hidden",
-  boxSizing: "border-box",
-  paddingLeft: "5px",
+  vars: {
+    "--rdp-accent-color": "#666DFB",
+    "--rdp-accent-background": "#eef2ff",
+    "--rdp-outline": "2px solid #666DFB",
+  },
+});
+
+globalStyle(`${calendar} .rdp-month_grid`, {
+  width: "100%",
+  tableLayout: "fixed",
 });
