@@ -21,6 +21,8 @@ import {
 import { useInfiniteScroll } from "@/shared/hook";
 import * as styles from "./index.css";
 
+const SCROLL_THRESHOLD = 1;
+
 interface ChatListProps {
   conversationId: number;
   isTripCreated?: boolean;
@@ -65,53 +67,55 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
       return allMessages.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
     }, [previousChatsData]);
 
+    const lastChat = currentChats.at(-1);
     const restChats = currentChats.length > 1 ? currentChats.slice(0, -1) : currentChats;
-    const recentChat = currentChats.length > 1 ? currentChats.at(-1) : undefined;
+    const recentChat = currentChats.length > 1 ? lastChat : undefined;
 
     const checkIfAtBottom = useCallback(() => {
-      if (!containerRef.current) return false;
+      const container = containerRef.current;
+      if (!container) return false;
 
-      const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+      const { scrollTop, scrollHeight, clientHeight } = container;
       const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
 
-      return distanceFromBottom < 1;
-    }, [containerRef]);
+      return distanceFromBottom < SCROLL_THRESHOLD;
+    }, [containerRef.current]);
 
     const scrollToBottom = useCallback(() => {
-      if (containerRef.current) {
-        containerRef.current.scrollTo({
-          top: containerRef.current.scrollHeight,
-        });
-        setIsAtBottom(true);
-        setShowScrollButton(false);
-      }
-    }, [containerRef]);
+      const container = containerRef.current;
+      if (!container) return;
 
-    const handleScroll = useCallback(() => {
-      const atBottom = checkIfAtBottom();
-      setIsAtBottom(atBottom);
-
-      if (atBottom) {
-        setShowScrollButton(false);
-      }
-    }, [checkIfAtBottom]);
+      container.scrollTo({
+        top: container.scrollHeight,
+      });
+      setIsAtBottom(true);
+      setShowScrollButton(false);
+    }, [containerRef.current]);
 
     useEffect(() => {
       const container = containerRef.current;
       if (!container) return;
 
+      const handleScroll = () => {
+        const atBottom = checkIfAtBottom();
+        setIsAtBottom(atBottom);
+
+        if (atBottom) {
+          setShowScrollButton(false);
+        }
+      };
+
       container.addEventListener("scroll", handleScroll);
       return () => {
         container.removeEventListener("scroll", handleScroll);
       };
-    }, [containerRef, handleScroll]);
+    }, [containerRef.current, checkIfAtBottom]);
 
     useEffect(() => {
-      const lastChat = currentChats.at(-1);
       if (lastChat?.messageType === "ASSISTANT") {
         setWaitingResponse(false);
       }
-    }, [currentChats, setWaitingResponse]);
+    }, [lastChat?.messageType, setWaitingResponse]);
 
     useEffect(() => {
       if (isInitialLoadRef.current && sortedPreviousChats.length > 0) {
@@ -126,10 +130,9 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
       const currentChatCount = currentChats.length;
       const hasNewMessage = currentChatCount > previousChatCountRef.current;
 
-      if (hasNewMessage) {
-        const lastChat = currentChats.at(-1);
-        const isUserMessage = lastChat?.messageType === "USER";
-        const isAssistantMessage = lastChat?.messageType === "ASSISTANT";
+      if (hasNewMessage && lastChat) {
+        const isUserMessage = lastChat.messageType === "USER";
+        const isAssistantMessage = lastChat.messageType === "ASSISTANT";
 
         if (isUserMessage) {
           scrollToBottom();
@@ -141,7 +144,7 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
       }
 
       previousChatCountRef.current = currentChatCount;
-    }, [currentChats, isAtBottom, showScrollButton, scrollToBottom]);
+    }, [currentChats.length, lastChat, isAtBottom, showScrollButton, scrollToBottom]);
 
     return (
       <div className={styles.container}>
