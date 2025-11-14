@@ -100,4 +100,4 @@ export type ScheduleMessage = {
 export type GetTripsResponse = ApiResponse<Trips>;
 export type GetStateTripIdResponse = ApiResponse<TripId>;
 export type GetTripPlanInfoResponse = ApiResponse<TripPlanInfo>;
-export type GetDailyPlanListResponse = ApiResponse<ScheduleMessage>;
+export type GetDailyPlanListResponse = ApiResponse<DayPlanData[]>;

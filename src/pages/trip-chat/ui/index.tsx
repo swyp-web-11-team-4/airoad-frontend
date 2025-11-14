@@ -1,10 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useLocation, useSearchParams } from "react-router";
+import { useLocation, useNavigate, useSearchParams } from "react-router";
 import { useAuthStore } from "@/entities/auth/model";
 import { useChatStore } from "@/entities/chats/model";
 import { tripsQueries } from "@/entities/trips/model";
 import { useStartTripPlan } from "@/entities/trips/model/use-start-trip-plan";
 import { useTripPlanStreams } from "@/entities/trips/model/use-trip-plan-streams";
+import { PAGE_ROUTES } from "@/shared/config";
 import { DataFetchState } from "@/shared/ui";
 import { ChatSection } from "./chat-section";
 import * as styles from "./index.css";
@@ -12,6 +13,7 @@ import { ScheduleSection } from "./schedule-section";
 
 export const TripChatPage = () => {
   const [params] = useSearchParams();
+  const navigate = useNavigate();
   const { state } = useLocation();
   const conversationId = Number(params.get("conversationId"));
   const tripPlanId = Number(params.get("tripPlanId"));
@@ -58,13 +60,15 @@ export const TripChatPage = () => {
 
   if (!conversationId || !tripPlanId) {
     return (
-      <DataFetchState
-        type="error"
-        title="잘못된 접근"
-        description="일정 정보가 없습니다."
-        actionText="뒤로 가기"
-        onAction={() => history.back()}
-      />
+      <div className={styles.container}>
+        <DataFetchState
+          type="error"
+          title="일정"
+          description="잘못된 접근 입니다."
+          actionText="메인 페이지로 이동"
+          onAction={() => navigate(PAGE_ROUTES.ROOT)}
+        />
+      </div>
     );
   }
 

@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router";
 import { tripsQueries } from "@/entities/trips/model";
-import type { DayPlanData, ScheduleMessage } from "@/entities/trips/model/trips.model";
+import type { DayPlanData } from "@/entities/trips/model/trips.model";
 import { ScheduleBox } from "../schedule-box";
 import { ScheduleBoxSkeleton } from "../schedule-box-skeleton";
 import * as styles from "./index.css";
 
-export function ScheduleSection({ schedule }: { schedule: ScheduleMessage[] }) {
+export function ScheduleSection({ schedule }: { schedule: DayPlanData[] }) {
   const [params] = useSearchParams();
   const tripPlanId = Number(params.get("tripPlanId"));
 
@@ -15,40 +15,62 @@ export function ScheduleSection({ schedule }: { schedule: ScheduleMessage[] }) {
   const { data: dailyPlans } = useQuery(tripsQueries.dailyPlan(tripPlanId));
 
   const lastRef = useRef<HTMLDivElement>(null);
-  const scheduleData = useMemo(() => {
-    if (!dailyPlans && schedule.length === 0) return [];
-
-    const ids = new Set<number>();
-    const plans: DayPlanData[] = [];
-
-    const apiList = Array.isArray(dailyPlans) ? dailyPlans : dailyPlans ? [dailyPlans] : [];
-    const socketList = schedule
-      .map((s) => s.dailyPlan)
-      .filter((p): p is DayPlanData => !!p && typeof p.id === "number");
-
-    for (const plan of [...apiList, ...socketList]) {
-      if (ids.has(plan.id)) continue;
-      ids.add(plan.id);
-      plans.push(plan);
-    }
-
-    return plans.sort((a, b) => a.dayNumber - b.dayNumber);
-  }, [dailyPlans, schedule]);
 
   const total = tripInfo?.duration ?? 0;
-  const remain = Math.max(total - scheduleData.length, 0);
+
+  const dayPlanList = useMemo(() => {
+    if (!total) return [];
+
+    const result: (DayPlanData | null)[] = Array.from({ length: total }, () => null);
+
+    (dailyPlans ?? []).forEach((plan) => {
+      if (plan.dayNumber == null) return;
+      const idx = plan.dayNumber - 1;
+      if (idx < 0 || idx >= total) return;
+      result[idx] = plan;
+    });
+
+    (schedule ?? []).forEach((plan) => {
+      if (plan?.dayNumber == null) return;
+      const idx = plan.dayNumber - 1;
+      if (idx < 0 || idx >= total) return;
+      result[idx] = plan;
+    });
+
+    return result;
+  }, [dailyPlans, schedule, total]);
+
+  const lastPlanIndex = useMemo(() => {
+    for (let i = dayPlanList.length - 1; i >= 0; i -= 1) {
+      if (dayPlanList[i]) return i;
+    }
+    return -1;
+  }, [dayPlanList]);
+
+  useEffect(() => {
+    if (lastPlanIndex < 0) return;
+    if (!lastRef.current) return;
+    lastRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+    });
+  }, [lastPlanIndex]);
 
   return (
     <div className={styles.container}>
-      {scheduleData.map((plan, idx) => (
-        <ScheduleBox
-          key={plan.id}
-          ref={idx === scheduleData.length - 1 ? lastRef : undefined}
-          {...plan}
-        />
-      ))}
-      {/* biome-ignore lint/suspicious/noArrayIndexKey: static skeleton, order won't change */}
-      {remain > 0 && Array.from({ length: remain }).map((_, i) => <ScheduleBoxSkeleton key={i} />)}
+      {dayPlanList.map((plan, idx) => {
+        if (plan) {
+          return (
+            <ScheduleBox
+              key={plan.id}
+              ref={idx === lastPlanIndex ? lastRef : undefined}
+              {...plan}
+            />
+          );
+        }
+        // biome-ignore lint/suspicious/noArrayIndexKey: index와 dayNumber를 1:1로 매칭하기 위함
+        return <ScheduleBoxSkeleton key={idx} />;
+      })}
     </div>
   );
 }

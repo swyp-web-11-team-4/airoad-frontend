@@ -2,7 +2,7 @@ import type { Client, StompSubscription } from "@stomp/stompjs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { type ChatStream, useChatStore } from "@/entities/chats/model";
 import { createStompClient } from "@/shared/lib";
-import type { ErrorMessage, ScheduleMessage } from "./trips.model";
+import type { DayPlanData, ErrorMessage, ScheduleMessage } from "./trips.model";
 
 type Props = {
   chatRoomId: number;
@@ -19,7 +19,7 @@ type Props = {
 export function useTripPlanStreams({
   chatRoomId,
   tripPlanId,
-  brokerURL = "wss://airoad.luigi99.cloud/ws-stomp",
+  brokerURL = import.meta.env.VITE_STOMP_BROKER_URL,
   token,
   onReady,
   onChat,
@@ -30,7 +30,7 @@ export function useTripPlanStreams({
   const subsRef = useRef<StompSubscription[]>([]);
 
   const [error, setError] = useState<ErrorMessage>();
-  const [schedule, setSchedule] = useState<ScheduleMessage[]>([]);
+  const [schedule, setSchedule] = useState<DayPlanData[]>([]);
 
   const addChat = useChatStore((state) => state.addChat);
 
@@ -90,7 +90,7 @@ export function useTripPlanStreams({
         paths.schedule,
         (msg) => {
           const data = JSON.parse(msg.body) as ScheduleMessage;
-          setSchedule((prev) => [...prev, data]);
+          setSchedule((prev) => [...prev, data.dailyPlan]);
           onSchedule?.(data);
         },
         { receipt: "sub-schedule" },
