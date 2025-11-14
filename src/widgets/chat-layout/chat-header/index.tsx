@@ -70,7 +70,6 @@ export const ChatHeader = () => {
                 size="2"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                onBlur={handlePatch}
                 autoFocus
               />
               <Button size="1" color="indigo" disabled={isPending} onClick={handlePatch}>
