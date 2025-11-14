@@ -91,7 +91,7 @@ export const dayTitle = recipe({
 });
 
 export const dayBox = style({
-  padding: "16px",
+  padding: "24px 16px",
   display: "flex",
   gap: "16px",
   alignItems: "center",
@@ -99,6 +99,12 @@ export const dayBox = style({
   borderBottom: "1px solid var(--gray-3)",
   flexShrink: 0,
   width: "100%",
+  position: "relative",
+});
+export const editButton = style({
+  position: "absolute",
+  top: "28px",
+  right: "18px",
 });
 
 export const dayImg = style({

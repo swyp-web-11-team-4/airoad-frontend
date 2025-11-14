@@ -1,9 +1,10 @@
-import { Badge, Text } from "@radix-ui/themes";
+import { Badge, IconButton, Text } from "@radix-ui/themes";
 import dayjs from "dayjs";
 import { forwardRef } from "react";
 import { Fragment } from "react/jsx-runtime";
 import { CATEGORY_OPTIONS, THEME_OPTIONS } from "@/entities/trips/config/category";
 import type { DayPlanData } from "@/entities/trips/model/trips.model";
+import Ai from "@/shared/asset/ai.svg";
 import Bus from "@/shared/asset/bus.svg";
 import * as styles from "./index.css";
 export const ScheduleBox = forwardRef<HTMLDivElement, DayPlanData>(
@@ -49,11 +50,12 @@ export const ScheduleBox = forwardRef<HTMLDivElement, DayPlanData>(
                         );
                       })
                     ) : (
-                      <Badge size="2" variant="outline">
-                        -
-                      </Badge>
+                      <Badge size="2" variant="outline"></Badge>
                     )}
                   </div>
+                  <IconButton className={styles.editButton} size="1" variant="outline" color="gray">
+                    <img src={Ai} alt="ai" />
+                  </IconButton>
                   <Text size="3" weight="bold">
                     {place.place.name}
                   </Text>
