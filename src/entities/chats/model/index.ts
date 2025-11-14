@@ -1,5 +1,6 @@
+export type { GetChatMessageRequest, GetChatMessagesResponse } from "./chat.dto";
 export type { LoadingStep } from "./chats.constants";
-export { LOADING_STEPS } from "./chats.constants";
+export { CHAT_LIST_SIZE, LOADING_STEPS } from "./chats.constants";
 export type {
   ChatMessage,
   ChatStream,

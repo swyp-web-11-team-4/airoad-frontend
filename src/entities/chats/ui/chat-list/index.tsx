@@ -1,14 +1,15 @@
 import { Flex } from "@radix-ui/themes";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { chatsQueries, useChatStore } from "@/entities/chats/model";
+import { CHAT_LIST_SIZE, chatsQueries, useChatStore } from "@/entities/chats/model";
 import {
   AssistantMessage,
   ChatLoadingPlaceholder,
   ChatMessage,
   ScheduleCreatingChat,
 } from "@/entities/chats/ui";
+import { useInfiniteScroll } from "@/shared/hook";
 
 interface ChatListProps {
   conversationId: number;
@@ -17,31 +18,50 @@ interface ChatListProps {
 
 export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
   ({ conversationId, isTripCreated = false }, forwardedRef) => {
-    const chatListRef = useRef<HTMLDivElement>(null);
+    const isInitialLoadRef = useRef(true);
 
     const currentChats = useChatStore((state) => state.chats);
     const isWaitingResponse = useChatStore((state) => state.isWaitingResponse);
     const setWaitingResponse = useChatStore((state) => state.setWaitingResponse);
 
-    useImperativeHandle(forwardedRef, () => chatListRef.current as HTMLDivElement);
-
-    const { data: previousChats } = useSuspenseQuery(chatsQueries.messageList(conversationId));
-
-    const sortedPreviousChats = useMemo(
-      () => [...previousChats.content].sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
-      [previousChats.content],
+    const {
+      data: previousChatsData,
+      fetchNextPage,
+      hasNextPage,
+      isFetchingNextPage,
+    } = useInfiniteQuery(
+      chatsQueries.infiniteMessageList({
+        chatRoomId: conversationId,
+        size: CHAT_LIST_SIZE,
+      }),
     );
+
+    const { sentinelRef, containerRef } = useInfiniteScroll({
+      hasNextPage,
+      fetchNextPage,
+      isFetchingNextPage,
+    });
+
+    useImperativeHandle(forwardedRef, () => containerRef.current as HTMLDivElement);
+
+    const sortedPreviousChats = useMemo(() => {
+      if (!previousChatsData) return [];
+
+      const allMessages = previousChatsData.pages.flatMap((page) => page.data.content);
+
+      return allMessages.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    }, [previousChatsData]);
 
     const restChats = currentChats.length > 1 ? currentChats.slice(0, -1) : currentChats;
     const recentChat = currentChats.length > 1 ? currentChats.at(-1) : undefined;
 
     const scrollToBottom = useCallback(() => {
-      if (chatListRef.current) {
-        chatListRef.current.scrollTo({
-          top: chatListRef.current.scrollHeight,
+      if (containerRef.current) {
+        containerRef.current.scrollTo({
+          top: containerRef.current.scrollHeight,
         });
       }
-    }, []);
+    }, [containerRef]);
 
     useEffect(() => {
       const lastChat = currentChats.at(-1);
@@ -51,14 +71,21 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
     }, [currentChats, setWaitingResponse]);
 
     useEffect(() => {
-      if (previousChats.content.length > 0 || currentChats.length > 0) {
+      if (isInitialLoadRef.current && sortedPreviousChats.length > 0) {
+        scrollToBottom();
+        isInitialLoadRef.current = false;
+      }
+    }, [sortedPreviousChats.length, scrollToBottom]);
+
+    useEffect(() => {
+      if (!isInitialLoadRef.current && currentChats.length > 0) {
         scrollToBottom();
       }
-    }, [previousChats.content.length, currentChats.length, scrollToBottom]);
+    }, [currentChats.length, scrollToBottom]);
 
     return (
       <Flex
-        ref={chatListRef}
+        ref={containerRef}
         gap="5"
         direction="column"
         pt="20px"
@@ -66,6 +93,14 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
         flexGrow="1"
         overflowY="auto"
       >
+        <div ref={sentinelRef} style={{ height: "1px" }} />
+
+        {isFetchingNextPage && (
+          <Flex justify="center" py="3">
+            <ChatLoadingPlaceholder />
+          </Flex>
+        )}
+
         {sortedPreviousChats.map(({ id, content, messageType }) => (
           <ChatMessage key={id} content={content} messageType={messageType} />
         ))}
