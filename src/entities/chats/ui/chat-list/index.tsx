@@ -1,15 +1,17 @@
 import { Flex } from "@radix-ui/themes";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { CHAT_LIST_SIZE, chatsQueries, useChatStore } from "@/entities/chats/model";
+import { CHAT_LIST_SIZE, chatsQueries, useChatScroll, useChatStore } from "@/entities/chats/model";
 import {
   AssistantMessage,
   ChatLoadingPlaceholder,
   ChatMessage,
   ScheduleCreatingChat,
+  ScrollToBottomButton,
 } from "@/entities/chats/ui";
 import { useInfiniteScroll } from "@/shared/hook";
+import * as styles from "./index.css";
 
 interface ChatListProps {
   conversationId: number;
@@ -19,6 +21,7 @@ interface ChatListProps {
 export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
   ({ conversationId, isTripCreated = false }, forwardedRef) => {
     const isInitialLoadRef = useRef(true);
+    const previousChatCountRef = useRef(0);
 
     const currentChats = useChatStore((state) => state.chats);
     const isWaitingResponse = useChatStore((state) => state.isWaitingResponse);
@@ -36,10 +39,13 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
       }),
     );
 
-    const { sentinelRef, containerRef } = useInfiniteScroll({
+    const { containerRef, showScrollButton, scrollToBottom, handleNewMessage } = useChatScroll();
+
+    const { sentinelRef } = useInfiniteScroll({
       hasNextPage,
       fetchNextPage,
       isFetchingNextPage,
+      containerRef,
     });
 
     useImperativeHandle(forwardedRef, () => containerRef.current as HTMLDivElement);
@@ -52,23 +58,15 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
       return allMessages.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
     }, [previousChatsData]);
 
+    const lastChat = currentChats.at(-1);
     const restChats = currentChats.length > 1 ? currentChats.slice(0, -1) : currentChats;
-    const recentChat = currentChats.length > 1 ? currentChats.at(-1) : undefined;
-
-    const scrollToBottom = useCallback(() => {
-      if (containerRef.current) {
-        containerRef.current.scrollTo({
-          top: containerRef.current.scrollHeight,
-        });
-      }
-    }, [containerRef]);
+    const recentChat = currentChats.length > 1 ? lastChat : undefined;
 
     useEffect(() => {
-      const lastChat = currentChats.at(-1);
       if (lastChat?.messageType === "ASSISTANT") {
         setWaitingResponse(false);
       }
-    }, [currentChats, setWaitingResponse]);
+    }, [lastChat?.messageType, setWaitingResponse]);
 
     useEffect(() => {
       if (isInitialLoadRef.current && sortedPreviousChats.length > 0) {
@@ -78,54 +76,68 @@ export const ChatList = forwardRef<HTMLDivElement, ChatListProps>(
     }, [sortedPreviousChats.length, scrollToBottom]);
 
     useEffect(() => {
-      if (!isInitialLoadRef.current && currentChats.length > 0) {
-        scrollToBottom();
+      if (isInitialLoadRef.current) return;
+
+      const currentChatCount = currentChats.length;
+      const hasNewMessage = currentChatCount > previousChatCountRef.current;
+
+      if (hasNewMessage && lastChat) {
+        const isUserMessage = lastChat.messageType === "USER";
+        const isAssistantMessage = lastChat.messageType === "ASSISTANT";
+
+        handleNewMessage({ isUserMessage, isAssistantMessage });
       }
-    }, [currentChats.length, scrollToBottom]);
+
+      previousChatCountRef.current = currentChatCount;
+    }, [currentChats.length, lastChat, handleNewMessage]);
 
     return (
-      <Flex
-        ref={containerRef}
-        gap="5"
-        direction="column"
-        pt="20px"
-        px="20px"
-        flexGrow="1"
-        overflowY="auto"
-      >
-        <div ref={sentinelRef} style={{ height: "1px" }} />
+      <div className={styles.container}>
+        <Flex
+          ref={containerRef}
+          gap="5"
+          direction="column"
+          py="20px"
+          px="20px"
+          flexGrow="1"
+          overflowY="auto"
+        >
+          {hasNextPage && <div ref={sentinelRef} style={{ height: "1px" }} />}
 
-        {isFetchingNextPage && (
-          <Flex justify="center" py="3">
-            <ChatLoadingPlaceholder />
-          </Flex>
-        )}
+          {isFetchingNextPage && (
+            <Flex justify="center" py="3">
+              <ChatLoadingPlaceholder />
+            </Flex>
+          )}
 
-        {sortedPreviousChats.map(({ id, content, messageType }) => (
-          <ChatMessage key={id} content={content} messageType={messageType} />
-        ))}
+          {sortedPreviousChats.map(({ id, content, messageType }) => (
+            <ChatMessage key={id} content={content} messageType={messageType} />
+          ))}
 
-        {currentChats.length > 0 && (
-          <>
-            {restChats.map(({ messageType, message }) => (
-              <ChatMessage key={uuidv4()} content={message} messageType={messageType} />
-            ))}
-            {recentChat && (
-              <ChatMessage
-                content={recentChat.message}
-                messageType={recentChat.messageType}
-                animate
-              />
-            )}
-          </>
-        )}
+          {currentChats.length > 0 && (
+            <>
+              {restChats.map(({ messageType, message }) => (
+                <ChatMessage key={uuidv4()} content={message} messageType={messageType} />
+              ))}
+              {recentChat && (
+                <ChatMessage
+                  content={recentChat.message}
+                  messageType={recentChat.messageType}
+                  animate
+                />
+              )}
+            </>
+          )}
 
-        {isWaitingResponse && <AssistantMessage content={<ChatLoadingPlaceholder />} />}
+          {isWaitingResponse && <AssistantMessage content={<ChatLoadingPlaceholder />} />}
 
-        {!isTripCreated && (
-          <AssistantMessage content={<ScheduleCreatingChat isCompleted={isTripCreated} />} />
-        )}
-      </Flex>
+          {!isTripCreated && (
+            <AssistantMessage content={<ScheduleCreatingChat isCompleted={isTripCreated} />} />
+          )}
+        </Flex>
+
+        {showScrollButton && <ScrollToBottomButton onClick={scrollToBottom} />}
+      </div>
     );
   },
 );

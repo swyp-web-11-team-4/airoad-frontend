@@ -35,7 +35,7 @@ export const ChatSection = ({ conversationId, sendMessage }: ChatSectionProps) =
   useEffect(() => reset, [reset]);
 
   return (
-    <Flex gap="5" direction="column" width="588px">
+    <Flex direction="column" width="588px">
       <ChatList conversationId={conversationId} isTripCreated={tripInfo?.isCompleted} />
       <Flex direction="column" px="20px" pb="4" gap="4">
         <ChatForm disabled={!tripInfo?.isCompleted} onSubmit={submitMessage} />
