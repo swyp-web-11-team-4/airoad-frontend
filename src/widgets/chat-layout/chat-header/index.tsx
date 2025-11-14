@@ -71,6 +71,15 @@ export const ChatHeader = () => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handlePatch();
+                  }
+                  if (e.key === "Escape") {
+                    setTitle(data?.title ?? "");
+                    setEditMode(false);
+                  }
+                }}
               />
               <Button size="1" color="indigo" disabled={isPending} onClick={handlePatch}>
                 {isPending ? "수정중.." : "완료"}
