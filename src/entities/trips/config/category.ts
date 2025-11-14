@@ -1,5 +1,6 @@
 export const PLACE_OPTIONS: string[] = [
   "서울",
+  "경기도",
   "부산",
   "제주",
   "가평/양평",
