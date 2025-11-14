@@ -13,6 +13,7 @@ import iconLogo from "@/shared/asset/icon-logo.png";
 import { PAGE_ROUTES } from "@/shared/config";
 import { withAsyncBoundary } from "@/shared/ui";
 import { Header } from "@/widgets/header";
+import { MainHeader } from "@/widgets/main-layout/main-header";
 import { ChatHeaderSkeleton } from "../chat-header-skeleton";
 import * as styles from "./index.css";
 
@@ -123,6 +124,6 @@ const ChatHeader = () => {
 };
 
 export default withAsyncBoundary(ChatHeader, {
-  rejectedFallback: () => <ChatHeaderSkeleton />,
+  rejectedFallback: () => <MainHeader />,
   pendingFallback: <ChatHeaderSkeleton />,
 });
