@@ -1,8 +1,8 @@
 import { Flex } from "@radix-ui/themes";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { CHAT_LIST_SIZE, chatsQueries, useChatScroll, useChatStore } from "@/entities/chats/model";
+import { CHAT_LIST_SIZE, chatsQueries, useChatScroll } from "@/entities/chats/model";
 import {
   AssistantMessage,
   ChatLoadingPlaceholder,
