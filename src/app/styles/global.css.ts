@@ -13,6 +13,20 @@ globalStyle("*", {
 });
 
 globalStyle("body", {
+  vars: {
+    "--indigo-1": "#FDFDFE ",
+    "--indigo-2": "#F5F6FE",
+    "--indigo-3": "#EDF2FE",
+    "--indigo-4": "#D2D4FE",
+    "--indigo-5": "#B5B8FC",
+    "--indigo-6": "#A1A6FC",
+    "--indigo-7": "#8D93FB",
+    "--indigo-8": "#747BFF",
+    "--indigo-9": "#666DFB",
+    "--indigo-10": "#3037B1",
+    "--indigo-11": "#272C8E",
+    "--indigo-12": "#1F2370",
+  },
   "@media": {
     // "(prefers-color-scheme: dark)": {
     //   vars: {
@@ -30,26 +44,29 @@ globalStyle("body", {
     //     "--indigo-12": "#D6E1FF",
     //   },
     // },
-    "(prefers-color-scheme: light)": {
-      vars: {
-        "--indigo-1": "#FDFDFE ",
-        "--indigo-2": "#F5F6FE",
-        "--indigo-3": "#EDF2FE",
-        "--indigo-4": "#D2D4FE",
-        "--indigo-5": "#B5B8FC",
-        "--indigo-6": "#A1A6FC",
-        "--indigo-7": "#8D93FB",
-        "--indigo-8": "#747BFF",
-        "--indigo-9": "#666DFB",
-        "--indigo-10": "#3037B1",
-        "--indigo-11": "#272C8E",
-        "--indigo-12": "#1F2370",
-      },
-    },
+    // "(prefers-color-scheme: light)": {
+    //   vars: {
+    //     "--indigo-1": "#FDFDFE ",
+    //     "--indigo-2": "#F5F6FE",
+    //     "--indigo-3": "#EDF2FE",
+    //     "--indigo-4": "#D2D4FE",
+    //     "--indigo-5": "#B5B8FC",
+    //     "--indigo-6": "#A1A6FC",
+    //     "--indigo-7": "#8D93FB",
+    //     "--indigo-8": "#747BFF",
+    //     "--indigo-9": "#666DFB",
+    //     "--indigo-10": "#3037B1",
+    //     "--indigo-11": "#272C8E",
+    //     "--indigo-12": "#1F2370",
+    //   },
+    // },
   },
 });
 
 globalStyle("*", {
+  fontFamily: 'Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+});
+globalStyle(".radix-themes, .radix-themes *", {
   fontFamily: 'Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
 });
 
