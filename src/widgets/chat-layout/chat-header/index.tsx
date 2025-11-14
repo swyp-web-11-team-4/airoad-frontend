@@ -3,7 +3,7 @@ import { Share1Icon } from "@radix-ui/react-icons";
 import { Button, Flex, IconButton, Text, TextField } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import { UserSection } from "@/entities/members/ui";
