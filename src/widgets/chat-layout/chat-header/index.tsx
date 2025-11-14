@@ -25,12 +25,16 @@ export const ChatHeader = () => {
 
   useEffect(() => {
     if (!tripPlanId) navigate(PAGE_ROUTES.ROOT);
-    if (data?.title) {
+    if (data?.title && !editMode) {
       setTitle(data.title);
     }
-  }, [tripPlanId, navigate, data]);
+  }, [tripPlanId, navigate, data, editMode]);
 
   const handlePatch = () => {
+    if (!title.trim()) {
+      toast.error("제목을 입력해주세요.");
+      return;
+    }
     patchTrip(
       { id: tripPlanId, title },
       {
@@ -69,7 +73,7 @@ export const ChatHeader = () => {
                 onBlur={handlePatch}
                 autoFocus
               />
-              <Button size="1" color="indigo" disabled={isPending}>
+              <Button size="1" color="indigo" disabled={isPending} onClick={handlePatch}>
                 {isPending ? "수정중.." : "완료"}
               </Button>
             </>
