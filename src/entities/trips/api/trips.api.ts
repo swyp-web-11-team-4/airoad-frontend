@@ -54,6 +54,10 @@ export const postTripPlan = async (id: number) => {
   await api.post(`${API_PATHS.TRIPS.INFO._}/${id}`);
   return id;
 };
+export const patchTripPlan = async (id: number, title: string) => {
+  await api.patch(`${API_PATHS.TRIPS.INFO._}/${id}`, { title });
+  return id;
+};
 
 export const getDailyPlans = async (tripPlanId: number) => {
   const { data } = await api.get<GetDailyPlanListResponse>(

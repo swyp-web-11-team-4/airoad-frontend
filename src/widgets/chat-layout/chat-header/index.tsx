@@ -1,13 +1,14 @@
 import { NotePencilIcon } from "@phosphor-icons/react";
 import { Share1Icon } from "@radix-ui/react-icons";
-import { Button, Flex, IconButton, Text } from "@radix-ui/themes";
+import { Button, Flex, IconButton, Text, TextField } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useEffect } from "react";
+import { use, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
+import { toast } from "sonner";
 import { UserSection } from "@/entities/members/ui";
 import { PEOPLE_OPTIONS, TERM_OPTIONS, THEME_OPTIONS } from "@/entities/trips/config";
-import { tripsQueries } from "@/entities/trips/model";
+import { tripsQueries, usePatchTrip } from "@/entities/trips/model";
 import iconLogo from "@/shared/asset/icon-logo.png";
 import { PAGE_ROUTES } from "@/shared/config";
 import { Header } from "@/widgets/header";
@@ -18,23 +19,61 @@ export const ChatHeader = () => {
   const navigate = useNavigate();
   const tripPlanId = Number(params.get("tripPlanId"));
   const { data } = useQuery(tripsQueries.info(tripPlanId));
+  const { mutate: patchTrip, isPending } = usePatchTrip();
+  const [editMode, setEditMode] = useState(false);
+  const [title, setTitle] = useState<string>("");
 
   useEffect(() => {
     if (!tripPlanId) navigate(PAGE_ROUTES.ROOT);
-  }, [tripPlanId, navigate]);
+    if (data?.title) {
+      setTitle(data.title);
+    }
+  }, [tripPlanId, navigate, data]);
+
+  const handlePatch = () => {
+    patchTrip(
+      { id: tripPlanId, title },
+      {
+        onSuccess: () => {
+          setEditMode(false);
+          toast.success("타이틀 수정을 완료했습니다.");
+        },
+      },
+    );
+  };
   return (
     <Header>
       <Flex align="center" gap="20px">
         <div className={styles.logo}>
           <img src={iconLogo} height={16} alt="로고 아이콘" />
         </div>
+
         <Flex align="center" gap="3">
-          <Text size="4" weight="medium">
-            {data?.title || "타이틀 없음"}
-          </Text>
-          <IconButton variant="ghost" color="gray">
-            <NotePencilIcon />
-          </IconButton>
+          {!editMode && (
+            <>
+              <Text size="4" weight="medium">
+                {data?.title || "타이틀 없음"}
+              </Text>
+              <IconButton variant="ghost" color="indigo" onClick={() => setEditMode(true)}>
+                <NotePencilIcon />
+              </IconButton>
+            </>
+          )}
+          {editMode && (
+            <>
+              <TextField.Root
+                placeholder="일정 타이틀을 작성해주세요."
+                size="2"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                onBlur={handlePatch}
+                autoFocus
+              />
+              <Button size="1" color="indigo" disabled={isPending}>
+                {isPending ? "수정중.." : "완료"}
+              </Button>
+            </>
+          )}
         </Flex>
       </Flex>
 
