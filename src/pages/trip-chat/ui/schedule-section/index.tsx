@@ -2,12 +2,18 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router";
 import { tripsQueries } from "@/entities/trips/model";
-import type { DayPlanData } from "@/entities/trips/model/trips.model";
+import type { DayPlanData, StatusMessage } from "@/entities/trips/model/trips.model";
 import { ScheduleBox } from "../schedule-box";
 import { ScheduleBoxSkeleton } from "../schedule-box-skeleton";
 import * as styles from "./index.css";
 
-export function ScheduleSection({ schedule }: { schedule: DayPlanData[] }) {
+export function ScheduleSection({
+  schedule,
+  status,
+}: {
+  schedule: DayPlanData[];
+  status: StatusMessage[];
+}) {
   const [params] = useSearchParams();
   const tripPlanId = Number(params.get("tripPlanId"));
 
@@ -17,6 +23,10 @@ export function ScheduleSection({ schedule }: { schedule: DayPlanData[] }) {
   const lastRef = useRef<HTMLDivElement>(null);
 
   const total = tripInfo?.duration ?? 0;
+
+  useEffect(() => {
+    console.log(status);
+  }, [status]);
 
   const dayPlanList = useMemo(() => {
     if (!total) return [];

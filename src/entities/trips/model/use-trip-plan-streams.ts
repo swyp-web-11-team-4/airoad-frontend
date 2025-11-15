@@ -2,7 +2,13 @@ import type { Client, StompSubscription } from "@stomp/stompjs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { type ChatStream, useChatStore } from "@/entities/chats/model";
 import { createStompClient } from "@/shared/lib";
-import type { DayPlanData, ErrorMessage, ScheduleMessage } from "./trips.model";
+import type {
+  DayPlanData,
+  ErrorMessage,
+  ScheduleMessage,
+  StatusMessage,
+  StatusType,
+} from "./trips.model";
 
 type Props = {
   chatRoomId: number;
@@ -12,8 +18,9 @@ type Props = {
   onReady?: () => void;
   enabled?: boolean;
   onChat?: (m: ChatStream) => void;
-  onSchedule?: (p: ScheduleMessage) => void;
+  onSchedule?: (p: DayPlanData) => void;
   onErrorMsg?: (e: ErrorMessage) => void;
+  onStatusMsg?: (e: StatusMessage) => void;
 };
 
 export function useTripPlanStreams({
@@ -25,12 +32,14 @@ export function useTripPlanStreams({
   onChat,
   onSchedule,
   onErrorMsg,
+  onStatusMsg,
 }: Props) {
   const clientRef = useRef<Client | null>(null);
   const subsRef = useRef<StompSubscription[]>([]);
 
   const [error, setError] = useState<ErrorMessage>();
   const [schedule, setSchedule] = useState<DayPlanData[]>([]);
+  const [status, setStatus] = useState<StatusMessage[]>([]);
 
   const addChat = useChatStore((state) => state.addChat);
 
@@ -90,11 +99,25 @@ export function useTripPlanStreams({
         paths.schedule,
         (msg) => {
           const data = JSON.parse(msg.body) as ScheduleMessage;
-          setSchedule((prev) => [...prev, data.dailyPlan]);
-          onSchedule?.(data);
+          if (data.type === "DAILY_PLAN_GENERATED") {
+            setSchedule((prev) => [...prev, data.dailyPlan]);
+            onSchedule?.(data.dailyPlan);
+            return;
+          }
+
+          const statusMsg: StatusMessage = {
+            type: data.type as StatusType,
+            tripPlanId: data.tripPlanId,
+            dailyPlan: null,
+            message: data.message,
+          };
+
+          setStatus((prev) => [...prev, statusMsg]);
+          onStatusMsg?.(statusMsg);
         },
         { receipt: "sub-schedule" },
       );
+
       client.watchForReceipt("sub-schedule", onReceipt);
 
       subsRef.current = [errSub, chatSub, schedSub];
@@ -150,5 +173,5 @@ export function useTripPlanStreams({
     });
   };
 
-  return { sendMessage, schedule, error, reconnect };
+  return { sendMessage, schedule, status, error, reconnect };
 }
