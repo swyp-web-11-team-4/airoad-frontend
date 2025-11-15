@@ -1,16 +1,19 @@
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import { Flex, IconButton } from "@radix-ui/themes";
 import { type ChangeEvent, type FormEventHandler, type KeyboardEvent, useState } from "react";
-
+import { useChatSection } from "../../model";
 import * as styles from "./index.css";
 
 interface ChatFormProps {
-  disabled?: boolean;
   onSubmit: FormEventHandler<HTMLFormElement>;
 }
 
-export const ChatForm = ({ disabled, onSubmit }: ChatFormProps) => {
+export const ChatForm = ({ onSubmit }: ChatFormProps) => {
   const [isValid, setIsValid] = useState(false);
+
+  const { isChatLoading, isScheduleCreating } = useChatSection();
+
+  const disabled = isScheduleCreating || isChatLoading || !isValid;
 
   const handleValid = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) => {
     if (value.trim()) {
@@ -50,7 +53,7 @@ export const ChatForm = ({ disabled, onSubmit }: ChatFormProps) => {
           color="indigo"
           radius="full"
           type="submit"
-          disabled={disabled || !isValid}
+          disabled={disabled}
         >
           <ArrowUpIcon width={16} height={16} />
         </IconButton>

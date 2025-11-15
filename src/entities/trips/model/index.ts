@@ -3,3 +3,4 @@ export { tripsQueries } from "./trips.queries";
 export { useDeleteTrip } from "./use-delete-trip";
 export { usePatchTrip } from "./use-patch-trip";
 export { usePostTrip } from "./use-post-trip";
+export { useTripPlanStreams } from "./use-trip-plan-streams";

@@ -7,16 +7,13 @@ interface ClientChat extends Omit<ChatStream, "messageStreamType"> {
 
 interface ChatState {
   chats: ClientChat[];
-  isWaitingResponse: boolean;
   addChat: (chat: ClientChat) => void;
-  setWaitingResponse: (isWaiting: boolean) => void;
   clearChats: () => void;
   reset: () => void;
 }
 
-const initialState = {
+const initialState: Pick<ChatState, "chats"> = {
   chats: [],
-  isWaitingResponse: false,
 };
 
 export const useChatStore = create<ChatState>((set) => ({
@@ -26,7 +23,6 @@ export const useChatStore = create<ChatState>((set) => ({
     set((state) => ({
       chats: [...state.chats, chat],
     })),
-  setWaitingResponse: (isWaiting) => set({ isWaitingResponse: isWaiting }),
   clearChats: () => set({ chats: [] }),
   reset: () => set(initialState),
 }));
