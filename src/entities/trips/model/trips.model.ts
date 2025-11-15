@@ -91,10 +91,19 @@ export type ErrorMessage = {
   detail?: unknown;
 };
 
+export type StatusType = "COMPLETED" | "UPDATE_STARTED" | "UPDATED" | "ERROR" | "CANCELLED";
+
 export type ScheduleMessage = {
-  type: "DAILY_PLAN_GENERATED" | "COMPLETED";
+  type: "DAILY_PLAN_GENERATED";
   tripPlanId: number;
   dailyPlan: DayPlanData;
+  message: string;
+};
+
+export type StatusMessage = {
+  type: StatusType;
+  tripPlanId: number;
+  dailyPlan: null;
   message: string;
 };
 export type GetTripsResponse = ApiResponse<Trips>;

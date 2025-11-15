@@ -26,7 +26,7 @@ export const TripChatPage = () => {
 
   const queryClient = useQueryClient();
 
-  const { error, schedule, sendMessage, reconnect } = useTripPlanStreams({
+  const { error, schedule, status, sendMessage, reconnect } = useTripPlanStreams({
     chatRoomId: conversationId ?? 0,
     tripPlanId: tripPlanId ?? 0,
     token: accessToken,
@@ -86,7 +86,7 @@ export const TripChatPage = () => {
   return (
     <div className={styles.container}>
       <ChatSection conversationId={conversationId} sendMessage={sendMessage} />
-      <ScheduleSection schedule={schedule} />
+      <ScheduleSection schedule={schedule} status={status} />
     </div>
   );
 };
