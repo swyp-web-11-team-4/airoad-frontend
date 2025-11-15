@@ -98,7 +98,7 @@ export function useTripPlanStreams({
       const schedSub = client.subscribe(
         paths.schedule,
         (msg) => {
-          const data = JSON.parse(msg.body) as ScheduleMessage;
+          const data = JSON.parse(msg.body) as ScheduleMessage | StatusMessage;
           if (data.type === "DAILY_PLAN_GENERATED") {
             setSchedule((prev) => [...prev, data.dailyPlan]);
             onSchedule?.(data.dailyPlan);
