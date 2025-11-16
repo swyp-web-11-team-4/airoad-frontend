@@ -51,12 +51,12 @@ export const ScheduleBox = forwardRef<HTMLDivElement, DayPlanData>(
                       })
                     ) : (
                       <Badge size="2" variant="outline">
-                        -s
+                        -
                       </Badge>
                     )}
                   </div>
                   <IconButton className={styles.editButton} size="1" variant="outline" color="gray">
-                    <img src={Ai} alt="ai" />
+                    <img src={Ai} alt="ai" className={styles.iconImage} />
                   </IconButton>
                   <Text size="3" weight="bold">
                     {place.place.name}

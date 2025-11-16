@@ -105,6 +105,26 @@ export const editButton = style({
   position: "absolute",
   top: "28px",
   right: "18px",
+
+  selectors: {
+    "&[data-disabled]": {
+      backgroundColor: "#00062E32",
+      cursor: "not-allowed",
+      pointerEvents: "none",
+    },
+  },
+});
+
+export const iconImage = style({
+  width: "16px",
+  height: "16px",
+
+  selectors: {
+    [`${editButton}[data-disabled] &`]: {
+      filter:
+        "invert(41%) sepia(5%) saturate(335%) hue-rotate(180deg) brightness(89%) contrast(90%)",
+    },
+  },
 });
 
 export const dayImg = style({
