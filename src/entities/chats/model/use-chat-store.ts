@@ -10,7 +10,7 @@ export interface ScheduledPlaceRef {
   name: string;
   dayNumber: number;
   category: string;
-  imageUrl: string;
+  imageUrl: string | null;
 }
 
 interface ChatState {

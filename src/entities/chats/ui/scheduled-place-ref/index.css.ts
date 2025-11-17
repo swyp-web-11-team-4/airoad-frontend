@@ -17,6 +17,7 @@ export const img = style({
   borderRadius: "var(--radius-2)",
   aspectRatio: "1/1",
   objectFit: "cover",
+  background: "var(--gray-6)",
 });
 
 export const name = style({

@@ -13,7 +13,11 @@ export const ScheduledPlaceRef = ({
   const removeScheduledPlaceRef = useChatStore((state) => state.removeScheduledPlaceRef);
   return (
     <div className={styles.wrapper}>
-      <img className={styles.img} src={imageUrl} alt="태그 이미지" width={40} height={40} />
+      {imageUrl ? (
+        <img className={styles.img} src={imageUrl} alt="태그 이미지" width={40} height={40} />
+      ) : (
+        <div className={styles.img} />
+      )}
 
       <Flex gap="1" width="100%" align="start">
         <Flex direction="column" width="100%">
