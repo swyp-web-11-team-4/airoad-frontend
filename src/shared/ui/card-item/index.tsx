@@ -47,7 +47,7 @@ export function CardItem({
     >
       <img
         className={styles.cardImg}
-        src={imgUrl ?? "/images/default-card.png"}
+        src={imgUrl || "/images/default-card.png"}
         alt="기본 카드 이미지"
       />
       <div className={styles.cardData}>

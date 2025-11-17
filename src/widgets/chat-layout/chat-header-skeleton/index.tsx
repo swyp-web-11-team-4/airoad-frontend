@@ -22,10 +22,6 @@ export const ChatHeaderSkeleton = () => {
       </div>
 
       <Flex align="center" gap="2">
-        <Button size="3" variant="surface" color="gray" highContrast>
-          <Share1Icon />
-          공유하기
-        </Button>
         <UserSection />
       </Flex>
     </Header>
