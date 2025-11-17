@@ -40,9 +40,12 @@ export const useChatStore = create<ChatState>((set) => ({
   clearChats: () => set({ chats: [] }),
 
   addScheduledPlaceRef: (scheduledPlaceRef) => {
-    set((state) => ({
-      scheduledPlaceRefList: [...state.scheduledPlaceRefList, scheduledPlaceRef],
-    }));
+    set((state) => {
+      if (state.scheduledPlaceRefList.length >= 4) return state;
+      return {
+        scheduledPlaceRefList: [...state.scheduledPlaceRefList, scheduledPlaceRef],
+      };
+    });
   },
 
   removeScheduledPlaceRef: (id) => {

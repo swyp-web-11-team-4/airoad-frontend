@@ -24,7 +24,6 @@ export const name = style({
   maxWidth: 170,
   textOverflow: "ellipsis",
   overflow: "hidden",
-  wordBreak: "break-word",
   whiteSpace: "nowrap",
 });
 

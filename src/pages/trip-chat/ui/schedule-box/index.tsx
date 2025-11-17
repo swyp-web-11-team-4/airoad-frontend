@@ -74,6 +74,7 @@ export const ScheduleBox = forwardRef<HTMLDivElement, DayPlanData>(
                       variant="outline"
                       color="gray"
                       disabled={refDisabled}
+                      aria-label={`${place.place.name} 태그 제거`}
                       onClick={() =>
                         addScheduledPlaceRef({
                           id: place.id,
