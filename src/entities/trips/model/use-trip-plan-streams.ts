@@ -1,6 +1,5 @@
 import type { Client, StompSubscription } from "@stomp/stompjs";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useAuthStore } from "@/entities/auth/model";
 import { type ChatStream, useChatStore } from "@/entities/chats/model";
 import { createStompClient } from "@/shared/lib";
 import type {
@@ -34,25 +33,15 @@ export function useTripPlanStreams({
   onSchedule,
   onErrorMsg,
   onStatusMsg,
-  enabled = true,
 }: Props) {
   const clientRef = useRef<Client | null>(null);
   const subsRef = useRef<StompSubscription[]>([]);
-  const tokenRef = useRef<string | undefined>(token);
-  const autoReconnectRef = useRef(true);
-  const isReissuingRef = useRef(false);
 
   const [error, setError] = useState<ErrorMessage>();
   const [schedule, setSchedule] = useState<DayPlanData[]>([]);
   const [status, setStatus] = useState<StatusMessage[]>([]);
 
   const addChat = useChatStore((state) => state.addChat);
-
-  const reissue = useAuthStore((s) => s.reissue);
-
-  useEffect(() => {
-    tokenRef.current = token;
-  }, [token]);
 
   const paths = useMemo(
     () => ({
@@ -63,25 +52,16 @@ export function useTripPlanStreams({
     [chatRoomId, tripPlanId],
   );
 
-  const clearSubscriptions = () => {
+  const cleanup = () => {
     for (const s of subsRef.current) s.unsubscribe();
     subsRef.current = [];
-  };
-
-  const cleanup = () => {
-    const client = clientRef.current;
-    clearSubscriptions();
+    clientRef.current?.deactivate();
     clientRef.current = null;
-    client?.deactivate();
   };
-
   const connect = () => {
-    const accessToken = tokenRef.current;
+    if (!chatRoomId || !tripPlanId || !token) return;
 
-    if (!enabled) return;
-    if (!chatRoomId || !tripPlanId || !accessToken) return;
-
-    const client = createStompClient(brokerURL, accessToken);
+    const client = createStompClient(brokerURL, token);
     clientRef.current = client;
 
     client.onConnect = () => {
@@ -112,13 +92,13 @@ export function useTripPlanStreams({
         },
         { receipt: "sub-chat" },
       );
+
       client.watchForReceipt("sub-chat", onReceipt);
 
       const schedSub = client.subscribe(
         paths.schedule,
         (msg) => {
           const data = JSON.parse(msg.body) as ScheduleMessage | StatusMessage;
-
           if (data.type === "DAILY_PLAN_GENERATED") {
             setSchedule((prev) => [...prev, data.dailyPlan]);
             onSchedule?.(data.dailyPlan);
@@ -137,6 +117,7 @@ export function useTripPlanStreams({
         },
         { receipt: "sub-schedule" },
       );
+
       client.watchForReceipt("sub-schedule", onReceipt);
 
       subsRef.current = [errSub, chatSub, schedSub];
@@ -162,54 +143,17 @@ export function useTripPlanStreams({
       onErrorMsg?.(error);
     };
 
-    client.onWebSocketClose = async () => {
-      if (!autoReconnectRef.current) return;
-      if (isReissuingRef.current) return;
-
-      try {
-        isReissuingRef.current = true;
-
-        const { accessToken: newAccessToken } = await reissue();
-        tokenRef.current = newAccessToken;
-
-        clearSubscriptions();
-        clientRef.current = null;
-
-        setError(undefined);
-
-        connect();
-      } catch (err) {
-        const authError: ErrorMessage = {
-          code: "AUTH_EXPIRED",
-          message: "로그인이 만료되었습니다. 다시 로그인해주세요.",
-          detail: err,
-        };
-        setError(authError);
-        onErrorMsg?.(authError);
-      } finally {
-        isReissuingRef.current = false;
-      }
-    };
-
     client.activate();
   };
 
   useEffect(() => {
-    if (!enabled) return;
-
-    autoReconnectRef.current = true;
     connect();
-
-    return () => {
-      autoReconnectRef.current = false;
-      cleanup();
-    };
-  }, [chatRoomId, tripPlanId, brokerURL, enabled]);
+    return cleanup;
+  }, [chatRoomId, tripPlanId, brokerURL, token]);
 
   const reconnect = () => {
     setError(undefined);
     cleanup();
-    autoReconnectRef.current = true;
     connect();
   };
 
