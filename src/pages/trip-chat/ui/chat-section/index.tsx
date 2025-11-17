@@ -11,14 +11,19 @@ interface ChatSectionProps {
 
 export const ChatSection = ({ sendMessage }: ChatSectionProps) => {
   const reset = useChatStore((state) => state.reset);
+  const scheduledPlaceRefList = useChatStore((state) => state.scheduledPlaceRefList);
+  const resetScheduledPlaceRefList = useChatStore((state) => state.resetScheduledPlaceRefList);
 
   const submitMessage: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     const value = new FormData(event.currentTarget).get("chat");
 
     if (typeof value === "string" && value.trim()) {
-      sendMessage(value, "TEXT");
+      sendMessage(value, "TEXT", {
+        scheduledPlaceIdList: scheduledPlaceRefList.map(({ id }) => id),
+      });
       event.currentTarget.reset();
+      resetScheduledPlaceRefList();
     }
   };
 

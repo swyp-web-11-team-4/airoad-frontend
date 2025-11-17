@@ -157,12 +157,22 @@ export function useTripPlanStreams({
     connect();
   };
 
-  const sendMessage = (content: string, type: "TEXT" | "IMAGE" = "TEXT") => {
+  const sendMessage = (
+    content: string,
+    type: "TEXT" | "IMAGE" = "TEXT",
+    options?: { scheduledPlaceIdList?: number[] },
+  ) => {
     if (!clientRef.current) return;
 
     clientRef.current.publish({
       destination: `/pub/chat/${chatRoomId}/message`,
-      body: JSON.stringify({ content, messageType: type }),
+      body: JSON.stringify({
+        content,
+        messageType: type,
+        ...(options?.scheduledPlaceIdList && {
+          scheduledPlaceIdList: options.scheduledPlaceIdList,
+        }),
+      }),
     });
 
     addChat({
