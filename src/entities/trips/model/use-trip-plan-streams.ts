@@ -178,6 +178,7 @@ export function useTripPlanStreams({
         clientRef.current = null;
 
         setError(undefined);
+        cleanup();
 
         connect();
       } catch (err) {
