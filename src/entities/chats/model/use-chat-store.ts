@@ -29,7 +29,7 @@ const initialState: Pick<ChatState, "chats" | "scheduledPlaceRefList"> = {
   scheduledPlaceRefList: [],
 };
 
-export const useChatStore = create<ChatState>((set, get) => ({
+export const useChatStore = create<ChatState>((set) => ({
   ...initialState,
 
   addChat: (chat) =>

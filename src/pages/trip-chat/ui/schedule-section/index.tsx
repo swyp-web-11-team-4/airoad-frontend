@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router";
-import { useChatStore } from "@/entities/chats/model";
 import { tripsQueries } from "@/entities/trips/model";
 import type { DayPlanData, StatusMessage } from "@/entities/trips/model/trips.model";
 import { ScheduleBox } from "../schedule-box";
