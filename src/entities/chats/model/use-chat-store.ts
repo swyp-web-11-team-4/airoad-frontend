@@ -5,15 +5,28 @@ interface ClientChat extends Omit<ChatStream, "messageStreamType"> {
   messageType: MessageType;
 }
 
+export interface ScheduledPlaceRef {
+  id: number;
+  name: string;
+  dayNumber: number;
+  category: string;
+  imageUrl: string | null;
+}
+
 interface ChatState {
   chats: ClientChat[];
+  scheduledPlaceRefList: ScheduledPlaceRef[];
   addChat: (chat: ClientChat) => void;
   clearChats: () => void;
+  addScheduledPlaceRef: (scheduledPlaceRef: ScheduledPlaceRef) => void;
+  removeScheduledPlaceRef: (id: number) => void;
+  resetScheduledPlaceRefList: () => void;
   reset: () => void;
 }
 
-const initialState: Pick<ChatState, "chats"> = {
+const initialState: Pick<ChatState, "chats" | "scheduledPlaceRefList"> = {
   chats: [],
+  scheduledPlaceRefList: [],
 };
 
 export const useChatStore = create<ChatState>((set) => ({
@@ -23,6 +36,27 @@ export const useChatStore = create<ChatState>((set) => ({
     set((state) => ({
       chats: [...state.chats, chat],
     })),
+
   clearChats: () => set({ chats: [] }),
+
+  addScheduledPlaceRef: (scheduledPlaceRef) => {
+    set((state) => {
+      if (state.scheduledPlaceRefList.length >= 4) return state;
+      return {
+        scheduledPlaceRefList: [...state.scheduledPlaceRefList, scheduledPlaceRef],
+      };
+    });
+  },
+
+  removeScheduledPlaceRef: (id) => {
+    set((state) => ({
+      scheduledPlaceRefList: state.scheduledPlaceRefList.filter((ref) => ref.id !== id),
+    }));
+  },
+
+  resetScheduledPlaceRefList: () => {
+    set({ scheduledPlaceRefList: initialState.scheduledPlaceRefList });
+  },
+
   reset: () => set(initialState),
 }));

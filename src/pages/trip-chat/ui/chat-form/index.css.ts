@@ -13,6 +13,10 @@ export const wrapper = style({
     0px 1px 3px 0px var(--black-a1);`,
 });
 
+export const refList = style({
+  marginBottom: 14,
+});
+
 export const textarea = style({
   border: "none",
   outline: "none",

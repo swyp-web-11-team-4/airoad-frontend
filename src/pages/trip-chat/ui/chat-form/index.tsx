@@ -1,6 +1,8 @@
 import { ArrowUpIcon } from "@radix-ui/react-icons";
-import { Flex, IconButton } from "@radix-ui/themes";
+import { Flex, Grid, IconButton } from "@radix-ui/themes";
 import { type ChangeEvent, type FormEventHandler, type KeyboardEvent, useState } from "react";
+import { useChatStore } from "@/entities/chats/model";
+import { ScheduledPlaceRef } from "@/entities/chats/ui";
 import { useChatSection } from "../../model";
 import * as styles from "./index.css";
 
@@ -11,6 +13,7 @@ interface ChatFormProps {
 export const ChatForm = ({ onSubmit }: ChatFormProps) => {
   const [isValid, setIsValid] = useState(false);
 
+  const scheduledPlaceRefList = useChatStore((state) => state.scheduledPlaceRefList);
   const { isChatLoading, isScheduleCreating } = useChatSection();
 
   const disabled = isScheduleCreating || isChatLoading || !isValid;
@@ -39,6 +42,18 @@ export const ChatForm = ({ onSubmit }: ChatFormProps) => {
       }}
       aria-disabled={disabled}
     >
+      {scheduledPlaceRefList.length > 0 && (
+        <Grid
+          className={styles.refList}
+          rows={scheduledPlaceRefList.length > 2 ? "2" : "1"}
+          columns="2"
+          gap="1"
+        >
+          {scheduledPlaceRefList.map((scheduledPlaceRef) => (
+            <ScheduledPlaceRef key={scheduledPlaceRef.id} {...scheduledPlaceRef} />
+          ))}
+        </Grid>
+      )}
       <textarea
         name="chat"
         className={styles.textarea}
