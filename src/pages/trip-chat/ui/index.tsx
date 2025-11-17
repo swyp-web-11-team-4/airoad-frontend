@@ -26,38 +26,37 @@ export const TripChatPage = () => {
 
   const queryClient = useQueryClient();
 
-  const { error, schedule, status, sendMessage, reconnect } =
-    useTripPlanStreams({
-      chatRoomId: conversationId ?? 0,
-      tripPlanId: tripPlanId ?? 0,
-      token: accessToken,
+  const { error, schedule, status, sendMessage, reconnect } = useTripPlanStreams({
+    chatRoomId: conversationId ?? 0,
+    tripPlanId: tripPlanId ?? 0,
+    token: accessToken,
 
-      onChat: (data) => {
-        switch (data.messageStreamType) {
-          case "CHAT":
-            addChat({ messageType: "ASSISTANT", ...data });
-            break;
-          case "COMPLETED":
-            queryClient.invalidateQueries({
-              queryKey: tripsQueries.info(tripPlanId).queryKey,
-            });
-            break;
-          default:
-            break;
-        }
-      },
-
-      onReady: () => {
-        if (state?.create && !sessionStorage.getItem(POSTED_KEY)) {
-          sessionStorage.setItem(POSTED_KEY, "1");
-          postTripPlan(tripPlanId, {
-            onError: () => {
-              sessionStorage.removeItem(POSTED_KEY);
-            },
+    onChat: (data) => {
+      switch (data.messageStreamType) {
+        case "CHAT":
+          addChat({ messageType: "ASSISTANT", ...data });
+          break;
+        case "COMPLETED":
+          queryClient.invalidateQueries({
+            queryKey: tripsQueries.info(tripPlanId).queryKey,
           });
-        }
-      },
-    });
+          break;
+        default:
+          break;
+      }
+    },
+
+    onReady: () => {
+      if (state?.create && !sessionStorage.getItem(POSTED_KEY)) {
+        sessionStorage.setItem(POSTED_KEY, "1");
+        postTripPlan(tripPlanId, {
+          onError: () => {
+            sessionStorage.removeItem(POSTED_KEY);
+          },
+        });
+      }
+    },
+  });
 
   if (!conversationId || !tripPlanId) {
     return (
