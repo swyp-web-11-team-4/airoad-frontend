@@ -76,7 +76,8 @@ export function useTripPlanStreams({
   };
 
   const connect = () => {
-    const accessToken = tokenRef.current;
+    const storeToken = useAuthStore.getState().accessToken;
+    const accessToken = tokenRef.current ?? storeToken;
 
     if (!enabled) return;
     if (!chatRoomId || !tripPlanId || !accessToken) return;
@@ -173,12 +174,10 @@ export function useTripPlanStreams({
 
         const { accessToken: newAccessToken } = await reissue();
         tokenRef.current = newAccessToken;
-
-        clearSubscriptions();
+        cleanup();
         clientRef.current = null;
 
         setError(undefined);
-        cleanup();
 
         connect();
       } catch (err) {

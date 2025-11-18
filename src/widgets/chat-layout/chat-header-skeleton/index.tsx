@@ -1,5 +1,4 @@
-import { Share1Icon } from "@radix-ui/react-icons";
-import { Button, Flex, Skeleton } from "@radix-ui/themes";
+import { Flex, Skeleton } from "@radix-ui/themes";
 import { UserSection } from "@/entities/members/ui";
 import iconLogo from "@/shared/asset/icon-logo.png";
 import { Header } from "@/widgets/header";
