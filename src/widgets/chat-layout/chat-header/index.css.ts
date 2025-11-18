@@ -8,6 +8,7 @@ export const logo = style({
   height: "var(--space-7)",
   borderRadius: "var(--radius-4)",
   backgroundColor: "#DBEFFF",
+  border: "none",
 });
 
 export const infoList = style({
