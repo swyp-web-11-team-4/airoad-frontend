@@ -33,6 +33,10 @@ const ChatHeader = () => {
     }
   }, [tripPlanId, navigate, data, editMode]);
 
+  const handleMoveMain = () => {
+    navigate(PAGE_ROUTES.ROOT);
+  };
+
   const handlePatch = () => {
     if (!title.trim()) {
       toast.error("제목을 입력해주세요.");
@@ -51,9 +55,9 @@ const ChatHeader = () => {
   return (
     <Header>
       <Flex align="center" gap="20px">
-        <div className={styles.logo}>
+        <button type="button" className={styles.logo} onClick={handleMoveMain}>
           <img src={iconLogo} height={16} alt="로고 아이콘" />
-        </div>
+        </button>
 
         <Flex align="center" gap="3">
           {!editMode && (
