@@ -19,7 +19,9 @@ export const ScheduleCreatingChat = ({ isCompleted = false }: ScheduleCreatingCh
 
       <div className={styles.content}>
         <Flex direction="column" gap="4">
-          <img className={styles.loadingImage} src={LoadingImage} alt="로딩 이미지" />
+          <div className={styles.imageWrapper}>
+            <img className={styles.loadingImage} src={LoadingImage} alt="로딩 이미지" />
+          </div>
           {LOADING_STEPS.map((step, index) => (
             <LoadingStepItem key={step.id} step={step} completed={currentStep > index} />
           ))}

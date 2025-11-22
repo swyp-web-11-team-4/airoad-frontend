@@ -10,7 +10,18 @@ export const content = style({
   borderRadius: "var(--radius-6)",
 });
 
-export const loadingImage = style({
-  width: "100%",
+export const imageWrapper = style({
+  position: "relative",
+  width: 438,
+  height: 140,
   borderRadius: "var(--radius-6)",
+  overflowX: "hidden",
+});
+
+export const loadingImage = style({
+  position: "absolute",
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+  objectPosition: "center",
 });

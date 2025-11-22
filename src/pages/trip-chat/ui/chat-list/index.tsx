@@ -122,6 +122,8 @@ export const ChatList = () => {
           <AssistantMessage content={<ScheduleCreatingChat isCompleted={isTripCreated} />} />
         )}
 
+        <ScheduleCreatingChat isCompleted={false} />
+
         {isChatLoading && <AssistantMessage content={<ChatLoadingPlaceholder />} />}
       </Flex>
 
