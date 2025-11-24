@@ -3,13 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuthStore } from "@/entities/auth/model";
 import { type ChatStream, useChatStore } from "@/entities/chats/model";
 import { createStompClient } from "@/shared/lib";
-import type {
-  DayPlanData,
-  ErrorMessage,
-  ScheduleMessage,
-  StatusMessage,
-  StatusType,
-} from "./trips.model";
+import type { DayPlanData, ErrorMessage, StatusMessage, StreamMessage } from "./trips.model";
 
 type Props = {
   chatRoomId: number;
@@ -119,23 +113,19 @@ export function useTripPlanStreams({
       const schedSub = client.subscribe(
         paths.schedule,
         (msg) => {
-          const data = JSON.parse(msg.body) as ScheduleMessage | StatusMessage;
+          const data = JSON.parse(msg.body) as StreamMessage;
 
-          if (data.type === "DAILY_PLAN_GENERATED") {
-            setSchedule((prev) => [...prev, data.dailyPlan]);
-            onSchedule?.(data.dailyPlan);
+          if (data.type === "DAILY_PLAN_GENERATED" || data.type === "UPDATED") {
+            const dailyPlan = data.data;
+
+            setSchedule((prev) => [...prev, dailyPlan]);
+            onSchedule?.(dailyPlan);
             return;
+          } else {
+            const statusMsg = data as StatusMessage;
+            setStatus((prev) => [...prev, statusMsg]);
+            onStatusMsg?.(statusMsg);
           }
-
-          const statusMsg: StatusMessage = {
-            type: data.type as StatusType,
-            tripPlanId: data.tripPlanId,
-            dailyPlan: null,
-            message: data.message,
-          };
-
-          setStatus((prev) => [...prev, statusMsg]);
-          onStatusMsg?.(statusMsg);
         },
         { receipt: "sub-schedule" },
       );
