@@ -1,5 +1,6 @@
 import { Flex, Text } from "@radix-ui/themes";
 import { LOADING_STEPS, useLoadingProgress } from "@/entities/chats/model";
+import LoadingImage from "@/shared/asset/cat.gif";
 import { LoadingStepItem } from "../loading-step-item";
 import * as styles from "./index.css";
 
@@ -17,9 +18,14 @@ export const ScheduleCreatingChat = ({ isCompleted = false }: ScheduleCreatingCh
       </Text>
 
       <div className={styles.content}>
-        {LOADING_STEPS.map((step, index) => (
-          <LoadingStepItem key={step.id} step={step} completed={currentStep > index} />
-        ))}
+        <Flex direction="column" gap="4">
+          <div className={styles.imageWrapper}>
+            <img className={styles.loadingImage} src={LoadingImage} alt="로딩 이미지" />
+          </div>
+          {LOADING_STEPS.map((step, index) => (
+            <LoadingStepItem key={step.id} step={step} completed={currentStep > index} />
+          ))}
+        </Flex>
       </div>
     </Flex>
   );
