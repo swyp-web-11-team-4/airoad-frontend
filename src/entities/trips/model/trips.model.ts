@@ -42,7 +42,7 @@ export type CreateTrip = {
   userMessage: string;
 };
 
-export type CategoryType = "MORNING" | "AFTERNOON" | "EVENING";
+export type CategoryType = "MORNING" | "LUNCH" | "AFTERNOON" | "DINNER" | "EVENING";
 
 export type ThemeType =
   | "FAMOUS_SPOT"
