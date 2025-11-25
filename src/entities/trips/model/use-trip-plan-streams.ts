@@ -217,7 +217,7 @@ export function useTripPlanStreams({
       destination: `/pub/chat/${chatRoomId}/message`,
       body: JSON.stringify({
         content,
-        messageType: type,
+        messageContentType: type,
         ...(options?.scheduledPlaceIdList && {
           scheduledPlaceIdList: options.scheduledPlaceIdList,
         }),
