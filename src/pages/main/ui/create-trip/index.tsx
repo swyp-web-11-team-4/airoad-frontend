@@ -338,12 +338,6 @@ export default function CreateTrip() {
                 const value = e.target.value;
                 setMessage(value);
               }}
-              onKeyDown={(e) => {
-                e.currentTarget.value;
-                if (e.key === "Enter") {
-                  handleCreate();
-                }
-              }}
               placeholder="아이들과 함께 가기 좋은 박물관 위주로 여행하고 싶어요"
             />
             <Flex align="end" justify="end" width="100%">

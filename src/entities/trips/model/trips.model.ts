@@ -39,7 +39,7 @@ export type CreateTrip = {
   duration: number;
   region: string;
   peopleCount: number;
-  userMessage: string;
+  userMessage?: string;
 };
 
 export type CategoryType = "MORNING" | "LUNCH" | "AFTERNOON" | "DINNER" | "EVENING";

@@ -34,7 +34,7 @@ export function DataFetchState({
   if (type === "error") {
     return (
       <div className={styles.dataFetchBox}>
-        <img src="/images/error-state.png" alt="데이터 없음" className={styles.errorBox} />
+        <img src="/images/error-state.png" alt="오류 발생" className={styles.errorBox} />
         <Text className={styles.titleBox}>{title} 정보를 불러올 수 없습니다.</Text>
         <Text className={styles.titleBox}>{error?.message}</Text>
         {description && <Text className={styles.titleBox}>{description}</Text>}
