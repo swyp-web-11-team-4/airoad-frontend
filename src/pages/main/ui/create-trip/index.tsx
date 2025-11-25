@@ -1,14 +1,13 @@
-import { Button, Checkbox, DropdownMenu, Flex, Popover, RadioCards, Text } from "@radix-ui/themes";
+import { Button, Checkbox, DropdownMenu, Flex, Popover, Text, TextArea } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { useAuthStore } from "@/entities/auth/model";
 import { LoginDialog } from "@/entities/auth/ui";
-import { membersQueries } from "@/entities/members/model";
 import {
   PEOPLE_OPTIONS,
   PLACE_OPTIONS,
@@ -21,12 +20,13 @@ import * as styles from "./index.css";
 
 export default function CreateTrip() {
   const navigate = useNavigate();
-  const { data: user } = useQuery(membersQueries.me());
+  const accessToken = useAuthStore((s) => s.accessToken);
   const [place, setPlace] = useState("서울");
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [termId, setTermId] = useState<number>(1);
   const [themes, setThemes] = useState<string[]>([]);
   const [peopleCount, setPeopleCount] = useState<number>(1);
+  const [message, setMessage] = useState<string>("");
 
   const [openPlace, setOpenPlace] = useState(false);
   const [openDate, setOpenDate] = useState(false);
@@ -37,13 +37,14 @@ export default function CreateTrip() {
   const [selectedCard, setSelectedCard] = useState("");
   const { mutate: postTrip, isPending } = usePostTrip();
   const handleCreate = () => {
-    if (user === undefined) {
+    if (!accessToken) {
       setLoginOpen(true);
       return;
     }
 
     if (themes.length === 0) {
       setOpenTheme(true);
+      setSelectedCard("theme");
       toast.error("테마를 선택해주세요.");
       return;
     }
@@ -55,6 +56,7 @@ export default function CreateTrip() {
         duration: termId,
         region: place,
         peopleCount,
+        userMessage: message,
       },
       {
         onSuccess: (res) => {
@@ -78,29 +80,21 @@ export default function CreateTrip() {
   return (
     <div className={styles.container}>
       <div className={styles.imgBox}>
-        <img src="/images/main-view.jpg" alt="배경" className={styles.img} />
+        <img src="/images/main-view.png" alt="배경" className={styles.img} />
       </div>
 
       <div className={styles.layoutBox}>
         <div className={styles.titleBox}>
-          <Text size="8" weight="bold">
-            AI 로 가볍게 계획하는 한국여행
-          </Text>
-          <Text size="6" weight="regular" align="center">
-            유명 관광지, 동선 최적화, 식사까지 추천해드려요. <br />
-            복잡함은 줄이고 여행을 풍부하게 하세요.
+          <Text className={styles.mainTitle}>당신의 순간이 여행이 되는 곳</Text>
+          <Text className={styles.subTitle} weight="regular" align="center">
+            나만의 여행 경험을 Airoad와 함께
+            <br />
+            복잡한 여행 준비, 이제 더 쉽게 시작하게요
           </Text>
         </div>
 
         <div className={styles.formBox}>
-          <RadioCards.Root
-            className={styles.selectBox}
-            columns={{ initial: "1", sm: "5" }}
-            gap="2"
-            variant="classic"
-            value={selectedCard}
-            onValueChange={setSelectedCard}
-          >
+          <div className={styles.selectBox({ empty: selectedCard !== "" })}>
             <DropdownMenu.Root
               open={openPlace}
               onOpenChange={(open) => {
@@ -108,26 +102,20 @@ export default function CreateTrip() {
                 if (open) setSelectedCard("place");
               }}
             >
-              <div className={styles.cardWrap}>
-                <RadioCards.Item value="place" className={styles.radioItem}>
-                  <Flex direction="column" width="100%">
-                    <Text size="2">여행지</Text>
-                    <Text size="4" color={place ? undefined : "gray"}>
-                      {place || "여행지 선택"}
-                    </Text>
-                  </Flex>
-                </RadioCards.Item>
-
-                <DropdownMenu.Trigger>
-                  <button
-                    type="button"
-                    className={styles.overlayTrigger}
-                    aria-label="여행지 메뉴 열기"
-                    onClick={() => setSelectedCard("place")}
-                  />
-                </DropdownMenu.Trigger>
-              </div>
-
+              <DropdownMenu.Trigger>
+                <div
+                  className={styles.selectItem(
+                    selectedCard === "" ? {} : { active: selectedCard === "place" },
+                  )}
+                >
+                  <Text size="1" weight="medium">
+                    여행지
+                  </Text>
+                  <Text size="2" weight="medium">
+                    {place}
+                  </Text>
+                </div>
+              </DropdownMenu.Trigger>
               <DropdownMenu.Content
                 variant="soft"
                 color="gray"
@@ -149,7 +137,7 @@ export default function CreateTrip() {
                 ))}
               </DropdownMenu.Content>
             </DropdownMenu.Root>
-
+            {selectedCard === "" && <div className={styles.selectLine} />}
             <Popover.Root
               open={openDate}
               onOpenChange={(open) => {
@@ -157,26 +145,20 @@ export default function CreateTrip() {
                 if (open) setSelectedCard("date");
               }}
             >
-              <div className={styles.cardWrap}>
-                <RadioCards.Item value="date" className={styles.radioItem}>
-                  <Flex direction="column" width="100%">
-                    <Text size="2">날짜</Text>
-                    <Text size="4" color={date ? undefined : "gray"}>
-                      {date ? dayjs(date).format("YYYY.MM.DD (dd)") : "날짜 선택"}
-                    </Text>
-                  </Flex>
-                </RadioCards.Item>
-
-                <Popover.Trigger>
-                  <button
-                    type="button"
-                    className={styles.overlayTrigger}
-                    aria-label="날짜 선택 열기"
-                    onClick={() => setSelectedCard("date")}
-                  />
-                </Popover.Trigger>
-              </div>
-
+              <Popover.Trigger>
+                <div
+                  className={styles.selectItem(
+                    selectedCard === "" ? {} : { active: selectedCard === "date" },
+                  )}
+                >
+                  <Text size="1" weight="medium">
+                    날짜
+                  </Text>
+                  <Text size="2" weight="medium">
+                    {date ? dayjs(date).format("YYYY.MM.DD (dd)") : "날짜 선택"}
+                  </Text>
+                </div>
+              </Popover.Trigger>
               <Popover.Content
                 className={styles.popoverContent}
                 align="start"
@@ -196,7 +178,7 @@ export default function CreateTrip() {
                 />
               </Popover.Content>
             </Popover.Root>
-
+            {selectedCard === "" && <div className={styles.selectLine} />}
             <DropdownMenu.Root
               open={openTerm}
               onOpenChange={(open) => {
@@ -204,26 +186,20 @@ export default function CreateTrip() {
                 if (open) setSelectedCard("term");
               }}
             >
-              <div className={styles.cardWrap}>
-                <RadioCards.Item value="term" className={styles.radioItem}>
-                  <Flex direction="column" width="100%">
-                    <Text size="2">여행 기간</Text>
-                    <Text size="4">
-                      {TERM_OPTIONS.find((value) => value.id === termId)?.label || "여행 기간 선택"}
-                    </Text>
-                  </Flex>
-                </RadioCards.Item>
-
-                <DropdownMenu.Trigger>
-                  <button
-                    type="button"
-                    className={styles.overlayTrigger}
-                    aria-label="여행 기간 메뉴 열기"
-                    onClick={() => setSelectedCard("term")}
-                  />
-                </DropdownMenu.Trigger>
-              </div>
-
+              <DropdownMenu.Trigger>
+                <div
+                  className={styles.selectItem(
+                    selectedCard === "" ? {} : { active: selectedCard === "term" },
+                  )}
+                >
+                  <Text size="1" weight="medium">
+                    여행기간
+                  </Text>
+                  <Text size="2" weight="medium">
+                    {TERM_OPTIONS.find((value) => value.id === termId)?.label || "여행 기간 선택"}
+                  </Text>
+                </div>
+              </DropdownMenu.Trigger>
               <DropdownMenu.Content
                 className={styles.dropdownContent}
                 variant="soft"
@@ -245,7 +221,7 @@ export default function CreateTrip() {
                 ))}
               </DropdownMenu.Content>
             </DropdownMenu.Root>
-
+            {selectedCard === "" && <div className={styles.selectLine} />}
             <DropdownMenu.Root
               open={openTheme}
               onOpenChange={(data) => {
@@ -253,30 +229,31 @@ export default function CreateTrip() {
                 if (data) setSelectedCard("theme");
               }}
             >
-              <div className={styles.cardWrap}>
-                <RadioCards.Item value="theme" className={styles.radioItem}>
-                  <Flex direction="column" width="100%">
-                    <Text size="2">여행 테마</Text>
-                    <Text size="4" color={themes.length ? undefined : "gray"}>
-                      {themes.length
-                        ? themes
-                            .map((theme) => THEME_OPTIONS.find((d) => d.id === theme)?.label)
-                            .join(", ")
-                        : "테마 선택"}
-                    </Text>
-                  </Flex>
-                </RadioCards.Item>
-
-                <DropdownMenu.Trigger>
-                  <button
-                    type="button"
-                    className={styles.overlayTrigger}
-                    aria-label="여행 테마 메뉴 열기"
-                    onClick={() => setSelectedCard("theme")}
-                  />
-                </DropdownMenu.Trigger>
-              </div>
-
+              <DropdownMenu.Trigger>
+                <div
+                  className={styles.selectItem(
+                    selectedCard === "" ? {} : { active: selectedCard === "theme" },
+                  )}
+                >
+                  <Text size="1" weight="medium">
+                    여행테마
+                  </Text>
+                  <Text size="2" weight="medium">
+                    {themes.length ? (
+                      themes.length === 1 ? (
+                        THEME_OPTIONS.find((d) => d.id === themes[0])?.label
+                      ) : (
+                        <>
+                          {THEME_OPTIONS.find((d) => d.id === themes[0])?.label}
+                          <Text weight="bold"> 외 {themes.length - 1}개</Text>
+                        </>
+                      )
+                    ) : (
+                      "테마 선택"
+                    )}
+                  </Text>
+                </div>
+              </DropdownMenu.Trigger>
               <DropdownMenu.Content
                 className={styles.dropdownContent}
                 align="start"
@@ -308,7 +285,7 @@ export default function CreateTrip() {
                 })}
               </DropdownMenu.Content>
             </DropdownMenu.Root>
-
+            {selectedCard === "" && <div className={styles.selectLine} />}
             <DropdownMenu.Root
               open={openPeople}
               onOpenChange={(open) => {
@@ -316,25 +293,20 @@ export default function CreateTrip() {
                 if (open) setSelectedCard("people");
               }}
             >
-              <div className={styles.cardWrap}>
-                <RadioCards.Item value="people" className={styles.radioItem}>
-                  <Flex direction="column" width="100%">
-                    <Text size="2">인원 수</Text>
-                    <Text size="4">
-                      {PEOPLE_OPTIONS.find((value) => value.id === peopleCount)?.label ||
-                        "인원 선택"}
-                    </Text>
-                  </Flex>
-                </RadioCards.Item>
-                <DropdownMenu.Trigger>
-                  <button
-                    type="button"
-                    className={styles.overlayTrigger}
-                    aria-label="인원 선택 열기"
-                    onClick={() => setSelectedCard("people")}
-                  />
-                </DropdownMenu.Trigger>
-              </div>
+              <DropdownMenu.Trigger>
+                <div
+                  className={styles.selectItem(
+                    selectedCard === "" ? {} : { active: selectedCard === "people" },
+                  )}
+                >
+                  <Text size="1" weight="medium">
+                    인원
+                  </Text>
+                  <Text size="2" weight="medium">
+                    {PEOPLE_OPTIONS.find((value) => value.id === peopleCount)?.label || "인원 선택"}
+                  </Text>
+                </div>
+              </DropdownMenu.Trigger>
               <DropdownMenu.Content
                 className={styles.dropdownContent}
                 align="start"
@@ -356,19 +328,33 @@ export default function CreateTrip() {
                 ))}
               </DropdownMenu.Content>
             </DropdownMenu.Root>
-          </RadioCards.Root>
+          </div>
+          <div className={styles.chatBox}>
+            <TextArea
+              className={styles.chatTextarea}
+              rows={2}
+              value={message}
+              onChange={(e) => {
+                setMessage(e.target.value);
+              }}
+              placeholder="아이들과 함께 가기 좋은 박물관 위주로 여행하고 싶어요"
+            />
+            <Flex align="end" justify="end" width="100%">
+              <Button
+                radius="large"
+                className={styles.createButton}
+                size="4"
+                color="indigo"
+                onClick={handleCreate}
+                disabled={isPending}
+                aria-busy={isPending}
+              >
+                {isPending ? "생성 중..." : "AI 여행일정 만들기"}
+              </Button>
+            </Flex>
+          </div>
         </div>
-        <Flex align="center" justify="center" width="100%">
-          <Button
-            size="4"
-            color="indigo"
-            onClick={handleCreate}
-            disabled={isPending}
-            aria-busy={isPending}
-          >
-            {isPending ? "생성 중..." : "AI 여행일정 만들기"}
-          </Button>
-        </Flex>
+
         <LoginDialog open={openLogin} onOpenChange={setLoginOpen} showTriggerButton={false} />
       </div>
     </div>

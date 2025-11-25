@@ -1,16 +1,16 @@
 import { globalStyle, style } from "@vanilla-extract/css";
+import { recipe } from "@vanilla-extract/recipes";
 import { mediaQuery } from "@/shared/styles";
-
 export const container = style({
   width: "100%",
-  maxHeight: "700px",
+  height: "730px",
   overflow: "hidden",
   position: "relative",
 });
 
 export const imgBox = style({
   width: "100%",
-  height: "700px",
+  height: "730px",
 });
 
 export const img = style({
@@ -27,8 +27,8 @@ export const layoutBox = style({
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  gap: "48px",
-  background: "#0000004D",
+  marginBottom: "60px",
+  gap: "44px",
 });
 
 export const titleBox = style({
@@ -37,109 +37,149 @@ export const titleBox = style({
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  gap: "16px",
-  color: "#fff",
+  gap: "12px",
+});
+export const mainTitle = style({
+  fontSize: "60px",
+  color: "#333121",
+  fontWeight: "700",
+});
+
+export const subTitle = style({
+  fontSize: "24.8px",
 });
 
 export const formBox = style({
+  background: "#0000004D",
   display: "flex",
+  flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  width: "100%",
-  padding: "0 80px",
+  padding: "36px 40px",
+  borderRadius: "36px",
+  width: "920px",
+  gap: "18px",
   "@media": {
     [mediaQuery.tablet]: { padding: "0 40px" },
     [mediaQuery.mobile]: { padding: "0 16px" },
   },
 });
 
-export const selectBox = style({
-  width: "100%",
-  display: "grid",
-  alignItems: "center",
+export const selectBox = recipe({
+  base: {
+    alignItems: "center",
+    display: "flex",
+    borderRadius: "16px",
+    height: "74px",
+    width: "100%",
+    transition: "background-color 0.15s ease",
+  },
 
-  "@media": {
-    [mediaQuery.desktop]: {
-      gridTemplateColumns: "repeat(4, 20.94%) 12.5%",
-      gap: "1.25%",
+  variants: {
+    empty: {
+      true: {
+        background: "#EBEBEB",
+      },
+      false: {
+        background: "#fff",
+      },
     },
-    [mediaQuery.tablet]: {
-      gridTemplateColumns: "repeat(2, minmax(220px, 1fr))",
-      gap: "12px",
+  },
+
+  defaultVariants: {
+    empty: false,
+  },
+});
+export const chatBox = style({
+  alignItems: "center",
+  display: "flex",
+  flexDirection: "column",
+  background: "#fff",
+  padding: "20px 24px 24px 24px",
+  borderRadius: "16px",
+  width: "100%",
+  gap: "24px",
+});
+
+export const selectLine = style({
+  width: "1px",
+  height: "38px",
+  background: "#DDDDDD",
+});
+
+export const selectItem = recipe({
+  base: {
+    padding: "18px 20px",
+    display: "flex",
+    flexDirection: "column",
+    width: "180px",
+    borderRadius: "16px",
+
+    selectors: {
+      "&:hover": {
+        backgroundColor: "#EBEBEB",
+        cursor: "pointer",
+      },
     },
-    [mediaQuery.mobile]: {
-      gridTemplateColumns: "1fr",
-      gap: "8px",
+  },
+
+  variants: {
+    active: {
+      true: {
+        backgroundColor: "#fff",
+      },
+
+      false: {
+        backgroundColor: "#EBEBEB",
+
+        selectors: {
+          "&:hover": {
+            backgroundColor: "#DDDDDD",
+          },
+        },
+      },
     },
   },
 });
 
-export const dropdownContent = style({
-  width: "var(--radix-dropdown-menu-trigger-width)",
+export const chatTextarea = style({
+  overflowY: "auto",
+  border: "none",
+  height: "52px",
+  width: "100%",
+  margin: "0",
+  boxShadow: "none",
+  outline: "none",
+  fontSize: "16px",
+
+  selectors: {
+    "&:focus": {
+      border: "none",
+      boxShadow: "none",
+      outline: "none",
+    },
+    "&:focus-visible": {
+      border: "none",
+      boxShadow: "none",
+      outline: "none",
+    },
+  },
 });
 
+export const dropdownContent = style({});
+
 export const popoverContent = style({
-  width: "var(--radix-popover-trigger-width)",
+  width: "300px",
   maxWidth: "100%",
   overflow: "hidden",
   boxSizing: "border-box",
   padding: 8,
 });
-export const personBox = style({
-  display: "flex",
-  alignContent: "center",
-  justifyContent: "space-between",
-  width: "100%",
-  alignItems: "center",
-  gap: "7px",
-});
 
-export const cardWrap = style({
-  position: "relative",
-  width: "100%",
-});
-export const radioItem = style({
-  width: "100%",
-  vars: {
-    "--radio-cards-item-border-radius": "99px",
-    "--radio-cards-item-padding-y": "11px",
-    "--radio-cards-item-padding-x": "32px",
-  },
-  transition: "box-shadow 0.2s ease",
-  boxShadow: "0px 2px 3px -2px var(--ColorsNeutralNeutralAlpha3)",
-  selectors: {
-    "&:hover": {
-      boxShadow: "0px 3px 12px -4px var(--OverlaysBlackAlpha2)",
-    },
-    "&[data-state='checked']": {
-      boxShadow: "0px 4px 16px -8px var(--OverlaysBlackAlpha2)",
-    },
-  },
-});
-
-export const overlayTrigger = style({
-  position: "absolute",
-  inset: 0,
-  width: "100%",
-  height: "100%",
-  background: "transparent",
-  border: 0,
-  padding: 0,
-  cursor: "pointer",
-  outline: "none",
-});
-
-export const iconBtn = style({
-  width: 24,
-  height: 24,
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  background: "transparent",
-  border: 0,
-  padding: 0,
-  cursor: "pointer",
-  outline: "none",
+export const createButton = style({
+  background: "linear-gradient(180deg, #434FF9 -6.82%, #4DB4FF 100%)",
+  padding: "16px 30px",
+  fontSize: "14.6px",
 });
 
 export const calendar = style({

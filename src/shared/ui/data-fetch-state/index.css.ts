@@ -9,14 +9,19 @@ export const dataFetchBox = style({
   flexDirection: "column",
 });
 
-export const iconBox = style({
-  height: "32px",
-  width: "32px",
-  marginBottom: "8px",
+export const noDataBox = style({
+  maxWidth: "274px",
+  maxHeight: "274px",
+});
+
+export const errorBox = style({
+  maxWidth: "500px",
+  maxHeight: "270px",
 });
 
 export const titleBox = style({
   textAlign: "center",
+  color: "#60646C",
 });
 
 export const buttonBox = style({

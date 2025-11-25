@@ -33,6 +33,7 @@ export const postTrip = async ({
   duration,
   region,
   peopleCount,
+  userMessage,
 }: CreateTrip) => {
   const { data } = await api.post<GetStateTripIdResponse>(API_PATHS.TRIPS.INFO._, {
     themes,
@@ -40,6 +41,7 @@ export const postTrip = async ({
     duration,
     region,
     peopleCount,
+    userMessage,
   });
 
   return data;
