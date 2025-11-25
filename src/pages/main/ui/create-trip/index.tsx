@@ -335,8 +335,7 @@ export default function CreateTrip() {
               rows={2}
               value={message}
               onChange={(e) => {
-                const value = e.target.value;
-                setMessage(value);
+                setMessage(e.target.value);
               }}
               placeholder="아이들과 함께 가기 좋은 박물관 위주로 여행하고 싶어요"
             />
