@@ -23,12 +23,12 @@ export const TERM_OPTIONS = [
 ];
 
 export const PEOPLE_OPTIONS = [
-  { id: 1, label: "1인" },
-  { id: 2, label: "2인" },
-  { id: 3, label: "3인" },
-  { id: 4, label: "4인" },
-  { id: 5, label: "5인" },
-  { id: 6, label: "6인 이상" },
+  { id: 1, label: "1명" },
+  { id: 2, label: "2명" },
+  { id: 3, label: "3명" },
+  { id: 4, label: "4명" },
+  { id: 5, label: "5명" },
+  { id: 6, label: "6명 이상" },
 ];
 
 export const THEME_OPTIONS = [

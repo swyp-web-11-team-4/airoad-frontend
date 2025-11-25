@@ -5,8 +5,8 @@ import type { CreateTrip } from "./trips.model";
 
 export function usePostTrip() {
   return useMutation({
-    mutationFn: ({ themes, startDate, duration, region, peopleCount }: CreateTrip) =>
-      postTrip({ themes, startDate, duration, region, peopleCount }),
+    mutationFn: ({ themes, startDate, duration, region, peopleCount, userMessage }: CreateTrip) =>
+      postTrip({ themes, startDate, duration, region, peopleCount, userMessage }),
     onSuccess: () => {
       toast.success("성공");
     },

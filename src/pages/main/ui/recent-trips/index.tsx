@@ -31,9 +31,9 @@ function RecentTrips() {
       <div className={styles.logBox}>
         <DataFetchState
           type="empty"
-          title="저장된 여행 계획이 없습니다!"
-          description="여행 일정을 생성해보세요!"
-          actionText="일정 생성하기"
+          title="아직 여행 일정이 없어요."
+          description="여행정보를 알려주면, 딱 맞는 일정을 만들어 드릴게요."
+          actionText="여행일정 만들기"
           onAction={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         />
       </div>
@@ -51,7 +51,6 @@ function RecentTrips() {
           </Text>
         </Link>
       </div>
-      {}
       <div className={styles.cardContainer}>
         {trips?.slice(0, 4).map((trip) => (
           <AlertDialog.Root key={trip.id}>
