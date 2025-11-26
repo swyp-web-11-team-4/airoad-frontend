@@ -103,8 +103,20 @@ export default withAsyncBoundary(RecentTrips, {
     </div>
   ),
   pendingFallback: (
-    <div className={styles.cardContainer}>
-      <CardItemSkeleton size={4} />
+    <div className={styles.logBox}>
+      <div className={styles.titleBox}>
+        <Text size="6" weight="bold">
+          최근 여행 계획
+        </Text>
+        <Link to={PAGE_ROUTES.TRIP_LIST} className={styles.linkBox}>
+          <Text size="4" color="gray">
+            전체보기
+          </Text>
+        </Link>
+      </div>
+      <div className={styles.cardContainer}>
+        <CardItemSkeleton size={4} />
+      </div>
     </div>
   ),
 });
