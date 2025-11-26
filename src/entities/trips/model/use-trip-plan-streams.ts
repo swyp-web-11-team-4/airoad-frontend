@@ -158,7 +158,7 @@ export function useTripPlanStreams({
     client.onWebSocketClose = async () => {
       if (!autoReconnectRef.current) return;
       if (isReissuingRef.current) return;
-
+      autoReconnectRef.current = false;
       try {
         isReissuingRef.current = true;
 
