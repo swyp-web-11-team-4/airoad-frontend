@@ -6,7 +6,7 @@ import { router } from "./router";
 
 import "@radix-ui/themes/styles.css";
 
-export function AppProvider() {
+export const AppProvider = () => {
   return (
     <QueryProvider>
       <Theme grayColor="gray">
@@ -14,4 +14,4 @@ export function AppProvider() {
       </Theme>
     </QueryProvider>
   );
-}
+};

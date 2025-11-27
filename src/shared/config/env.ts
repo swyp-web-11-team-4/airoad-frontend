@@ -3,4 +3,5 @@ export const env = {
   MODE: import.meta.env.MODE,
   DEV: import.meta.env.DEV,
   PROD: import.meta.env.PROD,
+  KAKAO_MAP_APP_KEY: import.meta.env.VITE_KAKAO_MAP_APP_KEY || "",
 } as const;

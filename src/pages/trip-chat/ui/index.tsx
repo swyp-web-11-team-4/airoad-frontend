@@ -9,6 +9,7 @@ import { PAGE_ROUTES } from "@/shared/config";
 import { DataFetchState } from "@/shared/ui";
 import { ChatSection } from "./chat-section";
 import * as styles from "./index.css";
+import { MapSection } from "./map-section";
 import { ScheduleSection } from "./schedule-section";
 
 export const TripChatPage = () => {
@@ -83,10 +84,12 @@ export const TripChatPage = () => {
         />
       </div>
     );
+
   return (
     <div className={styles.container}>
       <ChatSection sendMessage={sendMessage} />
       <ScheduleSection schedule={schedule} status={status} />
+      <MapSection />
     </div>
   );
 };
