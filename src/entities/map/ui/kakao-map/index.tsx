@@ -7,11 +7,10 @@ interface KakaoMapProps {
   center: MapPosition;
   level?: number;
   markers?: MarkerOptions[];
-  style?: React.CSSProperties;
   onMapLoad?: (map: kakao.maps.Map) => void;
 }
 
-export const KakaoMap = ({ center, level = 3, markers = [], style, onMapLoad }: KakaoMapProps) => {
+export const KakaoMap = ({ center, level = 3, markers = [], onMapLoad }: KakaoMapProps) => {
   useKakaoLoader({
     appkey: env.KAKAO_MAP_APP_KEY,
   });
@@ -21,7 +20,6 @@ export const KakaoMap = ({ center, level = 3, markers = [], style, onMapLoad }: 
       center={{ lat: center.lat, lng: center.lng }}
       level={level}
       className={styles.mapContainer}
-      style={style}
       onCreate={onMapLoad}
     >
       {markers.map((marker, index) => (
