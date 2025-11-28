@@ -113,7 +113,7 @@ export default function CreateTrip() {
           <Text className={styles.subTitle} weight="regular" align="center">
             나만의 여행 경험을 Airoad와 함께
             <br />
-            복잡한 여행 준비, 이제 더 쉽게 시작하게요
+            복잡한 여행 준비, 이제 더 쉽게 시작하세요
           </Text>
         </div>
 

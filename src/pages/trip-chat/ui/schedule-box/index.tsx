@@ -1,4 +1,4 @@
-import { Badge, IconButton, Skeleton, Text } from "@radix-ui/themes";
+import { Badge, Flex, IconButton, Skeleton, Text } from "@radix-ui/themes";
 import dayjs from "dayjs";
 import { Fragment } from "react/jsx-runtime";
 import { useChatStore } from "@/entities/chats/model";
@@ -27,11 +27,19 @@ export function ScheduleBox({ dayNumber, date, title, scheduledPlaces }: DayPlan
           return (
             <Fragment key={place.id}>
               <div className={styles.dayBox} key={place.id}>
-                <img
-                  className={styles.dayImg}
-                  src={place.place.imageUrl || "/images/day-card.png"}
-                  alt="일정 이미지"
-                />
+                <div className={styles.imgBox}>
+                  <img
+                    className={styles.dayImg}
+                    src={place.place.imageUrl || "/images/day-card.png"}
+                    alt="일정 이미지"
+                  />
+                  <div className={styles.mapNumber({ dayNumber })}>
+                    <Text size="2" weight="bold">
+                      {idx + 1}
+                    </Text>
+                  </div>
+                </div>
+
                 <div className={styles.dayInfo}>
                   <div className={styles.dayTag}>
                     <Badge
@@ -42,31 +50,33 @@ export function ScheduleBox({ dayNumber, date, title, scheduledPlaces }: DayPlan
                     >
                       {CATEGORY_OPTIONS[place.category]}
                     </Badge>
-                    {place.place.themes?.length ? (
-                      place.place.themes.map((id) => {
-                        const options = [
-                          ...THEME_OPTIONS,
-                          { id: "RESTAURANT", label: "음식점", emoji: "🥘" },
-                        ];
+                    <Flex gap="6.75px" align="center">
+                      {place.place.themes?.length ? (
+                        place.place.themes.map((id, index) => {
+                          const options = [
+                            ...THEME_OPTIONS,
+                            { id: "RESTAURANT", label: "음식점", emoji: "🥘" },
+                          ];
 
-                        const theme = options.find((theme) => theme.id === id);
+                          const theme = options.find((t) => t.id === id);
 
-                        return (
-                          <Badge key={id} size="2" variant="outline">
-                            {theme ? `${theme.emoji} ${theme.label}` : id}
-                          </Badge>
-                        );
-                      })
-                    ) : (
-                      <Badge size="2" variant="outline">
-                        -
-                      </Badge>
-                    )}
+                          return (
+                            <Fragment key={id}>
+                              <Text size="1">{theme ? `${theme.emoji} ${theme.label}` : id}</Text>
+                              {index < place.place.themes.length - 1 && (
+                                <div className={styles.tagLine} />
+                              )}
+                            </Fragment>
+                          );
+                        })
+                      ) : (
+                        <Text size="1">-</Text>
+                      )}
+                    </Flex>
                   </div>
                   <IconButton
                     className={styles.editButton}
-                    size="1"
-                    variant="outline"
+                    size="2"
                     color="gray"
                     disabled={refDisabled}
                     aria-label={`${place.place.name} 태그 제거`}
@@ -115,24 +125,32 @@ function ScheduleBoxSkeleton() {
 
   return (
     <div className={styles.box}>
+      <div className={styles.headerSkeleton}>
+        <Skeleton width="218px" height="30px" />
+        <Skeleton width="130px" height="20px" />
+      </div>
       <div className={styles.dayContainer}>
         {days.map((_, idx) => (
           /* biome-ignore lint/suspicious/noArrayIndexKey: static skeleton, order won't change  */
           <Fragment key={idx}>
             <div className={styles.dayBox}>
-              <Skeleton width="128px" height="128px" />
+              <Skeleton width="136px" height="136px" />
               <div className={styles.dayInfo}>
                 <div className={styles.dayTag}>
-                  <Skeleton width="56px" height="24px" />
-                  <Skeleton width="56px" height="24px" />
+                  <Skeleton width="59px" height="24px" />
+                  <Skeleton width="40px" height="24px" />
+                  <Skeleton width="40px" height="24px" />
+                  <Skeleton width="40px" height="24px" />
+                  <Skeleton width="40px" height="24px" />
+                  <Skeleton width="40px" height="24px" />
                 </div>
 
-                <Skeleton width="172px" height="24px" />
-                <Skeleton width="402px" height="68px" />
+                <Skeleton width="203px" height="24px" />
+                <Skeleton width="369px" height="40px" />
               </div>
             </div>
             <div className={styles.timeBox}>
-              <Skeleton width="128px" height="28px" />
+              <Skeleton width="121px" height="28px" />
             </div>
           </Fragment>
         ))}

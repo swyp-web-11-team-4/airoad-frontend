@@ -11,6 +11,26 @@ export const box = style({
   flexDirection: "column",
 });
 
+export const headerSkeleton = style({
+  position: "relative",
+  padding: "28px 24px 20px 24px",
+  display: "flex",
+  flexDirection: "column",
+  gap: "4px",
+  flex: "0 0 auto",
+  overflow: "hidden",
+  background: "#FFF8F0",
+  "::before": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: "3px",
+    background: "#00002D17",
+  },
+});
+
 export const header = recipe({
   base: {
     position: "relative",
@@ -83,9 +103,9 @@ export const dayTitle = recipe({
 });
 
 export const dayBox = style({
-  padding: "24px 16px",
+  padding: "20px",
   display: "flex",
-  gap: "16px",
+  gap: "20px",
   alignItems: "center",
   borderTop: "1px solid var(--gray-3)",
   borderBottom: "1px solid var(--gray-3)",
@@ -97,12 +117,11 @@ export const editButton = style({
   position: "absolute",
   top: "28px",
   right: "18px",
+  background: "#F2F2F2",
 
   selectors: {
     "&[data-disabled]": {
-      backgroundColor: "#00062E32",
-      cursor: "not-allowed",
-      pointerEvents: "none",
+      opacity: "0",
     },
   },
 });
@@ -120,23 +139,59 @@ export const iconImage = style({
 });
 
 export const dayImg = style({
-  width: "108px",
-  height: "108px",
-  borderRadius: "10px",
+  width: "132px",
+  height: "132px",
+  borderRadius: "16px",
   flexShrink: 0,
+  objectFit: "cover",
+});
+
+export const imgBox = style({
+  position: "relative",
 });
 
 export const dayInfo = style({
   display: "flex",
   flexDirection: "column",
-  gap: "8px",
   flex: 1,
+  height: "100%",
+  padding: "8px 0",
+  gap: "8px",
 });
 
 export const dayTag = style({
   display: "flex",
-  gap: "8px",
   alignItems: "center",
+  gap: "8px",
+  marginBottom: "8px",
+});
+
+export const mapNumber = recipe({
+  base: {
+    width: "24px",
+    height: "24px",
+    borderRadius: "50%",
+    position: "absolute",
+    top: "6px",
+    left: "5.5px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#fff",
+  },
+  variants: {
+    dayNumber: {
+      1: { backgroundColor: "#E60076" },
+      2: { backgroundColor: "#0093AD" },
+      3: { backgroundColor: "#861EFE" },
+      4: { backgroundColor: "#FF7A00" },
+      5: { backgroundColor: "#008F5D" },
+      6: { backgroundColor: "#A87D00" },
+    },
+  },
+  defaultVariants: {
+    dayNumber: 1,
+  },
 });
 
 export const tagBadge = recipe({
@@ -155,6 +210,14 @@ export const tagBadge = recipe({
   },
 });
 
+export const tagLine = style({
+  width: "2.5px",
+  height: "2.5px",
+  background: "#000",
+  borderRadius: "50%",
+  display: "inline-block",
+});
+
 export const description = style({
   display: "-webkit-box",
   WebkitLineClamp: 2,
@@ -165,7 +228,7 @@ export const description = style({
 });
 
 export const timeBox = style({
-  height: "60px",
+  height: "52px",
   position: "relative",
   display: "flex",
   justifyContent: "center",
@@ -190,9 +253,8 @@ export const timeLabel = style({
   display: "flex",
   alignItems: "center",
   gap: "4px",
-  border: "1px solid var(--indigo-4)",
   borderRadius: "9999px",
   zIndex: 1,
   padding: "8px 12px",
-  background: "linear-gradient(90deg, #EEF2FF 0%, #FAF5FF 100%)",
+  background: "#fff",
 });

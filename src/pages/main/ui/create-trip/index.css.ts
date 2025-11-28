@@ -41,8 +41,10 @@ export const titleBox = style({
 });
 export const mainTitle = style({
   fontSize: "60px",
-  color: "#333121",
   fontWeight: "700",
+  background: "linear-gradient(90deg, #FF057C 0%, #8D0B93 50%, #321575 100%)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
 });
 
 export const subTitle = style({

@@ -21,8 +21,9 @@ export const tabItem = recipe({
     justifyContent: "center",
 
     background: "transparent",
-    color: "#000",
+    color: "#AAAAAA",
     fontSize: "18px",
+    fontWeight: "bold",
     transition: "all 0.2s ease",
 
     vars: {
