@@ -1,3 +1,4 @@
+import { Flex } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 import { useAuthStore } from "@/entities/auth/model";
@@ -88,8 +89,10 @@ export const TripChatPage = () => {
   return (
     <div className={styles.container}>
       <ChatSection sendMessage={sendMessage} />
-      <ScheduleSection schedule={schedule} status={status} />
-      <MapSection />
+      <Flex width="100%">
+        <ScheduleSection schedule={schedule} status={status} />
+        <MapSection />
+      </Flex>
     </div>
   );
 };

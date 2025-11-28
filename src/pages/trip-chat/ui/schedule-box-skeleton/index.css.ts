@@ -1,7 +1,7 @@
 import { style } from "@vanilla-extract/css";
 export const skeletonBox = style({
-  width: "578px",
   height: "100%",
+  width: "100%",
   background: "#fff",
   borderTopLeftRadius: "16px",
   borderTopRightRadius: "16px",

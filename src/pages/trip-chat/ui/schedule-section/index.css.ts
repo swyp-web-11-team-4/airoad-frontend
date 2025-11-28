@@ -1,11 +1,19 @@
 import { style } from "@vanilla-extract/css";
 
 export const container = style({
-  padding: "24px 0 24px 24px",
   display: "flex",
-  gap: "16px",
-  flex: 1,
+  flexDirection: "column",
   height: "100%",
-  overflowX: "auto",
-  background: "#ECF1FF",
+  width: "49.2%",
+  minWidth: "576px",
+});
+
+export const box = style({
+  overflowY: "auto",
+  height: "calc(100% - 69px)",
+});
+
+export const tabContainer = style({
+  width: "100%",
+  height: "100%",
 });

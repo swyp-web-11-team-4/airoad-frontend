@@ -30,7 +30,7 @@ export const ChatSection = ({ sendMessage }: ChatSectionProps) => {
   useEffect(() => reset, [reset]);
 
   return (
-    <Flex direction="column" width="588px">
+    <Flex direction="column" width="34rem">
       <ChatList />
       <Flex direction="column" px="20px" pb="4" gap="4">
         <ChatForm onSubmit={submitMessage} />

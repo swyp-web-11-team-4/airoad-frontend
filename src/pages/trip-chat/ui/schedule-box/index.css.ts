@@ -2,17 +2,13 @@ import { style } from "@vanilla-extract/css";
 import { recipe } from "@vanilla-extract/recipes";
 
 export const box = style({
-  width: "578px",
+  width: "100%",
   height: "100%",
   background: "#fff",
-  borderTopLeftRadius: "16px",
-  borderTopRightRadius: "16px",
   borderBottomLeftRadius: "4px",
   borderBottomRightRadius: "4px",
-  overflow: "hidden",
   display: "flex",
   flexDirection: "column",
-  flexShrink: 0,
 });
 
 export const header = recipe({
@@ -22,8 +18,6 @@ export const header = recipe({
     display: "flex",
     flexDirection: "column",
     gap: "4px",
-    borderTopLeftRadius: "16px",
-    borderTopRightRadius: "16px",
     flex: "0 0 auto",
     overflow: "hidden",
     "::before": {
@@ -32,9 +26,7 @@ export const header = recipe({
       top: 0,
       left: 0,
       right: 0,
-      height: "8px",
-      borderTopLeftRadius: "16px",
-      borderTopRightRadius: "16px",
+      height: "3px",
     },
   },
   variants: {
