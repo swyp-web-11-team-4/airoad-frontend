@@ -13,7 +13,7 @@ interface AssistantMessageProps {
 
 export const AssistantMessage = ({ content, animate = false }: AssistantMessageProps) => {
   return (
-    <Flex align="start" direction="column" gap="4" width="460px">
+    <Flex align="start" direction="column" gap="10px" width="460px">
       <div className={styles.avatar}>
         <img src={iconLogo} alt="어시스턴트 이미지" />
       </div>

@@ -14,7 +14,7 @@ export const ScheduleCreatingChat = ({ isCompleted = false }: ScheduleCreatingCh
   return (
     <Flex direction="column" gap="2" width="100%">
       <Text size="3" weight="regular">
-        일정을 생성중 입니다..
+        먼저 다녀와서 추천드릴게요. 잠시만 기다려주세요 😎
       </Text>
 
       <div className={styles.content}>
