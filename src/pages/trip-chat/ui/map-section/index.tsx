@@ -2,13 +2,17 @@ import { Flex } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useSearchParams } from "react-router";
-import type { MarkerOptions } from "@/entities/map/model";
-import { KakaoMap } from "@/entities/map/ui";
+import {
+  getCenterCoordinate,
+  getMapLevel,
+  type MarkerFilterOption,
+  type MarkerOptions,
+} from "@/entities/map/model";
+import { KakaoMap, KakaoMapLoading } from "@/entities/map/ui";
 import { tripsQueries } from "@/entities/trips/model";
 import type { DayPlanData, SchedulePlaceData } from "@/entities/trips/model/trips.model";
-import { ShinyText } from "@/shared/ui";
 
-const DAY_COLORS = ["#FF5252", "#FF9800", "#FFC107", "#4CAF50", "#2196F3", "#9C27B0"];
+const DAY_COLORS = ["#E60076", "#0093AD", "#861EFE", "#FF7A00", "#008F5D", "#A87D00"];
 
 const createMarkerSvg = (orderNumber: number, color: string): string => {
   const svg = `
@@ -25,16 +29,32 @@ const createMarkerSvg = (orderNumber: number, color: string): string => {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 };
 
-export const MapSection = () => {
+interface MapSectionProps {
+  schedule: DayPlanData[];
+}
+
+export const MapSection = ({ schedule }: MapSectionProps) => {
   const [params] = useSearchParams();
   const tripPlanId = Number(params.get("tripPlanId"));
 
-  const { data: dailyPlans, isLoading } = useQuery(tripsQueries.dailyPlan(tripPlanId));
+  const { data: tripInfo, isLoading: isTripInfoLoading } = useQuery(tripsQueries.info(tripPlanId));
+
+  const { data: dailyPlans, isLoading: isDailyPlansLoading } = useQuery(
+    tripsQueries.dailyPlan(tripPlanId),
+  );
+
+  const dailyPlanList = dailyPlans
+    ? Array.from(
+        [...dailyPlans, ...schedule]
+          .reduce((map, item) => map.set(item.dayNumber, item), new Map())
+          .values(),
+      )
+    : schedule;
 
   const markers: MarkerOptions[] = useMemo(() => {
-    if (!dailyPlans) return [];
+    if (!dailyPlanList) return [];
 
-    return dailyPlans.flatMap((dayPlan: DayPlanData) => {
+    return dailyPlanList.flatMap((dayPlan: DayPlanData) => {
       const dayIndex = dayPlan.dayNumber - 1;
       const color = DAY_COLORS[dayIndex % DAY_COLORS.length];
 
@@ -43,32 +63,55 @@ export const MapSection = () => {
           lat: scheduledPlace.place.latitude,
           lng: scheduledPlace.place.longitude,
         },
-        title: `${dayPlan.dayNumber}일차 ${scheduledPlace.visitOrder}번 - ${scheduledPlace.place.name}`,
+        title: `${dayPlan.dayNumber}일차 ${scheduledPlace.visitOrder}번 : ${scheduledPlace.place.name}`,
         image: {
           src: createMarkerSvg(scheduledPlace.visitOrder, color),
           size: { width: 30, height: 38 },
         },
+        category: `day-${dayPlan.dayNumber}`,
       }));
     });
-  }, [dailyPlans]);
+  }, [dailyPlanList]);
+
+  const filterOptions: MarkerFilterOption[] = useMemo(() => {
+    if (!dailyPlanList) return [];
+
+    return dailyPlanList.map((dayPlan: DayPlanData) => {
+      const dayIndex = dayPlan.dayNumber - 1;
+      const color = DAY_COLORS[dayIndex % DAY_COLORS.length];
+
+      return {
+        label: `${dayPlan.dayNumber}일차`,
+        value: `day-${dayPlan.dayNumber}`,
+        labelColor: color,
+      };
+    });
+  }, [dailyPlanList]);
+
+  const coords = useMemo(() => markers.map(({ position }) => position), [markers]);
 
   const center = useMemo(() => {
-    if (markers.length > 0) {
-      return markers[0].position;
-    }
-    return { lat: 36.2683, lng: 127.6358 };
-  }, [markers]);
+    const defaultCoord = { lat: 36.2683, lng: 127.6358 };
 
-  if (isLoading)
-    return (
-      <Flex flexGrow="1" justify="center" align="center">
-        <ShinyText>일정을 불러오는 중입니다 ...</ShinyText>
-      </Flex>
-    );
+    if (coords.length === 1) {
+      return coords[0];
+    }
+
+    if (coords.length > 1) {
+      return getCenterCoordinate(coords);
+    }
+
+    return defaultCoord;
+  }, [coords]);
+
+  const level = useMemo(() => getMapLevel(coords), [coords]);
+
+  if (isTripInfoLoading || isDailyPlansLoading || !tripInfo?.isCompleted)
+    return <KakaoMapLoading />;
 
   return (
     <Flex flexGrow="1">
-      <KakaoMap center={center} markers={markers} level={8} />
+      <KakaoMap center={center} markers={markers} filterOptions={filterOptions} level={level} />
     </Flex>
   );
 };

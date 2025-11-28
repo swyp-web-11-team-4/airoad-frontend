@@ -91,7 +91,7 @@ export const TripChatPage = () => {
       <ChatSection sendMessage={sendMessage} />
       <Flex width="100%">
         <ScheduleSection schedule={schedule} status={status} />
-        <MapSection />
+        <MapSection schedule={schedule} />
       </Flex>
     </div>
   );

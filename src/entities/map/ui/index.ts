@@ -1,1 +1,1 @@
-export { KakaoMap } from "./kakao-map";
+export { KakaoMap, KakaoMapLoading } from "./kakao-map";
