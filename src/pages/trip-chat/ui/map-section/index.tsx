@@ -1,6 +1,6 @@
 import { Flex } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useSearchParams } from "react-router";
 import {
   getCenterCoordinate,
