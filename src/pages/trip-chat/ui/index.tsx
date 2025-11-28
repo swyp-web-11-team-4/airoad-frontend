@@ -1,8 +1,10 @@
 import { Flex } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 import { useAuthStore } from "@/entities/auth/model";
 import { useChatStore } from "@/entities/chats/model";
+import { useMapStore } from "@/entities/map/model";
 import { tripsQueries } from "@/entities/trips/model";
 import { useStartTripPlan } from "@/entities/trips/model/use-start-trip-plan";
 import { useTripPlanStreams } from "@/entities/trips/model/use-trip-plan-streams";
@@ -25,8 +27,16 @@ export const TripChatPage = () => {
 
   const accessToken = useAuthStore((state) => state.accessToken);
   const addChat = useChatStore((state) => state.addChat);
+  const resetMapStore = useMapStore((state) => state.reset);
 
   const queryClient = useQueryClient();
+
+  // 페이지 언마운트 시 맵 store 초기화
+  useEffect(() => {
+    return () => {
+      resetMapStore();
+    };
+  }, [resetMapStore]);
 
   const { error, schedule, status, sendMessage, reconnect } = useTripPlanStreams({
     chatRoomId: conversationId ?? 0,

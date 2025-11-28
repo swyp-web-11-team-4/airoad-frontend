@@ -2,6 +2,7 @@ import { Tabs } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
+import { getCenterCoordinate, getMapLevel, useMapStore } from "@/entities/map/model";
 import { tripsQueries } from "@/entities/trips/model";
 import type { DayPlanData, StatusMessage } from "@/entities/trips/model/trips.model";
 import { ScheduleBox } from "../schedule-box";
@@ -23,10 +24,14 @@ export function ScheduleSection({
 
   const total = tripInfo?.duration ?? 0;
 
+  const setCenterAndLevel = useMapStore((state) => state.setCenterAndLevel);
+
   const [tabValue, setTabValue] = useState("1");
+
   useEffect(() => {
     console.log(status);
   }, [status]);
+
   useEffect(() => {
     if (schedule.length > 0) {
       const latest = schedule[schedule.length - 1].dayNumber;
@@ -34,10 +39,31 @@ export function ScheduleSection({
     }
   }, [schedule]);
 
+  const handleTabChange = (value: string) => {
+    setTabValue(value);
+
+    const dayNumber = Number(value);
+    const targetDayPlan = dailyPlanList.find((plan) => plan.dayNumber === dayNumber);
+
+    if (targetDayPlan && targetDayPlan.scheduledPlaces.length > 0) {
+      const coords = targetDayPlan.scheduledPlaces.map(
+        (place: DayPlanData["scheduledPlaces"][number]) => ({
+          lat: place.place.latitude,
+          lng: place.place.longitude,
+        }),
+      );
+
+      const center = coords.length === 1 ? coords[0] : getCenterCoordinate(coords);
+      const level = getMapLevel(coords);
+
+      setCenterAndLevel(center, level);
+    }
+  };
+
   if (!dailyPlans) {
     return (
       <div className={styles.container}>
-        <Tabs.Root value={tabValue} onValueChange={setTabValue}>
+        <Tabs.Root value={tabValue} onValueChange={handleTabChange}>
           <ScheduleTap.Skeleton dayNumber={total || 1} />
           <div className={styles.box}>
             <ScheduleBox.Skeleton />
@@ -58,7 +84,7 @@ export function ScheduleSection({
   if (dailyPlanList.length === 0) {
     return (
       <div className={styles.container}>
-        <Tabs.Root value={tabValue} onValueChange={setTabValue}>
+        <Tabs.Root value={tabValue} onValueChange={handleTabChange}>
           <ScheduleTap.Skeleton dayNumber={total || 1} />
           <div className={styles.box}>
             {days.map((day) => (
@@ -74,7 +100,7 @@ export function ScheduleSection({
 
   return (
     <div className={styles.container}>
-      <Tabs.Root value={tabValue} onValueChange={setTabValue} style={{ height: "100%" }}>
+      <Tabs.Root value={tabValue} onValueChange={handleTabChange} style={{ height: "100%" }}>
         <ScheduleTap dayNumber={total} />
         <div className={styles.box}>
           {days.map((day) => {

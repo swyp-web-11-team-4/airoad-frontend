@@ -1,12 +1,13 @@
 import { Flex } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router";
 import {
   getCenterCoordinate,
   getMapLevel,
   type MarkerFilterOption,
   type MarkerOptions,
+  useMapStore,
 } from "@/entities/map/model";
 import { KakaoMap, KakaoMapLoading } from "@/entities/map/ui";
 import { tripsQueries } from "@/entities/trips/model";
@@ -90,9 +91,10 @@ export const MapSection = ({ schedule }: MapSectionProps) => {
 
   const coords = useMemo(() => markers.map(({ position }) => position), [markers]);
 
-  const center = useMemo(() => {
-    const defaultCoord = { lat: 36.2683, lng: 127.6358 };
+  const mapCenter = useMapStore((state) => state.center);
+  const mapLevel = useMapStore((state) => state.level);
 
+  const calculatedCenter = useMemo(() => {
     if (coords.length === 1) {
       return coords[0];
     }
@@ -101,10 +103,13 @@ export const MapSection = ({ schedule }: MapSectionProps) => {
       return getCenterCoordinate(coords);
     }
 
-    return defaultCoord;
+    return { lat: 37.5665, lng: 126.978 };
   }, [coords]);
 
-  const level = useMemo(() => getMapLevel(coords), [coords]);
+  const calculatedLevel = useMemo(() => getMapLevel(coords), [coords]);
+
+  const center = mapCenter ?? calculatedCenter;
+  const level = mapLevel ?? calculatedLevel;
 
   if (isTripInfoLoading || isDailyPlansLoading || !tripInfo?.isCompleted)
     return <KakaoMapLoading />;

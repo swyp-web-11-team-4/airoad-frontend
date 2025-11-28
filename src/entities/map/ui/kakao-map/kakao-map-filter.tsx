@@ -1,6 +1,6 @@
 import { CaretDownIcon } from "@phosphor-icons/react";
 import { Box, Button, Checkbox, Flex, Popover, Text } from "@radix-ui/themes";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { MarkerFilterOption } from "../../model";
 import * as styles from "./kakao-map-filter.css";
 
