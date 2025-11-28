@@ -10,4 +10,11 @@ export interface MarkerOptions {
     src: string;
     size: { width: number; height: number };
   };
+  category?: string;
+}
+
+export interface MarkerFilterOption {
+  label: string;
+  value: string;
+  labelColor: string;
 }

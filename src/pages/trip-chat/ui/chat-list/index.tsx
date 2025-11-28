@@ -83,6 +83,7 @@ export const ChatList = () => {
   return (
     <div className={styles.container}>
       <Flex
+        className={styles.list}
         ref={containerRef}
         gap="5"
         direction="column"

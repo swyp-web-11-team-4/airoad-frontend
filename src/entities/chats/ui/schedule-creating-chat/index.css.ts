@@ -12,7 +12,7 @@ export const content = style({
 
 export const imageWrapper = style({
   position: "relative",
-  width: 438,
+  width: 430,
   height: 140,
   borderRadius: "var(--radius-6)",
   overflowX: "hidden",
