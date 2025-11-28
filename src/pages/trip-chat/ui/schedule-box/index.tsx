@@ -1,4 +1,4 @@
-import { Badge, IconButton, Text } from "@radix-ui/themes";
+import { Badge, IconButton, Skeleton, Text } from "@radix-ui/themes";
 import dayjs from "dayjs";
 import { Fragment } from "react/jsx-runtime";
 import { useChatStore } from "@/entities/chats/model";
@@ -109,3 +109,36 @@ export function ScheduleBox({ dayNumber, date, title, scheduledPlaces }: DayPlan
     </div>
   );
 }
+
+function ScheduleBoxSkeleton() {
+  const days = Array.from({ length: 5 });
+
+  return (
+    <div className={styles.box}>
+      <div className={styles.dayContainer}>
+        {days.map((_, idx) => (
+          /* biome-ignore lint/suspicious/noArrayIndexKey: static skeleton, order won't change  */
+          <Fragment key={idx}>
+            <div className={styles.dayBox}>
+              <Skeleton width="128px" height="128px" />
+              <div className={styles.dayInfo}>
+                <div className={styles.dayTag}>
+                  <Skeleton width="56px" height="24px" />
+                  <Skeleton width="56px" height="24px" />
+                </div>
+
+                <Skeleton width="172px" height="24px" />
+                <Skeleton width="402px" height="68px" />
+              </div>
+            </div>
+            <div className={styles.timeBox}>
+              <Skeleton width="128px" height="28px" />
+            </div>
+          </Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ScheduleBox.Skeleton = ScheduleBoxSkeleton;

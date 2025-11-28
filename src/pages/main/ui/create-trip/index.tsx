@@ -48,6 +48,30 @@ export default function CreateTrip() {
       toast.error("테마를 선택해주세요.");
       return;
     }
+    if (!date) {
+      setOpenDate(true);
+      setSelectedCard("date");
+      toast.error("날짜를 선택해주세요.");
+      return;
+    }
+    if (!place) {
+      setOpenPlace(true);
+      setSelectedCard("place");
+      toast.error("여행지를 선택해주세요.");
+      return;
+    }
+    if (!termId) {
+      setOpenTerm(true);
+      setSelectedCard("term");
+      toast.error("여행기간을 선택해주세요.");
+      return;
+    }
+    if (!peopleCount) {
+      setOpenPeople(true);
+      setSelectedCard("people");
+      toast.error("인원을 선택해주세요.");
+      return;
+    }
 
     postTrip(
       {
